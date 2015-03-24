@@ -12,54 +12,7 @@ use constructed_variables, clear
 
 
 
-* checked 1 time
-gen mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
-replace mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0
 
-
-* checked 1 time
-
-gen mom_full_time_child_report_w1 = 1 if res_mom_work_hours_w1 >= 35 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-replace mom_full_time_child_report_w1 = 0 if res_mom_work_hours_w1 < 35 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-* checked 1 time
-gen mom_full_time_child_report_w1_v2 = 1 if res_mom_work_hours_w1 >= 40 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-replace mom_full_time_child_report_w1_v2 = 0 if res_mom_work_hours_w1 < 40 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-
-
-
-
-
-
-
-
-* checked once
-
-gen dad_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 1
-replace dad_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 1
-replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 0
-replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0
-
-
-* checked once
-
-gen dad_full_time_child_report_w1 = 1 if res_dad_work_hours_w1 >= 35 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .    // I restricted data only for those who report full time/part time in parents survey
-replace dad_full_time_child_report_w1 = 0 if res_dad_work_hours_w1 < 35 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-
-* checked once
-
-gen dad_full_time_child_report_w1_v2 = 1 if res_dad_work_hours_w1 >= 40 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .    // I restricted data only for those who report full time/part time in parents survey
-replace dad_full_time_child_report_w1_v2 = 0 if res_dad_work_hours_w1 < 40 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-
-* checked once
-
-gen sports = roller_blading_cycling_w1 + play_active_sport_w1 + exercise_w1 
-gen time_use = tv_hours_per_week_w1 + video_hours_per_week_w1 + computer_games_hours_per_week_w1 + listen_radio_hours_per_week_w1
-gen time_use_no_radio =  tv_hours_per_week_w1 + video_hours_per_week_w1 + computer_games_hours_per_week_w1 
 
 
 
@@ -98,7 +51,7 @@ foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 times_tv_videos_w1 roller_
 
 
 
-foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use time_use_no_radio {
+foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use_w1 time_use_no_radio_w1 {
 
 
 	reg `varname' mom_full_time_child_report_w1 dad_full_time_child_report_w1 
@@ -116,7 +69,7 @@ foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use time_use_n
 
 
 
-foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use time_use_no_radio {
+foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use_w1 time_use_no_radio_w1 {
 
 
 	reg `varname' mom_full_time_child_report_w1  
@@ -128,6 +81,30 @@ foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use time_use_n
 
 
 }
+
+
+
+
+
+
+
+
+
+
+foreach varname in BMI_w1 work_in_house_w1 hobbies_w1 sports time_use_w1 time_use_no_radio_w1 {
+
+
+	reg `varname' mom_full_time_child_report_v3_w1 dad_full_time_child_report_v3_w1 
+
+
+	reg `varname' mom_full_time_mom_report_v2_w1 dad_full_time_mom_report_v2_w1
+
+
+}
+
+
+
+
 
 
 *************************************************************************************** check variables ************************************************************************
