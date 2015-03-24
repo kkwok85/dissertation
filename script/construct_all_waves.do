@@ -1,8 +1,15 @@
-cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
+*  cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
 
 
 
 * cd "C:\Users\Julian.Julian-PC\Dropbox\J file\dissertation\Add_health_data\temp_data"
+* cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
+
+* cd "C:\Users\AYSPS\Desktop\temp_data"
+
+
+cd "D:\temp_data"
+
 
 
 clear
@@ -106,13 +113,14 @@ save construct_variables, replace
 * section 1
 gen race = .
 
-replace race = 1 if H1GI4 == 1   // Hispanic, All Races
-replace race = 2 if H1GI6B == 1  // Black or African American, Non-Hispanic
-replace race = 3 if H1GI6D == 1  // Asian, Non-Hispanic
-replace race = 4 if H1GI6C == 1  // Native American, Non-Hispanic
-replace race = 5 if H1GI6E == 1  // Other, Non-Hispanic
-replace race = 6 if H1GI6A == 1  // White, Non-Hispanic
-
+* replace race = 1 if H1GI4 == 1   // Hispanic, All Races
+replace race = 1 if H1GI6A == 1  // White
+replace race = 2 if H1GI6B == 1  // Black or African American
+replace race = 3 if H1GI6C == 1  // Native American
+replace race = 4 if H1GI6D == 1  // Asian
+replace race = 5 if H1GI6E == 1  // Other
+gen race_2 =  H1GI6A + H1GI6B + H1GI6C + H1GI6D + H1GI6E
+replace race = 6 if race_2 == 2 | race_2 == 3 | race_2 == 4 // 2 races
 
 
 recode H1GI1M (96=.), gen (w1bmonth)
@@ -204,6 +212,9 @@ replace overweight_w1 = 0 if BMIZ_percentile_w1 <= 0.85
 gen obese_w1 = . 	   
 replace obese_w1 = 1 if BMIZ_percentile_w1 > 0.95
 replace obese_w1 = 0 if BMIZ_percentile_w1 <= 0.95
+
+rename H1GH23J eat_breakfast_w1
+
 
 
 rename H2GH1 general_health_w2
@@ -620,31 +631,96 @@ rename H2NF13 relationship_with_bio_dad_w2
 
 
 * section 14 w1, w2
+
+
+* checked the imputation of no mom using tab...should be 370 changes
 rename H1RM1 res_mom_educ_w1
+replace res_mom_educ_w1 = 99 if no_mom_w1 == 1
+tab res_mom_educ_w1 
+
 rename H1RM2 res_mom_born_US_w1
+replace res_mom_born_US_w1 = 99 if no_mom_w1 == 1
+tab res_mom_born_US_w1 
+
+
+
 rename H1RM3 res_mom_born_country_w1
+replace res_mom_born_country_w1 = 99 if no_mom_w1 == 1
+tab res_mom_born_country_w1 
+
+
+
 rename H1RM4 res_mom_occupation_w1
+replace res_mom_occupation_w1 = 99 if no_mom_w1 == 1
+tab res_mom_occupation_w1
+
+
+
 rename H1RM5 res_mom_pay_w1
+replace res_mom_pay_w1 = 99 if no_mom_w1 == 1
+tab res_mom_pay_w1
+
+
 rename H1RM6 res_mom_has_worked_for_pay_w1
-rename H1RM7 res_mom_work_hours_w1
+replace res_mom_has_worked_for_pay_w1 = 99 if no_mom_w1 == 1
+tab res_mom_has_worked_for_pay_w1
+
+
+rename H1RM7 res_mom_work_hours_w1   // continuous variable
+replace res_mom_work_hours_w1 = 0 if no_mom_w1 == 1
+sum res_mom_work_hours_w1 
+
+
+
 rename H1RM8 res_mom_at_home_or_outside_w1
 
 gen mom_stay_home_out_w1 = .
 replace mom_stay_home_out_w1 = 1 if res_mom_at_home_or_outside_w1 == 1 | res_mom_pay_w1 == 0 | res_mom_occupation_w1 == 16
 replace mom_stay_home_out_w1 = 2 if res_mom_at_home_or_outside_w1 == 2
 replace mom_stay_home_out_w1 = 3 if res_mom_at_home_or_outside_w1 == 3
+
+
+gen mom_stay_home_out_v2_w1 = .
+replace mom_stay_home_out_v2_w1 = 99 if no_mom_w1 == 1
+replace mom_stay_home_out_v2_w1 = 0 if res_mom_occupation_w1 == 16 
+replace mom_stay_home_out_v2_w1 = 1 if res_mom_at_home_or_outside_w1 == 1  
+replace mom_stay_home_out_v2_w1 = 2 if res_mom_at_home_or_outside_w1 == 2
+replace mom_stay_home_out_v2_w1 = 3 if res_mom_at_home_or_outside_w1 == 3
+replace mom_stay_home_out_v2_w1 = 4 if res_mom_pay_w1 == 0
+
+
  
 
 rename H1RM9 res_mom_public_assistance_w1
+replace res_mom_public_assistance_w1 = 99 if no_mom_w1 == 1
+tab res_mom_public_assistance_w1
+
+
 rename H1RM10 res_mom_handicapped_w1
+replace res_mom_handicapped_w1 = 99 if no_mom_w1 == 1
+tab res_mom_handicapped_w1
+
 rename H1RM11 res_mom_at_home_leave_school_w1
+replace res_mom_at_home_leave_school_w1 = 99 if no_mom_w1 == 1
+tab res_mom_at_home_leave_school_w1
+
 rename H1RM12 res_mom_at_home_return_school_w1
+replace res_mom_at_home_return_school_w1 = 99 if no_mom_w1 == 1
+tab res_mom_at_home_return_school_w1
+
 rename H1RM13 res_mom_at_home_go_to_bed_w1
+replace res_mom_at_home_go_to_bed_w1 = 99 if no_mom_w1 == 1
+tab res_mom_at_home_go_to_bed_w1
+
 rename H1RM14 res_mom_smoked_w1
+replace res_mom_smoked_w1 = 99 if no_mom_w1 == 1
+tab res_mom_smoked_w1
 
 
 
 
+
+* not yet cleaned!!!!!!
 rename H2RM1 res_mom_educ_w2
 rename H2RM2 res_mom_born_US_w2
 rename H2RM3 res_mom_born_country_w2
@@ -672,13 +748,46 @@ rename H2RM14 res_mom_smoked_w2
 
 
 * section 15 w1, w2
+* checked the imputation of no dad using tab...should be 1952 changes
+
+
 rename H1RF1 res_dad_educ_w1
+replace res_dad_educ_w1 = 99 if no_dad_w1 == 1
+tab res_dad_educ_w1 
+
 rename H1RF2 res_dad_born_US_w1
+replace res_dad_born_US_w1 = 99 if no_dad_w1 == 1
+tab res_dad_born_US_w1 
+
+
+
 rename H1RF3 res_dad_born_country_w1
+replace res_dad_born_country_w1 = 99 if no_dad_w1 == 1
+tab res_dad_born_country_w1 
+
+
 rename H1RF4 res_dad_occupation_w1
+replace res_dad_occupation_w1 = 99 if no_dad_w1 == 1
+tab res_dad_occupation_w1 
+
+
+
 rename H1RF5 res_dad_pay_w1
+replace res_dad_pay_w1 = 99 if no_dad_w1 == 1
+tab res_dad_pay_w1 
+
+
+
 rename H1RF6 res_dad_has_worked_for_pay_w1
-rename H1RF7 res_dad_work_hours_w1
+replace res_dad_has_worked_for_pay_w1 = 99 if no_dad_w1 == 1
+tab res_dad_has_worked_for_pay_w1
+
+
+rename H1RF7 res_dad_work_hours_w1  // continuous variable
+replace res_dad_work_hours_w1 = 0 if no_dad_w1 == 1
+sum res_dad_work_hours_w1 
+
+
 rename H1RF8 res_dad_at_home_or_outside_w1
 
 gen dad_stay_home_out_w1 = .
@@ -686,14 +795,59 @@ replace dad_stay_home_out_w1 = 1 if res_dad_at_home_or_outside_w1 == 1 | res_dad
 replace dad_stay_home_out_w1 = 2 if res_dad_at_home_or_outside_w1 == 2
 replace dad_stay_home_out_w1 = 3 if res_dad_at_home_or_outside_w1 == 3
 
+
+
+gen dad_stay_home_out_v2_w1 = .
+replace dad_stay_home_out_v2_w1 = 99 if no_dad_w1 == 1
+replace dad_stay_home_out_v2_w1 = 0 if res_dad_occupation_w1 == 16 
+replace dad_stay_home_out_v2_w1 = 1 if res_dad_at_home_or_outside_w1 == 1  
+replace dad_stay_home_out_v2_w1 = 2 if res_dad_at_home_or_outside_w1 == 2
+replace dad_stay_home_out_v2_w1 = 3 if res_dad_at_home_or_outside_w1 == 3
+replace dad_stay_home_out_v2_w1 = 4 if res_dad_pay_w1 == 0
+
+
+
 rename H1RF9 res_dad_public_assistance_w1
+replace res_dad_has_worked_for_pay_w1 = 99 if no_dad_w1 == 1
+tab res_dad_has_worked_for_pay_w1
+
+
+
 rename H1RF10 res_dad_handicapped_w1
+replace res_dad_handicapped_w1 = 99 if no_dad_w1 == 1
+tab res_dad_handicapped_w1
+
 rename H1RF11 res_dad_at_home_leave_school_w1
+replace res_dad_at_home_leave_school_w1 = 99 if no_dad_w1 == 1
+tab res_dad_at_home_leave_school_w1
+
 rename H1RF12 res_dad_at_home_return_school_w1
+replace res_dad_at_home_return_school_w1 = 99 if no_dad_w1 == 1
+tab res_dad_at_home_return_school_w1
+
 rename H1RF13 res_dad_at_home_go_to_bed_w1
+replace res_dad_at_home_go_to_bed_w1 = 99 if no_dad_w1 == 1
+tab res_dad_at_home_go_to_bed_w1
+
 rename H1RF14 res_dad_smoked_w1
+replace res_dad_smoked_w1 = 99 if no_dad_w1 == 1
+tab res_dad_smoked_w1
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+* not yet cleaned!!!!!
 rename H2RF1 res_dad_educ_w2
 rename H2RF2 res_dad_born_US_w2
 rename H2RF3 res_dad_born_country_w2
@@ -1678,7 +1832,7 @@ replace dad_full_time_child_report_w1_v2 = 0 if res_dad_work_hours_w1 < 40 & res
 
 
 
-* checked 1 time
+* checked 1 time  (version 2 means 0 is added here)
 gen mom_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
 replace mom_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
 replace mom_full_time_mom_report_v2_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
@@ -1971,7 +2125,7 @@ replace res_dad_h_go_to_bed_group_w2 = 0 if res_dad_at_home_go_to_bed_w2  == 6
 
 
 
-* version of mom working hours are the one with imputed mom working hours
+* version of mom working hours are the one with imputed mom working hours with mom does not work for pay and mom without occupation
 gen res_mom_work_hours_v2_w1 = res_mom_work_hours_w1    
 replace res_mom_work_hours_v2_w1 = 0 if res_mom_pay_w1 == 0  | res_mom_occupation_w1 == 16
 

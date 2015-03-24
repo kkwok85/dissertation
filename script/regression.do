@@ -2,10 +2,14 @@
 
 
 
-cd "C:\Users\Julian.Julian-PC\Dropbox\J file\dissertation\Add_health_data\temp_data"
+* cd "C:\Users\Julian.Julian-PC\Dropbox\J file\dissertation\Add_health_data\temp_data"
 * cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
 
 * cd "C:\Users\AYSPS\Desktop\temp_data"
+
+
+cd "D:\temp_data"
+
 
 
 clear all
@@ -14,18 +18,17 @@ set maxvar 32767
 
 use constructed_variables, clear
 
-* skip feel_part_of_school_w1 happy_at_school_w1 close_to_people_w1 get_along_teacher_w1 get_hw_done_w1 stud_prejudiced_w1 teachers_treat_fairly_w1 i.grade_ELA_w1 i.grade_math_w1 i.grade_history_w1 i.grade_science_w1 
+* skip feel_part_of_school_w1 happy_at_school_w1 close_to_people_w1 get_along_teacher_w1 get_hw_done_w1 stud_prejudiced_w1 teachers_treat_fairly_w1  i.grade_history_w1 i.grade_science_w1 
 
 #delimit ;
 global school_related_controls 
 i.abs_school_w1 abs_school_no_excuse_w1 i.suspension_w1 
-i.pay_attention_w1 i.get_along_stud_w1 i.get_along_teacher_w1  i.feel_safe_w1;
+i.pay_attention_w1 i.get_along_stud_w1 i.get_along_teacher_w1  i.feel_safe_w1 i.grade_ELA_w1 i.grade_math_w1;
 sum $school_related_controls;
 
 
 
 * could_not_shake_off_blues_w1 felt_depressed_w1 felt_sad_w1 felt_disliked_w1 enjoyed_life_w1 felt_life_failure_w1 felt_happy_w1;
-
 global psy_health i.bothered_by_things_w1 i.appetite_w1 
 i.felt_as_good_as_others_w1 i.trouble_concentrate_w1  i.felt_too_tired_w1 
 i.felt_hopeful_w1  i.felt_fearful_w1 i.talked_less_w1 
@@ -33,14 +36,12 @@ i.felt_lonely_w1 i.felt_unfriendly_w1
 i.hard_get_started_w1 i.life_not_worth_living_w1;
 sum $psy_health;
 
-
 global health_status i.general_health_w1 i.health_cause_soc_absence_w1;
 sum $health_status;
 
 
-* family_income_1994 i.enuf_pay_bills i.Soc_Sec i.SSI i.AFDC i.food_stamps i.unemp_compensation i.housing_sub;
-
-global family_wealth i.routine_phy_check_w1 i.cigarettes_available_home_w1 i.alcohol_available_home_w1 i.drugs_available_home_w1 i.gun_available_home_w1;
+*  i.enuf_pay_bills i.Soc_Sec i.SSI i.AFDC i.food_stamps i.unemp_compensation i.housing_sub;
+global family_wealth i.routine_phy_check_w1 i.cigarettes_available_home_w1 i.alcohol_available_home_w1 i.drugs_available_home_w1 i.gun_available_home_w1 family_income_1994;
 sum $family_wealth;
 
 
@@ -48,7 +49,6 @@ sum $family_wealth;
 
 * i.move_here_reason_A i.move_here_reason_B i.move_here_reason_C i.move_here_reason_D i.move_here_reason_E  i.move_here_reason_F i.move_here_reason_G i.move_here_reason_H i.move_here_reason_I i.move_here_reason_J;
    
-	
 global environment i.know_neighborhood_w1 i.environment_nearby_w1 
 i.neighborhood_gym_w1 i.neighborhood_safe_w1  i.move_out_happy_w1 
 i.building_type_w1 i.building_well_kept_w1  i.nearby_safe_w1;     
@@ -58,28 +58,27 @@ sum $environment;
 
 
 
-* skip age_mom_w1 age_dad_w1;
 
-* skip i.full_time_mom_or_dad i.sex_spouse  other_spouse indian_spouse  asian_spouse happy_spouse work_outside_spouse fight_w_spouse retired_spouse full_time_mom_or_dad separating_spouse disabled_spouse 
-i.white_spouse i.black_spouse  
-i.religion_spouse i.school_spouse i.full_time_spouse i.disabled_spouse 
-i.receive_public_assist_spouse  i.happy_w_spouse  
+
+/* skip i.full_time_mom_or_dad i.sex_spouse  other_spouse indian_spouse  asian_spouse happy_spouse work_outside_spouse fight_w_spouse retired_spouse full_time_mom_or_dad separating_spouse disabled_spouse ;
+i.white_spouse i.black_spouse  ;
+i.religion_spouse i.school_spouse i.full_time_spouse i.disabled_spouse ;
+i.receive_public_assist_spouse  i.happy_w_spouse ; 
 i.health_status_spouse i.drink_alcohol_spouse;                                                  
 
 
-* i.sex_mom_or_dad age_mom_or_dad i.marital_status_mom_or_dad i.work_outside_mom_or_dad  i.receiving_public_assistance 
+* i.sex_mom_or_dad age_mom_or_dad i.marital_status_mom_or_dad i.work_outside_mom_or_dad  i.receiving_public_assistance; 
 i.religion_parent i.parent_org i.military_org i.labor_union i.hobby_org i.civic_org  i.most_important_son_learn i.most_important_daughter_learn i.ever_married;
 
 
-* skip i.bio_mom_w1 i.bio_dad_w1 num_sibling_survey_w1 num_household_mem_w1;
+* skip i.bio_mom_w1 i.bio_dad_w1 num_sibling_survey_w1 num_household_mem_w1 i.dummy_mom_lived_in_households_w1 i.dummy_dad_lived_in_households_w1;
+*/ 
 
-global fam_mem_bg i.mom_w1  i.dummy_mom_lived_in_households_w1 i.dad_w1  
-i.dummy_dad_lived_in_households_w1 num_bro_w1 num_sis_w1 num_granddad_w1 num_grandmom_w1; 
+global fam_mem_bg age_mom_w1 age_dad_w1 i.mom_w1  i.dad_w1  num_bro_w1 num_sis_w1 num_granddad_w1 num_grandmom_w1; 
 sum $fam_mem_bg;
 
 
 * skip res_mom_public_assistance_w1 mom_stay_home_out_w1;
-
 global mom_bg i.res_mom_educ_w1 i.res_mom_born_US_w1 i.res_mom_occupation_w1 i.res_mom_handicapped_w1 i.res_mom_smoked_w1; 
 sum $mom_bg;
 
@@ -91,14 +90,16 @@ sum $dad_bg;
 
 
 
+
+
 * skip birth_control_hazzle_w1 birth_control_expensive_w1 birth_control_plan_trouble_w1;
 * these 3 variables screw up my regression!!!;
 global relationship i.had_relationship_w1 i.ever_had_sex_w1; 		  
 sum $relationship;
 
-
+***!!!!!!!!!!!!!!!!!!!!!!!!!!!!! change from religion_w1 to i.religion_group_w1; 
 * skip religion_importance_w1 god_without_mistakes_w1  i.religion_activities_w1;
-global religion i.religion_w1 i.attend_religious_service_w1 i.pray_times_w1;
+global religion i.religion_group_w1 i.attend_religious_service_w1 i.pray_times_w1;
 sum $religion;
 
 
@@ -117,13 +118,29 @@ global interviewer_comments i.candid_w1 i.physical_mature_w1 i.third_person_pres
 sum $interviewer_comments;
 
 
-* skip i.school_good_learn  i.school_safe  i.school_good;
-global mother_report_child i.relationship i.bio_mom_live_here i.bio_dad_live_here i.know_frds i.met_frds i.met_frds_parents i.opinion_frds i.kids_have_gf_bf i.talk_to_how_many_parents
-i.son_health i.medicare i.medicaid i.individual_coverage i.prepaid_health_plan i.other i.none i.dont_know i.time_to_bed i.in_school i.talk_about_school_grade i.talk_about_school_things  i.talk_to_teachers
-i.participate_school_activities i.expect_high_school_stud i.expect_hs i.bad_temper i.son_life i.get_along_well i.make_decision_tgt  i.do_not_understand_him  i.trust_him i.son_interferes_u i.not_live_with_you_6_months
-i.retarded i.learning_disability i.special_educ i.son_use_tobacco i.son_use_alcohol i.son_ever_gone_date i.son_ever_kissed i.son_ever_had_sex;
-sum $mother_report_child; 
 
+* variable available:
+*  i.school_good_learn  i.school_safe  i.school_good i.relationship i.bio_mom_live_here i.bio_dad_live_here ;
+* global mother_report_child  i.know_frds i.met_frds i.met_frds_parents i.opinion_frds i.kids_have_gf_bf i.talk_to_how_many_parents
+* i.son_health i.medicare i.medicaid i.individual_coverage i.prepaid_health_plan i.other i.none i.dont_know i.time_to_bed i.in_school i.talk_about_school_grade i.talk_about_school_things  i.talk_to_teachers
+* i.participate_school_activities i.expect_high_school_stud i.expect_hs i.bad_temper i.son_life i.get_along_well i.make_decision_tgt  i.do_not_understand_him  i.trust_him i.son_interferes_u i.not_live_with_you_6_months
+* i.retarded i.learning_disability i.special_educ i.son_use_tobacco i.son_use_alcohol i.son_ever_gone_date i.son_ever_kissed i.son_ever_had_sex;
+* sum $mother_report_child; 
+
+global parents_school_mom_report i.school_good_learn  i.school_safe  i.school_good;
+sum $parents_school_mom_report;
+
+global parents_involvement_mom_report i.know_frds i.met_frds i.met_frds_parents i.talk_to_how_many_parents 
+i.talk_about_school_grade i.talk_about_school_things  i.talk_to_teachers i.participate_school_activities i.make_decision_tgt i.time_to_bed;
+sum $parents_involvement_mom_report; 
+
+	
+global parents_relation_mom_report i.get_along_well i.trust_him i.son_interferes_u;
+sum $parents_relation_mom_report; 
+
+
+global parents_expectation_mom_report i.expect_high_school_stud i.expect_hs;
+sum $parents_expectation_mom_report;
 
 
 global respondent_background AH_PVT i.race age_w1 BIO_SEX;
@@ -918,7 +935,7 @@ gen H1DS6 = 1 and = 0
 	gen error_sex = son_ever_had_sex - ever_had_sex_w1
 	
 	gen error_sex_dummy = 1 if error_sex == -1 | error_sex == 1 
-	replace error_sex_dummy = error_sex == 0
+	replace error_sex_dummy = 0 if error_sex == 0
 	
 	
 	gen error_date = son_ever_gone_date - had_relationship_w1
@@ -930,10 +947,20 @@ gen H1DS6 = 1 and = 0
 	
 	
 	gen drink_alcohol_w1 = 1 if drink_days_w1 == 1 | drink_days_w1 == 2 | drink_days_w1 == 3 | drink_days_w1 == 4 | drink_days_w1 == 5
-	replace drink_alcohol_w1 = 0 if drink_days_w1 == 6 | drink_alcohol_w1 == 7
+	replace drink_alcohol_w1 = 0 if drink_days_w1 == 6 | drink_days_w1 == 7
 	
 	
 	gen error_alcohol = son_use_alcohol - drink_alcohol_w1
+	gen error_alcohol_dummy = 1 if error_alcohol == -1 | error_sex == 1 
+	replace error_alcohol_dummy = 0 if error_alcohol == 0
+	
+	
+	
+	
+	gen error_tobacco_v2 = 1 if error_tobacco == -1 | error_tobacco == 1
+	replace error_tobacco_v2  = 0 if error_tobacco == 0
+	
+	
 	
 	
 	* work

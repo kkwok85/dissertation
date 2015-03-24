@@ -1,4 +1,6 @@
-cd "D:\Dropbox\J file\dissertation\Add_health_data\temp_data"
+* cd "D:\Dropbox\J file\dissertation\Add_health_data\temp_data"
+cd "D:\temp_data"
+
 
 clear
 
