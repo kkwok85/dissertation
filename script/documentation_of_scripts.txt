@@ -1,0 +1,10 @@
+clean data procedure:
+
+use the following scripts:
+1) Add_Health_w1_v2
+2) Add_Health_w2_v2
+3) Add_Health_w3_in_home_v2
+4) Add_Health_w4_v2
+5) Add_Health_merge_waves
+6) clean_missing_data
+7) contruct_all_waves

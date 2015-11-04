@@ -1,4 +1,4 @@
-
+/*
 
 cd "D:\Dropbox"
 
@@ -11,6 +11,7 @@ merge 1:1 AID using "D:\Dropbox\J file\dissertation\Add_health_data\temp_data\w4
 
 save ".\J file\dissertation\Add_health_data\temp_data\Add_Health_w4_v2", replace
  
+ */
 
  
  
@@ -22,4 +23,31 @@ save ".\J file\dissertation\Add_health_data\temp_data\Add_Health_w4_v2", replace
  
  
  
+cd "F:\Add_health_data\"
+
+* clean  and save weight files
+
+fdause ".\Grand Sample Weights\weights4\weights4.xpt", clear
+renvars *, upper
+
+save ".\Grand Sample Weights\weights4\weights4", replace
+
+
+
+
+* clean  and save w4 files, combine with wieghts file
+
+fdause ".\In Home Interview Files\wave4\wave4.xpt", clear
+
+
+renvars *, upper
+
+
+
+merge 1:1 AID using ".\Grand Sample Weights\weights4\weights4"
+
+
+
+save "F:\temp_data\Add_Health_w4", replace
+
 

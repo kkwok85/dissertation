@@ -7,22 +7,26 @@
 
 * cd "C:\Users\AYSPS\Desktop\temp_data"
 
+* set maxvar 32767
 
-cd "D:\temp_data"
+* cd "D:\temp_data"
+cd "F:\temp_data"
 
 
 
 clear
 
-set maxvar 32767
+* use Add_Health_merged_w1_to_w2, clear
 
 
-use Add_Health_merged_w1_to_w4, clear
+use temp_missing_data, clear
+
+* use Add_Health_merged_w1_to_w4, clear
 
 
 
 
-
+/*
 
 gen H4PE11_reverse =  6 - H4PE11
 gen H4PE27_reverse =  6 - H4PE27
@@ -57,6 +61,7 @@ foreach personality in Extraversion_w4 Agreeableness_w4 Conscientiousness_w4 Neu
 }
 
 
+*/
 
 gen H1PF30_reverse =  6 - H1PF30
 gen H1PF32_reverse =  6 - H1PF32
@@ -190,6 +195,25 @@ rename H1GH1 general_health_w1
 rename H1GH26 no_medical_care_but_should_w1
 rename H1GH28 weight_image_w1
 rename H1GH29 lose_weight_w1
+
+gen diet_for_weight_w1 = 1 if H1GH30A == 1
+replace diet_for_weight_w1 = 1 if H1GH31A == 1
+replace diet_for_weight_w1 = 0 if H1GH30A == 0
+replace diet_for_weight_w1 = 0 if H1GH31A == 0
+replace diet_for_weight_w1 = 0 if lose_weight_w1 == 4
+
+
+gen exercise_for_weight_w1 = 1 if H1GH30B == 1
+replace exercise_for_weight_w1 = 1 if H1GH31B == 1
+replace exercise_for_weight_w1 = 0 if H1GH30B == 0
+replace exercise_for_weight_w1 = 0 if H1GH31B == 0
+replace exercise_for_weight_w1 = 0 if lose_weight_w1 == 4
+
+
+rename H1GH23A breakfast_milk_w1
+rename H1GH23G breakfast_snack_w1
+
+
 rename H1GH37 school_PE_days_w1
 rename H1GH38 school_PE_min_w1
 rename H1GH48 health_cause_sch_absence_w1
@@ -237,8 +261,8 @@ gen BMI_w2 = (weight_w2*0.454)/((height_w2*0.0254)^2)
 egen BMI_zscore_w2 = zanthro(BMI_w2,ba,US), xvar(age_w2) gender(BIO_SEX) gencode(male=1,female=2)
 gen BMIZ_percentile_w2 = normal(BMI_zscore_w2)
 gen overweight_w2 = .
-replace overweight_w2 = 1 if BMIZ_percentile_w1 > 0.85
-replace overweight_w2 = 0 if BMIZ_percentile_w1 <= 0.85
+replace overweight_w2 = 1 if BMIZ_percentile_w2 > 0.85
+replace overweight_w2 = 0 if BMIZ_percentile_w2 <= 0.85
 	   
 
 gen obese_w2 = . 	   
@@ -389,6 +413,14 @@ foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 
 
 
+
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+replace age_mom_w1 = 0 if no_mom_w1 == 1
+
+
+
+
+
 * can be used to check data: egen num_bio_dad = anycount(H1HR6A H1HR6B H1HR6C H1HR6D H1HR6E H1HR6F H1HR6G H1HR6H H1HR6I H1HR6J H1HR6K H1HR6L H1HR6M H1HR6N H1HR6O H1HR6P H1HR6Q H1HR6R H1HR6S H1HR6T), values(1)
 *****!!!!! one person has 2 dad!!!
 
@@ -425,6 +457,8 @@ foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 }
 
 
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+replace age_dad_w1 = 0 if no_dad_w1 == 1
 
 
 
@@ -1115,12 +1149,11 @@ rename H1TO7 how_many_cigarettes_w1
 replace how_many_cigarettes_w1 = 0 if H1TO2 == 0 | tried_cigarette_w1 == 0 | how_many_days_smoke_w1 == 0
 
 
-
 rename H1TO9 smoke_frds_w1
 
 
 rename H1TO12 ever_drink_alcohol_w1
-rename H1TO13 drink_when_parents_not_home_w1            //!!!!!!!!!!!!!!!!!!!!!! super important!!!
+rename H1TO13 drink_when_parents_not_home_w1            
 replace drink_when_parents_not_home_w1 = 0 if ever_drink_alcohol_w1 == 0 
 rename H1TO14 drink_age_w1
 rename H1TO15 drink_days_w1
@@ -1279,7 +1312,7 @@ rename H2TO68 drugs_available_home_w2
 * section 29 w1, section 28 w2 (y variable) (skipped some..usually cuz not enuf data)
 rename H1DS1 paint_graffiti_w1
 rename H1DS2 damage_property_w1
-rename H1DS3 lie_to_parents_w1
+rename H1DS3 lie_to_parents_whereabout_w1
 rename H1DS4 steal_things_more_fifty_w1
 rename H1DS7 run_away_from_home_w1
 rename H1DS8 steal_car_w1
@@ -1498,6 +1531,7 @@ gen earning_per_week_w2 = earnings_non_summer_w2 + allowance_w2
 * section 39 w1, section 38 w2
 
 egen num_study_sib_w1 = anycount(STUDSIBA STUDSIBB STUDSIBC STUDSIBD STUDSIBE STUDSIBF STUDSIBG), values(1)
+* egen num_study_sib_w1 = anycount(studsiba studsibb studsibc studsibd studsibe studsibf studsibg), values(1)
 
 
 egen num_sibling_survey_w1 = rownonmiss(H1WS1A H1WS1B H1WS1C H1WS1D H1WS1E H1WS1F H1WS1G) if IMONTH !=. | IDAY !=. | IYEAR !=.
@@ -1604,8 +1638,14 @@ forvalues i = 1(1)2 {
 		   
 		   
 		   
+
 		   
 		   
+rename S59F s_lie_to_parents_w1
+
+rename S47 s_time_spend_tv_video_w1
+
+
 		   
 		   
 		   
@@ -1693,6 +1733,7 @@ rename PC10 know_frds
 rename PC11 met_frds
 rename PC12 met_frds_parents
 rename PC13 opinion_frds
+
 rename PC14 kids_have_gf_bf
 rename PC15 met_gf_bf    // will drop data
 
@@ -1720,8 +1761,12 @@ replace talk_to_teachers = 0 if in_school == 0
 rename PC28 participate_school_activities
 replace participate_school_activities = 0 if in_school == 0
 
-
+ 
 rename (PC29A PC29B PC29C) (school_good_learn school_safe school_good)
+replace school_good_learn = 0 if in_school == 0
+replace school_safe = 0 if in_school == 0
+replace school_good = 0 if in_school == 0
+
 
 rename PC30 expect_high_school_stud
 rename PC31 expect_hs
@@ -1735,13 +1780,13 @@ rename PC39 special_educ
 rename PC40 son_use_tobacco   // would be super interesting to see how much claim by mom, how much claim by son!!
 rename PC41 son_use_alcohol
 
-
+rename PC44B disapprove_sex
 * PC42 PC43 PC44 only do it when talk about sex behavior
 
 rename PC45 son_ever_gone_date   // would be super interesting to see how much claim by mom, how much claim by son!!
 rename PC46 son_ever_kissed 
 rename PC47 son_ever_had_sex
-
+rename PC48 son_sex_age
 
 
 * PC49 when talk about intergeneration
