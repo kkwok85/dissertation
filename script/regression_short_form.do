@@ -1,15 +1,5 @@
-*  cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
 
-
-
-* cd "C:\Users\Julian.Julian-PC\Dropbox\J file\dissertation\Add_health_data\temp_data"
-* cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
-
-* cd "C:\Users\AYSPS\Desktop\temp_data"
-
-
-* cd "D:\temp_data"
-cd "F:\Add_health_data\courtemanche_data\temp_data"
+cd "F:\temp_data"
 
 
 
@@ -149,6 +139,10 @@ global parents_know_frds i.opinion_frds i.met_frds_parents i.kids_have_gf_bf;
 global respondent_background AH_PVT i.race age_w1 BIO_SEX;
 
 
+
+
+* this is after proposal;
+global demographic age_w1 BIO_SEX i.race num_siblings_w1;
 
 
 

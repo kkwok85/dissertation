@@ -26,7 +26,7 @@ use temp_missing_data, clear
 
 
 
-/*
+
 
 gen H4PE11_reverse =  6 - H4PE11
 gen H4PE27_reverse =  6 - H4PE27
@@ -61,7 +61,6 @@ foreach personality in Extraversion_w4 Agreeableness_w4 Conscientiousness_w4 Neu
 }
 
 
-*/
 
 gen H1PF30_reverse =  6 - H1PF30
 gen H1PF32_reverse =  6 - H1PF32
@@ -90,8 +89,8 @@ foreach personality in Neuroticism_w1 Conscientiousness_w1 Extraversion_w1 {
 
 
 
-
-
+****************** this reverse the interpretation of conscientiousness!!!!
+replace zConscientiousness_w1 = zConscientiousness_w1*(-1)
 
 
 
@@ -169,7 +168,7 @@ rename H1DA9 video_hours_per_week_w1
 rename H1DA10 computer_games_hours_per_week_w1
 rename H1DA11 listen_radio_hours_per_week_w1
 
-
+gen tv_video_comp_games_w1 = tv_hours_per_week_w1 + video_hours_per_week_w1 + computer_games_hours_per_week_w1
 
 
 
@@ -577,7 +576,7 @@ egen num_household_mem_w2 = rownonmiss(H2HR2A H2HR2B H2HR2C H2HR2D H2HR2E H2HR2F
 
 
 
-
+gen num_siblings_w1 = num_bro_w1 + num_sis_w1
 
 
 
@@ -1145,8 +1144,20 @@ replace regular_cigarette_w1 = 0 if H1TO2 == 0 | tried_cigarette_w1 == 0
 rename H1TO5 how_many_days_smoke_w1
 replace how_many_days_smoke_w1 = 0 if H1TO2 == 0 | tried_cigarette_w1 == 0 
 
+
+
 rename H1TO7 how_many_cigarettes_w1
 replace how_many_cigarettes_w1 = 0 if H1TO2 == 0 | tried_cigarette_w1 == 0 | how_many_days_smoke_w1 == 0
+
+
+gen total_smoke_a_month_w1 = how_many_days_smoke_w1*how_many_cigarettes_w1
+
+
+
+
+
+
+
 
 
 rename H1TO9 smoke_frds_w1
@@ -1157,14 +1168,68 @@ rename H1TO13 drink_when_parents_not_home_w1
 replace drink_when_parents_not_home_w1 = 0 if ever_drink_alcohol_w1 == 0 
 rename H1TO14 drink_age_w1
 rename H1TO15 drink_days_w1
-replace drink_days_w1 = 7 if ever_drink_alcohol_w1 == 0      
+replace drink_days_w1 = 7 if ever_drink_alcohol_w1 == 0     
+
+* v2 means translate it in days so that marginal effect can be interpreted using OLS
+gen drink_days_v2_w1 = 365 if drink_days_w1 == 1
+replace drink_days_v2_w1 = 4.5*52 if drink_days_w1 == 2
+replace drink_days_v2_w1 = 1.5*52 if drink_days_w1 == 3
+replace drink_days_v2_w1 = 2.5*12 if drink_days_w1 == 4
+replace drink_days_v2_w1 = 7.5 if drink_days_w1 == 5
+replace drink_days_v2_w1 = 1.5 if drink_days_w1 == 6
+replace drink_days_v2_w1 = 0 if drink_days_w1 == 7
+
+
+
+
+ 
 rename H1TO16 drink_amount_w1
 replace drink_amount_w1 = 0 if drink_days_w1 == 7  // this one is better since the previous questions ask lifetime use
 rename H1TO17 drink_5_a_row_w1
 replace drink_5_a_row_w1 = 7 if drink_days_w1 == 7 
 
+
+gen drink_5_a_row_v2_w1 = 365 if drink_5_a_row_w1 == 1
+replace drink_5_a_row_v2_w1 = 4.5*52 if drink_5_a_row_w1 == 2
+replace drink_5_a_row_v2_w1 = 1.5*52 if drink_5_a_row_w1 == 3
+replace drink_5_a_row_v2_w1 = 2.5*12 if drink_5_a_row_w1 == 4
+replace drink_5_a_row_v2_w1 = 7.5 if drink_5_a_row_w1 == 5
+replace drink_5_a_row_v2_w1 = 1.5 if drink_5_a_row_w1 == 6
+replace drink_5_a_row_v2_w1 = 0 if drink_5_a_row_w1 == 7
+
+
+
+
+
+
+
 rename H1TO18 drink_very_high_w1
 replace drink_very_high_w1 = 7 if drink_days_w1 == 7 
+
+gen drink_very_high_v2_w1 = 365 if drink_very_high_w1 == 1
+replace drink_very_high_v2_w1 = 4.5*52 if drink_very_high_w1 == 2
+replace drink_very_high_v2_w1 = 1.5*52 if drink_very_high_w1 == 3
+replace drink_very_high_v2_w1 = 2.5*12 if drink_very_high_w1 == 4
+replace drink_very_high_v2_w1 = 7.5 if drink_very_high_w1 == 5
+replace drink_very_high_v2_w1 = 1.5 if drink_very_high_w1 == 6
+replace drink_very_high_v2_w1 = 0 if drink_very_high_w1 == 7
+
+
+
+
+
+
+
+
+gen total_drink_per_year_w1 = drink_amount_w1*drink_days_v2_w1 
+
+
+
+
+
+
+
+
 
 rename H1TO19 type_of_drink_w1
 
