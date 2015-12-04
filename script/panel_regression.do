@@ -1,25 +1,40 @@
-*  cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
+cd "F:\temp_data"
 
-
-
-* cd "C:\Users\Julian.Julian-PC\Dropbox\J file\dissertation\Add_health_data\temp_data"
-cd "D:\dropbox_2\Dropbox\J file\dissertation\Add_health_data\temp_data"
 
 
 clear
+
 
 
 use constructed_variables, clear
 
 
 
+* add parent age, edu
+
+
+* [pw=GSWGT1]
+
+
+keep AID FAMID BIO_SEX GSWGT1 GSWGT2  race IMONTH PSUSCID W1STATE zConscientiousness_w1 *_w1 *_w2
+
+
+
+* BIO_SEX race conscientiousness
+
+
+reshape long GSWGT BMI_w BMI_zscore_w tv_hours_per_week_w video_hours_per_week_w computer_games_hours_per_week_w tv_video_comp_games_w  ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
+no_mom_w no_dad_w age_w num_siblings_w res_mom_occupation_w  res_dad_occupation_w res_mom_work_hours_v2_w res_dad_work_hours_v2_w ///
+decide_time_at_home_weekend_w decide_hang_around_with_w decide_what_u_wear_w decide_how_much_tv_w decide_what_tv_programs_w decide_what_time_go_bed_w decide_what_you_eat_w ///
+, i(AID) j(wave)
 
 
 
 
 
 
-keep CASEID-SMP03 *_w1 *_w2
 
 
 

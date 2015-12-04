@@ -1,24 +1,27 @@
 cd "F:\Add_health_data\"
 
 
-fdause ".\Sibling Files\Siblings\sibling3.xpt", clear
 
 
 
+
+
+
+
+
+fdause ".\Sibling Files\Pairs\pairs.xpt", clear
 renvars *, upper
 
-gen SIB_AID5 = AID
-* keep AID SIB_AID1 SIB_AID2 SIB_AID3 SIB_AID4 SIB_AID5
-
-reshape long SIB_AID SIB_REL, i(AID) j(sibling)
-
-drop if SIB_AID == ""
+keep PAIR AID_1 AID_2 FAMID
 
 
-duplicates drop SIB_AID, force
+reshape long AID_ , i(PAIR) j(sibling)
 
-rename AID FAMILY_ID
-rename SIB_AID AID
+rename AID_ AID
 
-save "F:\temp_data\sibling3", replace
+duplicates drop AID, force
+
+keep AID FAMID
+
+save "F:\temp_data\siblingID", replace
 

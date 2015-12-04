@@ -185,6 +185,7 @@ rename H2DA9 video_hours_per_week_w2
 rename H2DA10 computer_games_hours_per_week_w2
 rename H2DA11 listen_radio_hours_per_week_w2
 
+gen tv_video_comp_games_w2 = tv_hours_per_week_w2 + video_hours_per_week_w2 + computer_games_hours_per_week_w2
 
 
 
@@ -376,7 +377,7 @@ forvalues i = 1(1)2 {
 
 
 
-* section 11 w1
+* section 11 w1, section 11 w2
 
 gen mom_w1 = 0
 
@@ -463,9 +464,15 @@ replace age_dad_w1 = 0 if no_dad_w1 == 1
 
 
 
+egen num_96_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(96)
+egen num_98_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(98)
+egen num_99_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(99)
 
-egen num_bro_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(5)
 
+egen num_bro_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T)  , values(5)
+
+
+replace num_bro_w1 = . if (num_96_w1 != 0 | num_98_w1 !=0 | num_99_w1 !=0)
 
 * lazy to distinguish different type of brothers
 * since there are more than 1 brother at home, so the format is a little bit different from mom/dad
@@ -492,6 +499,10 @@ foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 
 
 egen num_sis_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(8)
+
+
+replace num_sis_w1 = . if (num_96_w1 != 0 | num_98_w1 !=0 | num_99_w1 !=0)
+
 
 * lazy to distinguish different type of sisters
 * since there are more than 1 sister at home, so the format is a little bit different from mom/dad
@@ -577,6 +588,60 @@ egen num_household_mem_w2 = rownonmiss(H2HR2A H2HR2B H2HR2C H2HR2D H2HR2E H2HR2F
 
 
 gen num_siblings_w1 = num_bro_w1 + num_sis_w1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+egen num_96_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(96)
+egen num_98_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(98)
+egen num_99_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(99)
+
+
+
+
+
+
+
+egen num_bro_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q)  , values(8)
+egen num_sis_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q)  , values(8)
+
+
+replace num_bro_w2 = . if (num_96_w2 != 0 | num_98_w2 !=0 | num_99_w2 !=0)
+replace num_sis_w2 = . if (num_96_w2 != 0 | num_98_w2 !=0 | num_99_w2 !=0)
+
+
+
+
+
+gen num_siblings_w2 = num_bro_w2 + num_sis_w2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1289,7 +1354,10 @@ rename H1TO53 gun_available_home_w1
 
 
 
+
+
 rename H2TO1 tried_cigarette_w2
+
 rename H2TO3 regular_cigarette_w2 
 replace regular_cigarette_w2 = 0 if tried_cigarette_w2 == 0
 rename H2TO5 how_many_days_smoke_w2
@@ -1297,6 +1365,10 @@ replace how_many_days_smoke_w2 = 0 if tried_cigarette_w2 == 0
 
 rename H2TO7 how_many_cigarettes_w2
 replace how_many_cigarettes_w2 = 0 if tried_cigarette_w2 == 0 | how_many_days_smoke_w2 == 0
+
+
+
+gen total_smoke_a_month_w2 = how_many_days_smoke_w2*how_many_cigarettes_w2
 
 
 rename H2TO10 smoke_frds_w2
@@ -1310,6 +1382,20 @@ replace drink_when_parents_not_home_w2 = 0 if ever_drink_alcohol_w2 == 0
 rename H2TO19 drink_days_w2
 replace drink_days_w2 = 7 if ever_drink_alcohol_w2 == 0
 
+
+
+gen drink_days_v2_w2 = 365 if drink_days_w2 == 1
+replace drink_days_v2_w2 = 4.5*52 if drink_days_w2 == 2
+replace drink_days_v2_w2 = 1.5*52 if drink_days_w2 == 3
+replace drink_days_v2_w2 = 2.5*12 if drink_days_w2 == 4
+replace drink_days_v2_w2 = 7.5 if drink_days_w2 == 5
+replace drink_days_v2_w2 = 1.5 if drink_days_w2 == 6
+replace drink_days_v2_w2 = 0 if drink_days_w2 == 7
+
+
+
+
+
 rename H2TO20 drink_amount_w2
 replace drink_amount_w2 = 0 if drink_days_w2 == 7 
 
@@ -1317,8 +1403,31 @@ rename H2TO21 drink_5_a_row_w2
 replace drink_5_a_row_w2 = 7 if drink_days_w2 == 7 
 
 
+gen drink_5_a_row_v2_w2 = 365 if drink_5_a_row_w2 == 1
+replace drink_5_a_row_v2_w2 = 4.5*52 if drink_5_a_row_w2 == 2
+replace drink_5_a_row_v2_w2 = 1.5*52 if drink_5_a_row_w2 == 3
+replace drink_5_a_row_v2_w2 = 2.5*12 if drink_5_a_row_w2 == 4
+replace drink_5_a_row_v2_w2 = 7.5 if drink_5_a_row_w2 == 5
+replace drink_5_a_row_v2_w2 = 1.5 if drink_5_a_row_w2 == 6
+replace drink_5_a_row_v2_w2 = 0 if drink_5_a_row_w2 == 7
+
+
 rename H2TO22 drink_very_high_w2
 replace drink_very_high_w2 = 7 if drink_days_w2 == 7 
+
+
+gen drink_very_high_v2_w2 = 365 if drink_very_high_w2 == 1
+replace drink_very_high_v2_w2 = 4.5*52 if drink_very_high_w2 == 2
+replace drink_very_high_v2_w2 = 1.5*52 if drink_very_high_w2 == 3
+replace drink_very_high_v2_w2 = 2.5*12 if drink_very_high_w2 == 4
+replace drink_very_high_v2_w2 = 7.5 if drink_very_high_w2 == 5
+replace drink_very_high_v2_w2 = 1.5 if drink_very_high_w2 == 6
+replace drink_very_high_v2_w2 = 0 if drink_very_high_w2 == 7
+
+
+
+gen total_drink_per_year_w2 = drink_amount_w2*drink_days_v2_w2 
+
 
 rename H2TO23 type_of_drink_w2
 rename H2TO25 drink_trouble_with_parents_w2
@@ -1766,6 +1875,16 @@ rename PA55 family_income_1994
 rename PA56 enuf_pay_bills
 rename (PA57A PA57B PA57C PA57D PA57E PA57F) (Soc_Sec SSI AFDC food_stamps unemp_compensation housing_sub)
 
+
+rename PA61 drink_alcohol_mom_dad 
+rename PA62 drink_5_more_mom_dad
+
+rename PA64 smoke_mom_or_dad
+replace smoke_mom_or_dad = 0 if smoke_mom_or_dad == 7
+
+
+
+
 * 1443 people do not have spouse
 rename PB2 sex_spouse
 rename (PB5_1 PB5_2 PB5_3 PB5_4 PB5_5) (white_spouse black_spouse indian_spouse asian_spouse other_spouse)  
@@ -1783,7 +1902,6 @@ rename PB19 separating_spouse
 rename PB20 fight_w_spouse
 rename PB21 health_status_spouse
 rename PB22 drink_alcohol_spouse
-
 
 
 	   
@@ -1857,7 +1975,8 @@ rename PC48 son_sex_age
 * PC49 when talk about intergeneration
 	   
 
-
+	   
+	   
 
 
 

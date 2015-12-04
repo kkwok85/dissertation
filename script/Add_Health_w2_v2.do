@@ -33,10 +33,25 @@ tab no_mom_bio_mom_w2
 
 
 
+
+
 gen no_dad_bio_dad_w2 = 0 if H2RF1 < 99
 replace no_dad_bio_dad_w2 = 1 if H2RF1 == 97
 tab no_dad_bio_dad_w2
 
+
+
+
+gen no_mom_w2 = 0 if H2RM4 < 99
+replace no_mom_w2 = 1 if H2RM4 == 97
+tab no_mom_w2
+
+
+
+
+gen no_dad_w2 = 0 if H2RF4 < 99
+replace no_dad_w2 = 1 if H2RF4 == 97
+tab no_dad_w2
 
 
 * do ".\J file\dissertation\Add_health_data\original_unzip_files\ICPSR_21600_w2\DS0003\21600-0003-Supplemental_syntax.do"
