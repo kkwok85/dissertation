@@ -47,6 +47,8 @@ renvars *, upper
 merge 1:1 AID using ".\Grand Sample Weights\weights4\weights4"
 
 
+rename PSUSCID PSUSCID_w4
+
 
 save "F:\temp_data\Add_Health_w4", replace
 

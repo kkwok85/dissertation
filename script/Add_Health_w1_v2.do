@@ -57,7 +57,7 @@ tab no_dad_w1
 
 
 
-merge 1:1 AID using ".\Grand Sample Weights\wt\HOMEWT1"
+merge 1:1 AID using ".\Grand Sample Weights\wt\HOMEWT1", gen(w1_weight)
 
 
 * save ".\J file\dissertation\Add_health_data\temp_data\Add_Health_w1_v2", replace
@@ -69,6 +69,12 @@ merge 1:1 AID using ".\Grand Sample Weights\wt\HOMEWT1"
 tab no_mom_w1
 tab no_dad_w1
 
+
+
+rename PSUSCID PSUSCID_w1
+
+
+merge 1:1 AID using "F:\temp_data\neighborhood_w1", gen(w1_neighborhood)
 
 
 save "F:\temp_data\Add_Health_w1", replace

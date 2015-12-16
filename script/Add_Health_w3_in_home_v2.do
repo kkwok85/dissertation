@@ -87,6 +87,10 @@ forvalues i = 22(1)25 {
 */
 
 
+rename PSUSCID PSUSCID_w3
+
+
+
 save "F:\temp_data\Add_Health_w3", replace
 
 

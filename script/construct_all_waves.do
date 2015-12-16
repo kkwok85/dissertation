@@ -114,6 +114,10 @@ save construct_variables, replace
 
 
 
+gen month_year_w1 = IMONTH*IYEAR
+
+gen month_year_w2 = IMONTH2*IYEAR2
+
 * section 1
 gen race = .
 
@@ -379,6 +383,17 @@ forvalues i = 1(1)2 {
 
 * section 11 w1, section 11 w2
 
+
+* show which one should be dropped
+
+egen num_96_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(96)
+egen num_98_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(98)
+egen num_99_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(99)
+
+
+
+
+
 gen mom_w1 = 0
 
 replace mom_w1 = 1 if H1HR3A == 14 | H1HR3B == 14 | H1HR3C == 14 | H1HR3D == 14 | H1HR3E == 14 | H1HR3F == 14 | H1HR3G == 14 | H1HR3H == 14 | H1HR3I == 14 | H1HR3J == 14 | ///
@@ -391,31 +406,27 @@ H1HR6K == 7 | H1HR6L == 7 | H1HR6M == 7 | H1HR6N == 7 | H1HR6O == 7 | H1HR6P == 
 
 
 
-**** can be x variables!!!
 
-gen age_mom_w1 = .
-gen dummy_mom_lived_in_households_w1 = .
-gen years_mom_living_tgt_w1 = .
-gen months_mom_living_tgt_w1 = .
+
+********* gen mom's age w1 *********
 
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
+	gen age_mom_`alpha'_w1 = .
 
-	replace age_mom_w1 = H1HR7`alpha' if H1HR3`alpha' == 14 
-	replace dummy_mom_lived_in_households_w1 = H1HR9`alpha' if H1HR3`alpha' == 14 
-	replace years_mom_living_tgt_w1 = H1HR10`alpha' if H1HR3`alpha' == 14 & H1HR10`alpha' != 0
-	replace months_mom_living_tgt_w1 = years_mom_living_tgt_w1*12 + H1HR11`alpha' if H1HR3`alpha' == 14 
-
-
-	replace age_mom_w1 = H1HR8`alpha' if H1HR3`alpha' == 14 & H1HR8`alpha' !=.
+	replace age_mom_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 14  
 
 }
 
+egen age_mom_w1 = rowmean( age_mom_A_w1 age_mom_B_w1 age_mom_C_w1 age_mom_D_w1 age_mom_E_w1 age_mom_F_w1 age_mom_G_w1 age_mom_H_w1 age_mom_I_w1 age_mom_J_w1 age_mom_K_w1 age_mom_L_w1 age_mom_M_w1 age_mom_N_w1 ///
+age_mom_O_w1 age_mom_P_w1 age_mom_Q_w1 age_mom_R_w1 age_mom_S_w1 age_mom_T_w1 )
 
 
 
+replace age_mom_w1 = . if age_mom_w1 > 990
 
-* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-replace age_mom_w1 = 0 if no_mom_w1 == 1
+
+********* gen mom's age w1 *********
+
 
 
 
@@ -437,36 +448,36 @@ H1HR6K == 1 | H1HR6L == 1 | H1HR6M == 1 | H1HR6N == 1 | H1HR6O == 1 | H1HR6P == 
 
 
 
-gen age_dad_w1 = .
-gen dummy_dad_lived_in_households_w1 = .
-gen years_dad_living_tgt_w1 = .
-gen months_dad_living_tgt_w1 = .
-
-
-
-foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
-
-	replace age_dad_w1 = H1HR7`alpha' if H1HR3`alpha' == 11 
-	replace dummy_dad_lived_in_households_w1 = H1HR9`alpha' if H1HR3`alpha' == 14 
-	replace years_dad_living_tgt_w1 = H1HR10`alpha' if H1HR3`alpha' == 14 & H1HR10`alpha' != 0
-	replace months_dad_living_tgt_w1 = years_dad_living_tgt_w1*12 + H1HR11`alpha' if H1HR3`alpha' == 14 
-
-
-	replace age_dad_w1 = H1HR8`alpha' if H1HR3`alpha' == 11 & H1HR8`alpha' !=.
-
-}
-
-
-* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-replace age_dad_w1 = 0 if no_dad_w1 == 1
 
 
 
 
 
-egen num_96_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(96)
-egen num_98_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(98)
-egen num_99_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(99)
+********* gen dad's age w1 *********
+
+	
+foreach alpha in A B C D E F G H I J K L M N O P Q R S T {	
+	gen age_dad_`alpha'_w1 = .
+	
+	replace age_dad_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 11  
+	
+}	
+	
+egen age_dad_w1 = rowmean( age_dad_A_w1 age_dad_B_w1 age_dad_C_w1 age_dad_D_w1 age_dad_E_w1 age_dad_F_w1 age_dad_G_w1 age_dad_H_w1 age_dad_I_w1 age_dad_J_w1 age_dad_K_w1 age_dad_L_w1 age_dad_M_w1 age_dad_N_w1 ///	
+age_dad_O_w1 age_dad_P_w1 age_dad_Q_w1 age_dad_R_w1 age_dad_S_w1 age_dad_T_w1 )	
+	
+	
+	
+replace age_dad_w1 = . if age_dad_w1 > 500	
+
+
+
+********* gen dad's age w1 *********
+
+
+
+
+
 
 
 egen num_bro_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T)  , values(5)
@@ -477,6 +488,8 @@ replace num_bro_w1 = . if (num_96_w1 != 0 | num_98_w1 !=0 | num_99_w1 !=0)
 * lazy to distinguish different type of brothers
 * since there are more than 1 brother at home, so the format is a little bit different from mom/dad
 
+
+/*
 
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 	gen age_bro`alpha'_w1 = .
@@ -492,7 +505,29 @@ foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 	replace age_bro`alpha'_w1 = H1HR8`alpha' if H1HR3`alpha' == 5 & H1HR8`alpha' !=.
 }
 
+*/
 
+* gen brother age
+
+
+
+****************
+foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
+	gen age_bro_`alpha'_w1 = .
+
+	replace age_bro_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 5  
+
+}
+
+
+
+egen youngest_bro_age_w1 = rowmin(age_bro_A_w1 age_bro_B_w1 age_bro_C_w1 age_bro_D_w1 age_bro_E_w1 age_bro_F_w1 age_bro_G_w1 age_bro_H_w1 age_bro_I_w1 age_bro_J_w1 age_bro_K_w1 age_bro_L_w1 age_bro_M_w1 age_bro_N_w1 age_bro_O_w1 age_bro_P_w1 age_bro_Q_w1 age_bro_R_w1 age_bro_S_w1 age_bro_T_w1)  
+ 
+ * drop those 998
+
+replace youngest_bro_age_w1 = . if youngest_bro_age_w1 > 990
+
+****************
 
 
 
@@ -507,6 +542,9 @@ replace num_sis_w1 = . if (num_96_w1 != 0 | num_98_w1 !=0 | num_99_w1 !=0)
 * lazy to distinguish different type of sisters
 * since there are more than 1 sister at home, so the format is a little bit different from mom/dad
 
+
+
+/* 
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 	gen age_sis`alpha'_w1 = .
 	gen dummy_sis`alpha'_lived_tgt_w1 = .
@@ -524,56 +562,48 @@ foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 
 
 
+*/
 
-
-
-
-
-
-egen num_granddad_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(19)
-
-
-gen age_granddad_w1 = .
-gen dummy_granddad_lived_tgt_w1 = .
-gen years_granddad_living_tgt_w1 = .
-gen months_granddad_living_tgt_w1 = .
-
-
+* gem sister age 
+****************
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
+	gen age_sis_`alpha'_w1 = .
 
-	replace age_granddad_w1 = H1HR7`alpha' if H1HR3`alpha' == 19
-	replace dummy_granddad_lived_tgt_w1 = H1HR9`alpha' if H1HR3`alpha' == 19 
-	replace years_granddad_living_tgt_w1 = H1HR10`alpha' if H1HR3`alpha' == 19 & H1HR10`alpha' != 0
-	replace months_granddad_living_tgt_w1 = years_granddad_living_tgt_w1*12 + H1HR11`alpha' if H1HR3`alpha' == 19 
-
-	replace age_granddad_w1 = H1HR8`alpha' if H1HR3`alpha' == 19 & H1HR8`alpha' !=.
+	replace age_sis_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 8  
 
 }
 
 
+egen youngest_sis_age_w1 = rowmin(age_sis_A_w1 age_sis_B_w1 age_sis_C_w1 age_sis_D_w1 age_sis_E_w1 age_sis_F_w1 age_sis_G_w1 age_sis_H_w1 age_sis_I_w1 age_sis_J_w1 age_sis_K_w1 age_sis_L_w1 age_sis_M_w1 age_sis_N_w1 age_sis_O_w1 age_sis_P_w1 age_sis_Q_w1 age_sis_R_w1 age_sis_S_w1 age_sis_T_w1)  
+ 
+ * drop those 998
+
+replace youngest_sis_age_w1 = . if youngest_sis_age_w1 > 990
+
+****************
 
 
-egen num_grandmom_w1 = anycount(H1HR3A H1HR3B H1HR3C H1HR3D H1HR3E H1HR3F H1HR3G H1HR3H H1HR3I H1HR3J H1HR3K H1HR3L H1HR3M H1HR3N H1HR3O H1HR3P H1HR3Q H1HR3R H1HR3S H1HR3T), values(20)
+
+
+egen youngest_sib_age_w1  = rowmin(youngest_sis_age_w1 youngest_bro_age_w1)
+
+gen age_diff_sib_w1 = age_w1 - youngest_sib_age_w1
+
+
+replace youngest_sib_age_w1 = . if age_diff_sib_w1 <= 0 
 
 
 
-* one person has 2 grandmother....but it is fine...I didnt change it here
 
-gen age_grandmom_w1 = .
-gen dummy_grandmom_lived_tgt_w1 = .
-gen years_grandmom_living_tgt_w1 = .
-gen months_grandmom_living_tgt_w1 = .
 
-foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 
-	replace age_grandmom_w1 = H1HR7`alpha' if H1HR3`alpha' == 20 
-	replace dummy_grandmom_lived_tgt_w1 = H1HR9`alpha' if H1HR3`alpha' == 20 
-	replace years_grandmom_living_tgt_w1 = H1HR10`alpha' if H1HR3`alpha' == 20 & H1HR10`alpha' != 0
-	replace months_grandmom_living_tgt_w1 = years_grandmom_living_tgt_w1*12 + H1HR11`alpha' if H1HR3`alpha' == 20 
 
-	replace age_grandmom_w1 = H1HR8`alpha' if H1HR3`alpha' == 20 & H1HR8`alpha' !=.
 
-}
+
+
+
+
+
 
 
 
@@ -599,15 +629,64 @@ gen num_siblings_w1 = num_bro_w1 + num_sis_w1
 
 
 
+*********** wave 2!!********
 
 
-
-
+* gen number of siblings wave 2
 
 
 egen num_96_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(96)
 egen num_98_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(98)
 egen num_99_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q), values(99)
+
+
+
+
+********* gen mom's age w2 *********
+
+foreach alpha in A B C D E F G H I J K L M N O P Q {
+	gen age_mom_`alpha'_w2 = .
+
+	replace age_mom_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 14  
+
+}
+
+egen age_mom_w2 = rowmean( age_mom_A_w2 age_mom_B_w2 age_mom_C_w2 age_mom_D_w2 age_mom_E_w2 age_mom_F_w2 age_mom_G_w2 age_mom_H_w2 age_mom_I_w2 age_mom_J_w2 age_mom_K_w2 age_mom_L_w2 age_mom_M_w2 age_mom_N_w2 ///
+age_mom_O_w2 age_mom_P_w2 age_mom_Q_w2  )
+
+
+
+replace age_mom_w2 = . if age_mom_w2 > 990
+
+
+********* gen mom's age w2 *********
+
+
+
+
+
+
+
+
+********* gen dad's age w2 *********
+
+foreach alpha in A B C D E F G H I J K L M N O P Q {	
+	gen age_dad_`alpha'_w2 = .
+	
+	replace age_dad_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 11  
+	
+}	
+	
+egen age_dad_w2 = rowmean( age_dad_A_w2 age_dad_B_w2 age_dad_C_w2 age_dad_D_w2 age_dad_E_w2 age_dad_F_w2 age_dad_G_w2 age_dad_H_w2 age_dad_I_w2 age_dad_J_w2 age_dad_K_w2 age_dad_L_w2 age_dad_M_w2 age_dad_N_w2 ///	
+age_dad_O_w2 age_dad_P_w2 age_dad_Q_w2  )	
+	
+	
+	
+replace age_dad_w2 = . if age_dad_w2 > 990	
+
+
+
+********* gen dad's age w2 *********
 
 
 
@@ -627,6 +706,74 @@ replace num_sis_w2 = . if (num_96_w2 != 0 | num_98_w2 !=0 | num_99_w2 !=0)
 
 
 gen num_siblings_w2 = num_bro_w2 + num_sis_w2
+
+
+
+
+
+
+
+
+
+* gen age of siblings wave 2
+	
+foreach alpha in A B C D E F G H I J K L M N O P Q {	
+	gen age_bro_`alpha'_w2 = .
+	
+	replace age_bro_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 5  
+	
+}	
+	
+	
+	
+egen youngest_bro_age_w2 = rowmin(age_bro_A_w2 age_bro_B_w2 age_bro_C_w2 age_bro_D_w2 age_bro_E_w2 age_bro_F_w2 age_bro_G_w2 age_bro_H_w2 age_bro_I_w2 age_bro_J_w2 age_bro_K_w2 age_bro_L_w2 age_bro_M_w2 age_bro_N_w2 age_bro_O_w2 age_bro_P_w2 age_bro_Q_w2)  	
+ 	
+ * drop those 998	
+	
+replace youngest_bro_age_w2 = . if youngest_bro_age_w2 > 990	
+	
+	
+	
+	
+	
+	
+foreach alpha in A B C D E F G H I J K L M N O P Q {	
+	gen age_sis_`alpha'_w2 = .
+	
+	replace age_sis_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 8  
+	
+}	
+	
+	
+egen youngest_sis_age_w2 = rowmin(age_sis_A_w2 age_sis_B_w2 age_sis_C_w2 age_sis_D_w2 age_sis_E_w2 age_sis_F_w2 age_sis_G_w2 age_sis_H_w2 age_sis_I_w2 age_sis_J_w2 age_sis_K_w2 age_sis_L_w2 age_sis_M_w2 age_sis_N_w2 age_sis_O_w2 age_sis_P_w2 age_sis_Q_w2)  	
+ 	
+ * drop those 998	
+	
+replace youngest_sis_age_w2 = . if youngest_sis_age_w2 > 990	
+	
+	
+	
+	
+	
+	
+egen youngest_sib_age_w2  = rowmin(youngest_sis_age_w2 youngest_bro_age_w2)	
+	
+gen age_diff_sib_w2 = age_w2 - youngest_sib_age_w2	
+	
+
+replace youngest_sib_age_w2 = . if age_diff_sib_w2 <= 0 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -820,6 +967,9 @@ tab res_mom_smoked_w1
 
 * not yet cleaned!!!!!!
 rename H2RM1 res_mom_educ_w2
+replace res_mom_educ_w2 = 99 if no_mom_w2 == 1
+replace res_mom_educ_w2 = res_mom_educ_w1 if res_mom_educ_w2 == . 
+
 rename H2RM2 res_mom_born_US_w2
 rename H2RM3 res_mom_born_country_w2
 rename H2RM4 res_mom_occupation_w2
@@ -947,6 +1097,10 @@ tab res_dad_smoked_w1
 
 * not yet cleaned!!!!!
 rename H2RF1 res_dad_educ_w2
+replace res_dad_educ_w2 = 99 if no_dad_w2 == 1
+replace res_dad_educ_w2 = res_dad_educ_w1 if res_dad_educ_w2 == . 
+
+
 rename H2RF2 res_dad_born_US_w2
 rename H2RF3 res_dad_born_country_w2
 rename H2RF4 res_dad_occupation_w2
@@ -1978,6 +2132,22 @@ rename PC48 son_sex_age
 	   
 	   
 
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
 
 
 

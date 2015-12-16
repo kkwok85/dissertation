@@ -73,10 +73,16 @@ rename H2TWIN* TWINSIB*
 * merge 1:1 AID using ".\original_unzip_files\ICPSR_21600_w2_sample_weights\DS0021\21600-0021-Data"
 
 
-merge 1:1 AID using ".\Grand Sample Weights\wt\HOMEWT2"
+merge 1:1 AID using ".\Grand Sample Weights\wt\HOMEWT2", gen(w2_weight)
 
 
 * save ".\J file\dissertation\Add_health_data\temp_data\Add_Health_w2_v2", replace
+
+
+rename PSUSCID PSUSCID_w2
+
+
+merge 1:1 AID using "F:\temp_data\neighborhood_w2", gen(w2_neighborhood)
 
 save "F:\temp_data\Add_Health_w2", replace
 

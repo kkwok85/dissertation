@@ -30,10 +30,10 @@ replace BIO_SEX = . if (BIO_SEX == 6 | BIO_SEX==8)
 
 
 replace H1DA3 = . if (H1DA3 == 6 | H1DA3 == 8)
-replace H1DA8 = . if (H1DA8 >= 996 & H1RM8 <= 999)
-replace H1DA9 = . if (H1DA9 >= 996 & H1RM9 <= 999)
-replace H1DA10 = . if (H1DA10 >= 996 & H1RM10 <= 999)
-replace H1DA11 = . if (H1DA11 >= 996 & H1RM11 <= 999)
+replace H1DA8 = . if (H1DA8 >= 996 & H1DA8 <= 999)
+replace H1DA9 = . if (H1DA9 >= 996 & H1DA9 <= 999)
+replace H1DA10 = . if (H1DA10 >= 996 & H1DA10 <= 999)
+replace H1DA11 = . if (H1DA11 >= 996 & H1DA11 <= 999)
 
 
 
@@ -42,21 +42,25 @@ replace H1GI1M = . if (H1GI1M == 96)
 replace H1GI1Y = . if (H1GI1Y == 96)
 
 replace H1GI6A = . if (H1GI6A == 6 | H1GI6A == 8 | H1GI6A == 9)
-replace H1GI6B = . if (H1GI6B == 6 | H1GI6B == 8 | H1GI6A == 9)
-replace H1GI6C = . if (H1GI6C == 6 | H1GI6C == 8 | H1GI6A == 9)
-replace H1GI6D = . if (H1GI6D == 6 | H1GI6D == 8 | H1GI6A == 9)
-replace H1GI6E = . if (H1GI6E == 6 | H1GI6E == 8 | H1GI6A == 9)
+replace H1GI6B = . if (H1GI6B == 6 | H1GI6B == 8 | H1GI6B == 9)
+replace H1GI6C = . if (H1GI6C == 6 | H1GI6C == 8 | H1GI6C == 9)
+replace H1GI6D = . if (H1GI6D == 6 | H1GI6D == 8 | H1GI6D == 9)
+replace H1GI6E = . if (H1GI6E == 6 | H1GI6E == 8 | H1GI6E == 9)
 
 
-* mom work hours + occupations
+* mom educ + work hours + occupations
+replace H1RM1 = . if (H1RM1 == 96 | H1RM1 == 97 | H1RM1 == 98)
+
 replace H1RM4 = . if (H1RM4 >= 96 & H1RM4 <= 99)
 replace H1RM7 = . if (H1RM7 >= 996 & H1RM7 <= 999)
 
 
 
-* dad work hours + occupations
-replace H1RF4 = . if (H1RM4 >= 96 & H1RM4 <= 99)
-replace H1RF7 = . if (H1RM7 >= 996 & H1RM7 <= 999)
+* dad educ + work hours + occupations
+replace H1RF1 = . if (H1RF1 == 96 | H1RF1 == 97 | H1RF1 == 98 | H1RF1 == 99)
+
+replace H1RF4 = . if (H1RF4 >= 96 & H1RF4 <= 99)
+replace H1RF7 = . if (H1RF7 >= 996 & H1RF7 <= 999)
 
 
 * family income
@@ -158,7 +162,7 @@ replace PB22 = . if (PB22 == 96 | PB22 == 98)
 * daily activities
 
 replace H2DA3 = . if (H2DA3 == 6 | H1DA3 == 8)
-replace H2DA8 = . if (H2RM8 == 998)
+replace H2DA8 = . if (H2DA8 == 998)
 replace H2DA9 = . if (H2DA9 == 98)
 replace H2DA10 = . if (H2DA10 == 98)
 replace H2DA11 = . if (H2DA11 == 998)
@@ -172,15 +176,18 @@ replace H2GI1Y = . if (H2GI1Y == 98)
 
 
 
-* mom work hours + occupations
-replace H2RM4 = . if (H2RM4 >= 96 & H2RM4 <= 98)
-replace H2RM7 = . if (H2RM7 >= 996 & H2RM7 <= 998)
-
-
-* dad work hours + occupations
+* mom educ + work hours + occupations
+replace H2RM1 = . if (H2RM1 == 97)
 
 replace H2RM4 = . if (H2RM4 >= 96 & H2RM4 <= 98)
 replace H2RM7 = . if (H2RM7 >= 996 & H2RM7 <= 998)
+
+
+* dad educ + work hours + occupations
+replace H2RF1 = . if (H2RF1 == 96 | H2RF1 == 97)
+
+replace H2RF4 = . if (H2RF4 >= 96 & H2RF4 <= 98)
+replace H2RF7 = . if (H2RF7 >= 996 & H2RF7 <= 998)
 
 * supervision
 
@@ -224,12 +231,12 @@ replace H2GH53 = . if (H2GH53 == 996 | H2GH53 == 998)
 replace H2TO1 = . if (H2TO1 == 6 | H2TO1 == 8)
 replace H2TO3 = . if (H2TO3 == 6 | H2TO3 == 7 | H2TO3 == 8)
 replace H2TO5 = . if (H2TO5 == 96 | H2TO5 == 97 | H2TO5 == 98)
-replace H2TO7 = . if (H2TO5 == 96 | H2TO5 == 97 | H2TO5 == 98)
+replace H2TO7 = . if (H2TO7 == 96 | H2TO7 == 97 | H2TO7 == 98)
 
 
 
 * drinking
-replace H2TO15 = . if (H2TO15 == 6 | H2TO12 == 8)
+replace H2TO15 = . if (H2TO15 == 6 | H2TO15 == 8)
 
 replace H2TO19 = . if (H2TO19 == 96 | H2TO19 == 97 | H2TO19 == 98)
 replace H2TO20 = . if (H2TO20 == 96 | H2TO20 == 97 | H2TO20 == 98)
