@@ -460,7 +460,8 @@ BMI_w1 BMI_zscore_w1 overweight_w1 obese_w1
 tried_cigarette_w1 regular_cigarette_w1 how_many_days_smoke_w1 how_many_cigarettes_w1 total_smoke_a_month_w1
 
 
-global demographic_panel age_w BIO_SEX i.race num_siblings_w AH_PVT i.no_mom_w i.no_dad_w
+global demographic_panel age_w BIO_SEX i.race num_siblings_w AH_PVT i.no_mom_w i.no_dad_w 
+
 
 
 *************new *******
@@ -469,27 +470,31 @@ foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_
 tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
 BMI_w BMI_zscore_w overweight_w obese_w {
 
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 [pw=GSWGT], vce(cluster AID)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  replace
 	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel [pw=GSWGT], vce(cluster AID)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w [pw=GSWGT], vce(cluster AID)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w i.mwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w [pw=GSWGT], vce(cluster AID)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.fam_income_impute_ind [pw=GSWGT] , vce(cluster AID)
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.fam_income_impute_ind [pw=GSWGT] , vce(cluster AID)
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
 
 
 	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w [pw=GSWGT], vce(cluster AID)                           
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
 
-
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.dad_edu_impute_indicator_w i.mom_edu_impute_indicator_w  [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
 	
 	
 }	
@@ -504,29 +509,33 @@ tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_
 BMI_w BMI_zscore_w overweight_w obese_w {
 
 
-
-	
-	ivregress 2sls `yvariable' zConscientiousness_w1 (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)
+	ivregress 2sls `yvariable' zConscientiousness_w1 i.mwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1)[pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 	
-	ivregress 2sls `yvariable'  zConscientiousness_w1 $demographic_panel (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1)[pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 
-	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w i.mwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1)[pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 	
-	ivregress 2sls `yvariable'  zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1)[pw=GSWGT], vce(cluster AID)
 	outreg2 using `yvariable', ctitle(`yvariable') excel  append
 
-	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.fam_income_impute_ind (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT] , vce(cluster AID)
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
-
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.fam_income_impute_ind (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1)[pw=GSWGT] , vce(cluster AID)
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
 
 	
-	ivregress 2sls `yvariable'  zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)                           
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append
 
-
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
+	
+	ivregress 2sls `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.dad_edu_impute_indicator_w i.mom_edu_impute_indicator_w  (res_mom_work_hours_v2_w c.res_mom_work_hours_v2_w#c.zConscientiousness_w1 = youngest_sib_age_w c.youngest_sib_age_w#c.zConscientiousness_w1) [pw=GSWGT], vce(cluster AID)                           
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append 
+	
+	
+	
 	
 	
 
@@ -551,29 +560,33 @@ foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_
 tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
 BMI_w BMI_zscore_w overweight_w obese_w {
 
-	
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 [pw=GSWGT], absorb(FAMID) vce(cluster AID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
-	
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel [pw=GSWGT], absorb(FAMID) vce(cluster AID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
-
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w [pw=GSWGT], absorb(FAMID) vce(cluster AID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
-	
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w [pw=GSWGT], absorb(FAMID) vce(cluster AID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
-
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.fam_income_impute_ind [pw=GSWGT] , absorb(FAMID) vce(cluster AID)
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
 
 
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, FAMILY)
 	
-	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w [pw=GSWGT], absorb(FAMID) vce(cluster AID)                           
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, FAMILY)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w i.mwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, FAMILY)
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, FAMILY)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.fam_income_impute_ind [pw=GSWGT] , absorb(AID2) vce(cluster AID)
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, FAMILY)
 
 
 	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)                         
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, FAMILY)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(AID2) vce(cluster AID)                          
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, FAMILY)
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.dad_edu_impute_indicator_w i.mom_edu_impute_indicator_w  [pw=GSWGT], absorb(AID2) vce(cluster AID)                       
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, FAMILY)
 	
 	
 	
@@ -583,13 +596,67 @@ BMI_w BMI_zscore_w overweight_w obese_w {
 	
 	
 	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+BMI_w BMI_zscore_w overweight_w obese_w {
+
 	
 	
+	
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w i.mwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.fam_income_impute_ind [pw=GSWGT] , absorb(PSUSCID_w) vce(cluster AID)
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+
+
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)                         
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)                          
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+	
+	areg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.dad_edu_impute_indicator_w i.mom_edu_impute_indicator_w  [pw=GSWGT], absorb(PSUSCID_w) vce(cluster AID)                       
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(FE, SCHOOL)
+	
+	
+	
+	
+
 	
 
 
 
 }
+
+
+
+
 
 
 
@@ -598,7 +665,20 @@ BMI_w BMI_zscore_w overweight_w obese_w {
 gen mwh_conscientious_w1 = res_mom_work_hours_v2_w*zConscientiousness_w1
 gen IV_conscientious_w = youngest_sib_age_w*zConscientiousness_w1
 
+
+*gen mwh_w1 = res_mom_work_hours_v2_w*zExtraversion_w1
+*gen IV2_w = youngest_sib_age_w*zExtraversion_w1
+
+
+
 xtset FAMID
+
+
+xtset AID2
+
+
+xtset PSUSCID_w
+
 
 
 foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
@@ -606,29 +686,32 @@ tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_
 BMI_w BMI_zscore_w overweight_w obese_w {
 
 
-
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 i.mwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w)[pw=GSWGT], r fe cluster(PSUSCID_w)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 	
-	xi: xtivreg2 `yvariable' zConscientiousness_w1 (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT],r fe cluster(FAMID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
-	
-	xi: xtivreg2 `yvariable'  zConscientiousness_w1 $demographic_panel (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT],r fe cluster(FAMID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w)[pw=GSWGT], r fe cluster(PSUSCID_w)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 
-	xi: xtivreg2 `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT],r fe cluster(FAMID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w i.mwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w)[pw=GSWGT], r fe cluster(PSUSCID_w)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 	
-	xi: xtivreg2 `yvariable'  zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT],r fe cluster(FAMID)
-	outreg2 using `yvariable', ctitle(`yvariable') excel  append
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w)[pw=GSWGT], r fe cluster(PSUSCID_w)
+	outreg2 using `yvariable', ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 
-	xi: xtivreg2 `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.fam_income_impute_ind (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT] , r fe cluster(FAMID)
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w family_income_1994 i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.fam_income_impute_ind (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w)[pw=GSWGT] ,r fe cluster(PSUSCID_w)
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 
 
 	
-	xi: xtivreg2 `yvariable'  zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT], r fe cluster(FAMID)                      
-	outreg2 using `yvariable', word ctitle(`yvariable') excel  append addtext(Imputed, NO)
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT],r fe cluster(PSUSCID_w)                      
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
 
-
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT], r fe cluster(PSUSCID_w)                      
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
+	
+	xi: xtivreg2  `yvariable' zConscientiousness_w1 $demographic_panel  i.res_mom_occupation_w res_dad_work_hours_v2_w  i.res_dad_occupation_w   family_income_1994 i.fam_income_impute_ind i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w i.mwh_impute_indicator_w i.dwh_impute_indicator_w i.dad_edu_impute_indicator_w i.mom_edu_impute_indicator_w  (mwh_conscientious_w1 res_mom_work_hours_v2_w = IV_conscientious_w youngest_sib_age_w) [pw=GSWGT], r fe cluster(PSUSCID_w)                       
+	outreg2 using `yvariable', word ctitle(`yvariable') excel  append  addtext(FE-IV, SCHOOL)
+	
 	
 	
 
@@ -644,13 +727,14 @@ BMI_w BMI_zscore_w overweight_w obese_w {
  
  
  
- replace FAMID  = AID if FAMID == . & AID !=.
+ * replace FAMID  = AID if FAMID == . & AID !=.
  
  
+ destring AID, gen (test2)
  
  
 
-
+replace test2 = FAMID if FAMID !=.
  
  
  

@@ -412,17 +412,22 @@ H1HR6K == 7 | H1HR6L == 7 | H1HR6M == 7 | H1HR6N == 7 | H1HR6O == 7 | H1HR6P == 
 
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {
 	gen age_mom_`alpha'_w1 = .
+	gen age_mom_`alpha'_est_w1 = .
 
-	replace age_mom_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 14  
+	replace age_mom_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 14  & H1HR7`alpha' < 990
 
+	replace age_mom_`alpha'_est_w1 = H1HR8`alpha' if H1HR3`alpha' == 14  & H1HR8`alpha' <= 990
 }
 
 egen age_mom_w1 = rowmean( age_mom_A_w1 age_mom_B_w1 age_mom_C_w1 age_mom_D_w1 age_mom_E_w1 age_mom_F_w1 age_mom_G_w1 age_mom_H_w1 age_mom_I_w1 age_mom_J_w1 age_mom_K_w1 age_mom_L_w1 age_mom_M_w1 age_mom_N_w1 ///
-age_mom_O_w1 age_mom_P_w1 age_mom_Q_w1 age_mom_R_w1 age_mom_S_w1 age_mom_T_w1 )
+age_mom_O_w1 age_mom_P_w1 age_mom_Q_w1 age_mom_R_w1 age_mom_S_w1 age_mom_T_w1 ///
+age_mom_A_est_w1 age_mom_B_est_w1 age_mom_C_est_w1 age_mom_D_est_w1 age_mom_E_est_w1 age_mom_F_est_w1 age_mom_G_est_w1 age_mom_H_est_w1 age_mom_I_est_w1 age_mom_J_est_w1 age_mom_K_est_w1 age_mom_L_est_w1 age_mom_M_est_w1 age_mom_N_est_w1 ///
+age_mom_O_est_w1 age_mom_P_est_w1 age_mom_Q_est_w1 age_mom_R_est_w1 age_mom_S_est_w1 age_mom_T_est_w1)
 
 
 
 replace age_mom_w1 = . if age_mom_w1 > 990
+replace age_mom_w1 = 0 if no_mom_w1 == 1
 
 
 ********* gen mom's age w1 *********
@@ -458,18 +463,22 @@ H1HR6K == 1 | H1HR6L == 1 | H1HR6M == 1 | H1HR6N == 1 | H1HR6O == 1 | H1HR6P == 
 	
 foreach alpha in A B C D E F G H I J K L M N O P Q R S T {	
 	gen age_dad_`alpha'_w1 = .
+	gen age_dad_`alpha'_est_w1 = .
 	
-	replace age_dad_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 11  
-	
+	replace age_dad_`alpha'_w1 = H1HR7`alpha' if H1HR3`alpha' == 11  & H1HR7`alpha' < 200
+	replace age_dad_`alpha'_est_w1 = H1HR7`alpha' if H1HR3`alpha' == 11  & H1HR8`alpha' <= 990
+
 }	
 	
 egen age_dad_w1 = rowmean( age_dad_A_w1 age_dad_B_w1 age_dad_C_w1 age_dad_D_w1 age_dad_E_w1 age_dad_F_w1 age_dad_G_w1 age_dad_H_w1 age_dad_I_w1 age_dad_J_w1 age_dad_K_w1 age_dad_L_w1 age_dad_M_w1 age_dad_N_w1 ///	
-age_dad_O_w1 age_dad_P_w1 age_dad_Q_w1 age_dad_R_w1 age_dad_S_w1 age_dad_T_w1 )	
+age_dad_O_w1 age_dad_P_w1 age_dad_Q_w1 age_dad_R_w1 age_dad_S_w1 age_dad_T_w1 ///
+age_dad_A_est_w1 age_dad_B_est_w1 age_dad_C_est_w1 age_dad_D_est_w1 age_dad_E_est_w1 age_dad_F_est_w1 age_dad_G_est_w1 age_dad_H_est_w1 age_dad_I_est_w1 age_dad_J_est_w1 age_dad_K_est_w1 age_dad_L_est_w1 age_dad_M_est_w1 age_dad_N_est_w1 ///
+age_dad_O_est_w1 age_dad_P_est_w1 age_dad_Q_est_w1 age_dad_R_est_w1 age_dad_S_est_w1 age_dad_T_est_w1)	
 	
 	
 	
 replace age_dad_w1 = . if age_dad_w1 > 500	
-
+replace age_dad_w1 = 0 if no_dad_w1 == 1
 
 
 ********* gen dad's age w1 *********
@@ -642,21 +651,32 @@ egen num_99_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4
 
 
 
+
+
+
+
+
+
 ********* gen mom's age w2 *********
 
 foreach alpha in A B C D E F G H I J K L M N O P Q {
 	gen age_mom_`alpha'_w2 = .
+	gen age_mom_`alpha'_est_w2 = .
 
-	replace age_mom_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 14  
+	replace age_mom_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 14  & H2HR8`alpha' < 990
+	replace age_mom_`alpha'_est_w2 = H2HR9`alpha' if H2HR4`alpha' == 14  & H2HR9`alpha' <= 990
 
 }
 
 egen age_mom_w2 = rowmean( age_mom_A_w2 age_mom_B_w2 age_mom_C_w2 age_mom_D_w2 age_mom_E_w2 age_mom_F_w2 age_mom_G_w2 age_mom_H_w2 age_mom_I_w2 age_mom_J_w2 age_mom_K_w2 age_mom_L_w2 age_mom_M_w2 age_mom_N_w2 ///
-age_mom_O_w2 age_mom_P_w2 age_mom_Q_w2  )
+age_mom_O_w2 age_mom_P_w2 age_mom_Q_w2  ///
+age_mom_A_est_w2 age_mom_B_est_w2 age_mom_C_est_w2 age_mom_D_est_w2 age_mom_E_est_w2 age_mom_F_est_w2 age_mom_G_est_w2 age_mom_H_est_w2 age_mom_I_est_w2 age_mom_J_est_w2 age_mom_K_est_w2 age_mom_L_est_w2 age_mom_M_est_w2 age_mom_N_est_w2 ///
+age_mom_O_est_w2 age_mom_P_est_w2 age_mom_Q_est_w2)
 
 
 
 replace age_mom_w2 = . if age_mom_w2 > 990
+replace age_mom_w2 = 0 if no_mom_w2 == 1
 
 
 ********* gen mom's age w2 *********
@@ -672,17 +692,22 @@ replace age_mom_w2 = . if age_mom_w2 > 990
 
 foreach alpha in A B C D E F G H I J K L M N O P Q {	
 	gen age_dad_`alpha'_w2 = .
-	
-	replace age_dad_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 11  
+	gen age_dad_`alpha'_est_w2 = .
+
+	replace age_dad_`alpha'_w2 = H2HR8`alpha' if H2HR4`alpha' == 11  & H2HR8`alpha' < 990
+	replace age_dad_`alpha'_est_w2 = H2HR9`alpha' if H2HR4`alpha' == 11  & H2HR9`alpha' <= 990
 	
 }	
 	
 egen age_dad_w2 = rowmean( age_dad_A_w2 age_dad_B_w2 age_dad_C_w2 age_dad_D_w2 age_dad_E_w2 age_dad_F_w2 age_dad_G_w2 age_dad_H_w2 age_dad_I_w2 age_dad_J_w2 age_dad_K_w2 age_dad_L_w2 age_dad_M_w2 age_dad_N_w2 ///	
-age_dad_O_w2 age_dad_P_w2 age_dad_Q_w2  )	
+age_dad_O_w2 age_dad_P_w2 age_dad_Q_w2  ///
+age_dad_A_est_w2 age_dad_B_est_w2 age_dad_C_est_w2 age_dad_D_est_w2 age_dad_E_est_w2 age_dad_F_est_w2 age_dad_G_est_w2 age_dad_H_est_w2 age_dad_I_est_w2 age_dad_J_est_w2 age_dad_K_est_w2 age_dad_L_est_w2 age_dad_M_est_w2 age_dad_N_est_w2 ///
+age_dad_O_est_w2 age_dad_P_est_w2 age_dad_Q_est_w2)	
 	
 	
 	
 replace age_dad_w2 = . if age_dad_w2 > 990	
+replace age_dad_w2 = 0 if no_dad_w2 == 1
 
 
 
@@ -879,6 +904,12 @@ rename H2NF13 relationship_with_bio_dad_w2
 
 
 * checked the imputation of no mom using tab...should be 370 changes
+
+* check 1
+gen mom_edu_impute_indicator_w1 = 1 if no_mom_w1 == 1 
+replace mom_edu_impute_indicator_w1 = 0 if H1RM1 != .
+
+
 rename H1RM1 res_mom_educ_w1
 replace res_mom_educ_w1 = 99 if no_mom_w1 == 1
 tab res_mom_educ_w1 
@@ -911,9 +942,15 @@ replace res_mom_has_worked_for_pay_w1 = 99 if no_mom_w1 == 1
 tab res_mom_has_worked_for_pay_w1
 
 
+
+gen mwh_impute_indicator_w1 = 1 if no_mom_w1 == 1 | res_mom_pay_w1 == 0  | res_mom_occupation_w1 == 16
+replace mwh_impute_indicator_w1 = 0 if H1RM7 != .
+* check 1
 rename H1RM7 res_mom_work_hours_w1   // continuous variable
 replace res_mom_work_hours_w1 = 0 if no_mom_w1 == 1
 sum res_mom_work_hours_w1 
+
+
 
 
 
@@ -966,16 +1003,40 @@ tab res_mom_smoked_w1
 
 
 * not yet cleaned!!!!!!
+* check 1
+gen mom_edu_impute_indicator_w2 = 1 if no_mom_w2 == 1 | (res_mom_educ_w1 != . & H2RM1 == .)
+replace mom_edu_impute_indicator_w2 = 0 if H2RM1 != .
+
+
 rename H2RM1 res_mom_educ_w2
 replace res_mom_educ_w2 = 99 if no_mom_w2 == 1
 replace res_mom_educ_w2 = res_mom_educ_w1 if res_mom_educ_w2 == . 
 
 rename H2RM2 res_mom_born_US_w2
 rename H2RM3 res_mom_born_country_w2
+
+
 rename H2RM4 res_mom_occupation_w2
+replace res_mom_occupation_w2 = 99 if no_mom_w2 == 1
+
+
+
 rename H2RM5 res_mom_pay_w2
+replace res_mom_pay_w2 = 99 if no_mom_w2 == 1
+tab res_mom_pay_w2
+
 rename H2RM6 res_mom_has_worked_for_pay_w2
+
+* check 1
+gen mwh_impute_indicator_w2 = 1 if no_mom_w2 == 1 | res_mom_pay_w2 == 0  | res_mom_occupation_w2 == 16
+replace mwh_impute_indicator_w2 = 0 if H2RM7 != . 
+
+
 rename H2RM7 res_mom_work_hours_w2
+replace res_mom_work_hours_w2 = 0 if no_mom_w2 == 1
+sum res_mom_work_hours_w2 
+
+
 rename H2RM8 res_mom_at_home_or_outside_w2
 
 gen mom_stay_home_out_w2 = .
@@ -997,6 +1058,9 @@ rename H2RM14 res_mom_smoked_w2
 
 * section 15 w1, w2
 * checked the imputation of no dad using tab...should be 1952 changes
+* check 1
+gen dad_edu_impute_indicator_w1 = 1 if no_dad_w1 == 1 
+replace dad_edu_impute_indicator_w1 = 0 if H1RF1 != .
 
 
 rename H1RF1 res_dad_educ_w1
@@ -1029,6 +1093,13 @@ tab res_dad_pay_w1
 rename H1RF6 res_dad_has_worked_for_pay_w1
 replace res_dad_has_worked_for_pay_w1 = 99 if no_dad_w1 == 1
 tab res_dad_has_worked_for_pay_w1
+
+
+* check 1 
+gen dwh_impute_indicator_w1 = 1 if no_dad_w1 == 1 | res_dad_pay_w1 == 0  | res_dad_occupation_w1 == 16
+replace dwh_impute_indicator_w1 = 0 if  H1RF7 != .
+
+
 
 
 rename H1RF7 res_dad_work_hours_w1  // continuous variable
@@ -1096,6 +1167,11 @@ tab res_dad_smoked_w1
 
 
 * not yet cleaned!!!!!
+* check 1
+gen dad_edu_impute_indicator_w2 = 1 if no_dad_w2 == 1 | (res_dad_educ_w1 != . & H2RF1 == .)
+replace dad_edu_impute_indicator_w2 = 0 if H2RF1 != .
+
+
 rename H2RF1 res_dad_educ_w2
 replace res_dad_educ_w2 = 99 if no_dad_w2 == 1
 replace res_dad_educ_w2 = res_dad_educ_w1 if res_dad_educ_w2 == . 
@@ -1103,10 +1179,31 @@ replace res_dad_educ_w2 = res_dad_educ_w1 if res_dad_educ_w2 == .
 
 rename H2RF2 res_dad_born_US_w2
 rename H2RF3 res_dad_born_country_w2
+
 rename H2RF4 res_dad_occupation_w2
+replace res_dad_occupation_w2 = 99 if no_dad_w2 == 1
+
+
+
 rename H2RF5 res_dad_pay_w2
+replace res_dad_pay_w2 = 99 if no_dad_w2 == 1
+
+
 rename H2RF6 res_dad_has_worked_for_pay_w2
+
+
+
+* check 1
+gen dwh_impute_indicator_w2 = 1 if no_dad_w2 == 1 | res_dad_pay_w2 == 0  | res_dad_occupation_w2 == 16
+replace dwh_impute_indicator_w2 = 0 if  H2RF7 != .
+
+
+
 rename H2RF7 res_dad_work_hours_w2
+replace res_dad_work_hours_w2 = 0 if no_dad_w2 == 1
+sum res_dad_work_hours_w2 
+
+
 rename H2RF8 res_dad_at_home_or_outside_w2
 
 gen dad_stay_home_out_w2 = .
@@ -2046,7 +2143,7 @@ rename PB7 religion_spouse
 rename PB8 school_spouse
 rename PB9 work_outside_spouse
 rename PB13 full_time_spouse
-replace full_time_spouse = 0 if work_outside_spouse == 0
+* replace full_time_spouse = 0 if work_outside_spouse == 0
 rename PB14 disabled_spouse
 rename PB15 retired_spouse
 rename PB16 happy_spouse
@@ -2159,25 +2256,6 @@ rename PC48 son_sex_age
 
 
 
-* checked 1 time
-gen mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
-replace mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0
-
-
-* checked 1 time
-gen mom_full_time_child_report_w1 = 1 if res_mom_work_hours_w1 >= 35 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-replace mom_full_time_child_report_w1 = 0 if res_mom_work_hours_w1 < 35 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-* checked 1 time
-gen mom_full_time_child_report_w1_v2 = 1 if res_mom_work_hours_w1 >= 40 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-replace mom_full_time_child_report_w1_v2 = 0 if res_mom_work_hours_w1 < 40 & res_mom_work_hours_w1 !=.  & mom_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-
-
-gen mom_full_time_child_report_w2 = 1 if res_mom_work_hours_w2 >= 35 & res_mom_work_hours_w2 !=.  & mom_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-replace mom_full_time_child_report_w2 = 0 if res_mom_work_hours_w2 < 35 & res_mom_work_hours_w2 !=.  & mom_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
 
 
 
@@ -2199,30 +2277,18 @@ replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & full_time_mom_o
 replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0
 
 
+
+
+
+
+
+
+
 * checked 1 time
-gen dad_full_time_child_report_w1 = 1 if res_dad_work_hours_w1 >= 35 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .    // I restricted data only for those who report full time/part time in parents survey
-replace dad_full_time_child_report_w1 = 0 if res_dad_work_hours_w1 < 35 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .   // I restricted data only for those who report full time/part time in parents survey
-
-* checked 1 time
-gen dad_full_time_child_report_w1_v2 = 1 if res_dad_work_hours_w1 >= 40 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .    // I restricted data only for those who report full time/part time in parents survey
-replace dad_full_time_child_report_w1_v2 = 0 if res_dad_work_hours_w1 < 40 & res_dad_work_hours_w1 !=.  & dad_full_time_mom_report_w1 != .  // I restricted data only for those who report full time/part time in parents survey
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+gen mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
+replace mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
+replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
+replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0
 
 
 
@@ -2263,263 +2329,7 @@ replace dad_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse =
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-* checked 1 time
-
-gen sports_w1 = roller_blading_cycling_w1 + play_active_sport_w1 + exercise_w1 
-gen time_use_w1 = tv_hours_per_week_w1 + video_hours_per_week_w1 + computer_games_hours_per_week_w1 + listen_radio_hours_per_week_w1
-gen time_use_no_radio_w1 =  tv_hours_per_week_w1 + video_hours_per_week_w1 + computer_games_hours_per_week_w1 
-
-
-
 *********************** for compare_child_mom_report_data *****************************
-
-
-
-
-
-
-
-
-
-*********************** for panel_regression *****************************
-
-
-
-
-
-
-
-gen religion_group_w1 = 1 if religion_w1 == 1 | religion_w1 == 2 | religion_w1 == 3 | religion_w1 == 4 | religion_w1 == 5 | religion_w1 == 6 |   religion_w1 == 7 | religion_w1 == 8 | religion_w1 == 9 | religion_w1 == 10 | ///
- religion_w1 == 11 | religion_w1 == 12 | religion_w1 == 13 | religion_w1 == 14 |  religion_w1 == 15 | religion_w1 == 16 | religion_w1 == 17 | religion_w1 == 18 | religion_w1 == 19 
-replace religion_group_w1 = 2 if religion_w1 == 22
-replace religion_group_w1 = 3 if religion_w1 == 20 | religion_w1 == 21 | religion_w1 == 23 | religion_w1 == 24 | religion_w1 == 25 | religion_w1 == 26 | religion_w1 == 27 | religion_w1 == 28
-replace religion_group_w1 = 0 if religion_w1 == 0
-
-
-gen religion_group_w2 = 1 if religion_w2 == 1 | religion_w2 == 2 | religion_w2 == 3 | religion_w2 == 4 | religion_w2 == 5 | religion_w2 == 6 |   religion_w2 == 7 | religion_w2 == 8 | religion_w2 == 9 | religion_w2 == 10 | ///
- religion_w2 == 11 | religion_w2 == 12 | religion_w2 == 13 | religion_w2 == 14 |  religion_w2 == 15 | religion_w2 == 16 | religion_w2 == 17 | religion_w2 == 18 | religion_w2 == 19 
-replace religion_group_w2 = 2 if religion_w2 == 22
-replace religion_group_w2 = 3 if religion_w2 == 20 | religion_w2 == 21 | religion_w2 == 23 | religion_w2 == 24 | religion_w2 == 25 | religion_w2 == 26 | religion_w2 == 27 | religion_w2 == 28
-replace religion_group_w2 = 0 if religion_w2 == 29
-
-
-gen res_mom_occupation_group_w1 = 1 if res_mom_occupation_w1 == 1 | res_mom_occupation_w1 == 2 | res_mom_occupation_w1 == 3 | res_mom_occupation_w1 == 4 | res_mom_occupation_w1 == 5 | res_mom_occupation_w1 == 6 
-replace res_mom_occupation_group_w1 = 2 if res_mom_occupation_w1 == 7 | res_mom_occupation_w1 == 8 | res_mom_occupation_w1 == 9 | res_mom_occupation_w1 == 10 | res_mom_occupation_w1 == 11 | ///
-res_mom_occupation_w1 == 12 | res_mom_occupation_w1 == 13 | res_mom_occupation_w1 == 14 
-replace res_mom_occupation_group_w1 = 3 if res_mom_occupation_w1 == 15
-replace res_mom_occupation_group_w1 = 0 if res_mom_occupation_w1 == 16
-
-
-
-gen res_mom_occupation_group_w2 = 1 if res_mom_occupation_w2 == 1 | res_mom_occupation_w2 == 2 | res_mom_occupation_w2 == 3 | res_mom_occupation_w2 == 4 | res_mom_occupation_w2 == 5 | res_mom_occupation_w2 == 6 
-replace res_mom_occupation_group_w2 = 2 if res_mom_occupation_w2 == 7 | res_mom_occupation_w2 == 8 | res_mom_occupation_w2 == 9 | res_mom_occupation_w2 == 10 | res_mom_occupation_w2 == 11 | ///
-res_mom_occupation_w2 == 12 | res_mom_occupation_w2 == 13 | res_mom_occupation_w2 == 14 
-replace res_mom_occupation_group_w2 = 3 if res_mom_occupation_w2 == 15
-replace res_mom_occupation_group_w2 = 0 if res_mom_occupation_w2 == 16
- 
-
- 
- 
-gen res_dad_occupation_group_w1 = 1 if res_dad_occupation_w1 == 1 | res_dad_occupation_w1 == 2 | res_dad_occupation_w1 == 3 | res_dad_occupation_w1 == 4 | res_dad_occupation_w1 == 5 | res_dad_occupation_w1 == 6 
-replace res_dad_occupation_group_w1 = 2 if res_dad_occupation_w1 == 7 | res_dad_occupation_w1 == 8 | res_dad_occupation_w1 == 9 | res_dad_occupation_w1 == 10 | res_dad_occupation_w1 == 11 | ///
-res_dad_occupation_w1 == 12 | res_dad_occupation_w1 == 13 | res_dad_occupation_w1 == 14 
-replace res_dad_occupation_group_w1 = 3 if res_dad_occupation_w1 == 15
-replace res_dad_occupation_group_w1 = 0 if res_dad_occupation_w1 == 16
-
-
-
-gen res_dad_occupation_group_w2 = 1 if res_dad_occupation_w2 == 1 | res_dad_occupation_w2 == 2 | res_dad_occupation_w2 == 3 | res_dad_occupation_w2 == 4 | res_dad_occupation_w2 == 5 | res_dad_occupation_w2 == 6 
-replace res_dad_occupation_group_w2 = 2 if res_dad_occupation_w2 == 7 | res_dad_occupation_w2 == 8 | res_dad_occupation_w2 == 9 | res_dad_occupation_w2 == 10 | res_dad_occupation_w2 == 11 | ///
-res_dad_occupation_w2 == 12 | res_dad_occupation_w2 == 13 | res_dad_occupation_w2 == 14 
-replace res_dad_occupation_group_w2 = 3 if res_dad_occupation_w2 == 15
-replace res_dad_occupation_group_w2 = 0 if res_dad_occupation_w2 == 16
-
- 
- 
- 
-gen res_mom_educ_group_w1 = 1 if res_mom_educ_w1 == 1 | res_mom_educ_w1 == 2 | res_mom_educ_w1 == 3 | res_mom_educ_w1 == 4 | res_mom_educ_w1 == 5
-replace res_mom_educ_group_w1 = 2 if res_mom_educ_w1 == 6 | res_mom_educ_w1 == 7 | res_mom_educ_w1 == 8 
-replace res_mom_educ_group_w1 = 3 if res_mom_educ_w1 == 9
-replace res_mom_educ_group_w1 = 4 if res_mom_educ_w1 == 11
-replace res_mom_educ_group_w1 = 5 if res_mom_educ_w1 == 10 | res_mom_educ_w1 == 12
-
-
-
-gen res_mom_educ_group_w2 = 1 if res_mom_educ_w2 == 1 | res_mom_educ_w2 == 2 | res_mom_educ_w2 == 3 | res_mom_educ_w2 == 4 | res_mom_educ_w2 == 5
-replace res_mom_educ_group_w2 = 2 if res_mom_educ_w2 == 6 | res_mom_educ_w2 == 7 | res_mom_educ_w2 == 8 
-replace res_mom_educ_group_w2 = 3 if res_mom_educ_w2 == 9
-replace res_mom_educ_group_w2 = 4 if res_mom_educ_w2 == 11
-replace res_mom_educ_group_w2 = 5 if res_mom_educ_w2 == 10 | res_mom_educ_w2 == 12
-
-
-gen res_dad_educ_group_w1 = 1 if res_dad_educ_w1 == 1 | res_dad_educ_w1 == 2 | res_dad_educ_w1 == 3 | res_dad_educ_w1 == 4 | res_dad_educ_w1 == 5
-replace res_dad_educ_group_w1 = 2 if res_dad_educ_w1 == 6 | res_dad_educ_w1 == 7 | res_dad_educ_w1 == 8 
-replace res_dad_educ_group_w1 = 3 if res_dad_educ_w1 == 9
-replace res_dad_educ_group_w1 = 4 if res_dad_educ_w1 == 11
-replace res_dad_educ_group_w1 = 5 if res_dad_educ_w1 == 10 | res_mom_educ_w1 == 12
-
-
-
-gen res_dad_educ_group_w2 = 1 if res_dad_educ_w2 == 1 | res_dad_educ_w2 == 2 | res_dad_educ_w2 == 3 | res_dad_educ_w2 == 4 | res_dad_educ_w2 == 5
-replace res_dad_educ_group_w2 = 2 if res_dad_educ_w2 == 6 | res_dad_educ_w2 == 7 | res_dad_educ_w2 == 8 
-replace res_dad_educ_group_w2 = 3 if res_dad_educ_w2 == 9
-replace res_dad_educ_group_w2 = 4 if res_dad_educ_w2 == 11
-replace res_dad_educ_group_w2 = 5 if res_dad_educ_w2 == 10 | res_dad_educ_w2 == 12
-
-
-
-
-
-
-
-
-
-
-gen res_mom_h_leave_school_group_w1 = 1 if res_mom_at_home_leave_school_w1 == 1 
-replace res_mom_h_leave_school_group_w1 = 2 if res_mom_at_home_leave_school_w1 == 2 | res_mom_at_home_leave_school_w1 == 3 | res_mom_at_home_leave_school_w1 == 4
-replace res_mom_h_leave_school_group_w1 = 3 if res_mom_at_home_leave_school_w1 == 5
-replace res_mom_h_leave_school_group_w1 = 0 if res_mom_at_home_leave_school_w1 == 6
-
-gen res_mom_h_leave_school_group_w2 = 1 if res_mom_at_home_leave_school_w2 == 1 
-replace res_mom_h_leave_school_group_w2 = 2 if res_mom_at_home_leave_school_w2 == 2 | res_mom_at_home_leave_school_w2 == 3 | res_mom_at_home_leave_school_w2 == 4
-replace res_mom_h_leave_school_group_w2 = 3 if res_mom_at_home_leave_school_w2 == 5
-replace res_mom_h_leave_school_group_w2 = 0 if res_mom_at_home_leave_school_w2 == 6
-
-
-
-
-
-
-
-
-gen res_mom_h_return_school_group_w1 = 1 if res_mom_at_home_return_school_w1 == 1 
-replace res_mom_h_return_school_group_w1 = 2 if res_mom_at_home_return_school_w1 == 2 | res_mom_at_home_return_school_w1 == 3 | res_mom_at_home_return_school_w1 == 4
-replace res_mom_h_return_school_group_w1 = 3 if res_mom_at_home_return_school_w1 == 5
-replace res_mom_h_return_school_group_w1 = 0 if res_mom_at_home_return_school_w1 == 6
-
-gen res_mom_h_return_school_group_w2 = 1 if res_mom_at_home_return_school_w2 == 1 
-replace res_mom_h_return_school_group_w2 = 2 if res_mom_at_home_return_school_w2 == 2 | res_mom_at_home_return_school_w2 == 3 | res_mom_at_home_return_school_w2 == 4
-replace res_mom_h_return_school_group_w2 = 3 if res_mom_at_home_return_school_w2 == 5
-replace res_mom_h_return_school_group_w2 = 0 if res_mom_at_home_return_school_w2 == 6
-
-
-
-
-
-
-
-
-
-
-gen res_mom_h_go_to_bed_group_w1  = 1 if res_mom_at_home_go_to_bed_w1  == 1 
-replace res_mom_h_go_to_bed_group_w1 = 2 if res_mom_at_home_go_to_bed_w1 == 2 | res_mom_at_home_go_to_bed_w1  == 3 | res_mom_at_home_go_to_bed_w1  == 4
-replace res_mom_h_go_to_bed_group_w1 = 3 if res_mom_at_home_go_to_bed_w1 == 5
-replace res_mom_h_go_to_bed_group_w1 = 0 if res_mom_at_home_go_to_bed_w1 == 6
-
-gen res_mom_h_go_to_bed_group_w2  = 1 if res_mom_at_home_go_to_bed_w2  == 1 
-replace res_mom_h_go_to_bed_group_w2 = 2 if res_mom_at_home_go_to_bed_w2  == 2 | res_mom_at_home_go_to_bed_w2  == 3 | res_mom_at_home_go_to_bed_w2  == 4
-replace res_mom_h_go_to_bed_group_w2 = 3 if res_mom_at_home_go_to_bed_w2  == 5
-replace res_mom_h_go_to_bed_group_w2 = 0 if res_mom_at_home_go_to_bed_w2  == 6
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-gen res_dad_h_leave_school_group_w1 = 1 if res_dad_at_home_leave_school_w1 == 1 
-replace res_dad_h_leave_school_group_w1 = 2 if res_dad_at_home_leave_school_w1 == 2 | res_dad_at_home_leave_school_w1 == 3 | res_dad_at_home_leave_school_w1 == 4
-replace res_dad_h_leave_school_group_w1 = 3 if res_dad_at_home_leave_school_w1 == 5
-replace res_dad_h_leave_school_group_w1 = 0 if res_dad_at_home_leave_school_w1 == 6
-
-gen res_dad_h_leave_school_group_w2 = 1 if res_dad_at_home_leave_school_w2 == 1 
-replace res_dad_h_leave_school_group_w2 = 2 if res_dad_at_home_leave_school_w2 == 2 | res_dad_at_home_leave_school_w2 == 3 | res_dad_at_home_leave_school_w2 == 4
-replace res_dad_h_leave_school_group_w2 = 3 if res_dad_at_home_leave_school_w2 == 5
-replace res_dad_h_leave_school_group_w2 = 0 if res_dad_at_home_leave_school_w2 == 6
-
-
-
-
-
-
-
-
-gen res_dad_h_return_school_group_w1 = 1 if res_dad_at_home_return_school_w1 == 1 
-replace res_dad_h_return_school_group_w1 = 2 if res_dad_at_home_return_school_w1 == 2 | res_dad_at_home_return_school_w1 == 3 | res_dad_at_home_return_school_w1 == 4
-replace res_dad_h_return_school_group_w1 = 3 if res_dad_at_home_return_school_w1 == 5
-replace res_dad_h_return_school_group_w1 = 0 if res_dad_at_home_return_school_w1 == 6
-
-gen res_dad_h_return_school_group_w2 = 1 if res_dad_at_home_return_school_w2 == 1 
-replace res_dad_h_return_school_group_w2 = 2 if res_dad_at_home_return_school_w2 == 2 | res_dad_at_home_return_school_w2 == 3 | res_dad_at_home_return_school_w2 == 4
-replace res_dad_h_return_school_group_w2 = 3 if res_dad_at_home_return_school_w2 == 5
-replace res_dad_h_return_school_group_w2 = 0 if res_dad_at_home_return_school_w2 == 6
-
-
-
-
-
-
-
-
-
-
-gen res_dad_h_go_to_bed_group_w1  = 1 if res_dad_at_home_go_to_bed_w1  == 1 
-replace res_dad_h_go_to_bed_group_w1 = 2 if res_dad_at_home_go_to_bed_w1 == 2 | res_dad_at_home_go_to_bed_w1  == 3 | res_dad_at_home_go_to_bed_w1  == 4
-replace res_dad_h_go_to_bed_group_w1 = 3 if res_dad_at_home_go_to_bed_w1 == 5
-replace res_dad_h_go_to_bed_group_w1 = 0 if res_dad_at_home_go_to_bed_w1 == 6
-
-gen res_dad_h_go_to_bed_group_w2  = 1 if res_dad_at_home_go_to_bed_w2  == 1 
-replace res_dad_h_go_to_bed_group_w2 = 2 if res_dad_at_home_go_to_bed_w2  == 2 | res_dad_at_home_go_to_bed_w2  == 3 | res_dad_at_home_go_to_bed_w2  == 4
-replace res_dad_h_go_to_bed_group_w2 = 3 if res_dad_at_home_go_to_bed_w2  == 5
-replace res_dad_h_go_to_bed_group_w2 = 0 if res_dad_at_home_go_to_bed_w2  == 6
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2537,25 +2347,18 @@ replace res_mom_work_hours_v2_w2 = 0 if res_mom_pay_w2 == 0  | res_mom_occupatio
 
 
 * this version is a dummy version
-gen mom_full_time_child_report_v3_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.     
-replace mom_full_time_child_report_v3_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.  
-replace mom_full_time_child_report_v3_w1 = 0 if res_mom_work_hours_v2_w1 == 0 
+gen mom_full_time_child_report_v2_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.     
+replace mom_full_time_child_report_v2_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.  
+replace mom_full_time_child_report_v2_w1 = 0 if res_mom_work_hours_v2_w1 == 0 
 
 
-gen mom_full_time_child_report_v3_w2 = 2 if res_mom_work_hours_v2_w2 >= 35 & res_mom_work_hours_v2_w2 !=.     
-replace mom_full_time_child_report_v3_w2 = 1 if res_mom_work_hours_v2_w2 < 35 & res_mom_work_hours_v2_w2 > 0 & res_mom_work_hours_v2_w2 !=.  
-replace mom_full_time_child_report_v3_w2 = 0 if res_mom_work_hours_v2_w2 == 0 & res_mom_work_hours_v2_w2 !=.  
+* this version is a dummy version + restricted to mom's report 
+gen mom_full_time_child_report_v3_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != .  
+replace mom_full_time_child_report_v3_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != . 
+replace mom_full_time_child_report_v3_w1 = 0 if res_mom_work_hours_v2_w1 == 0  & mom_full_time_mom_report_v2_w1  != . 
 
 
 
-
-* this version is a dummy version
-gen mom_full_time_child_report_v4_w1 = 1 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.     
-replace mom_full_time_child_report_v4_w1 = 0 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 !=.  
-
-
-gen mom_full_time_child_report_v4_w2 = 1 if res_mom_work_hours_v2_w2 >= 35 & res_mom_work_hours_v2_w2 !=.     
-replace mom_full_time_child_report_v4_w2 = 0 if res_mom_work_hours_v2_w2 < 35 & res_mom_work_hours_v2_w2 !=.  
 
 
 
@@ -2576,25 +2379,18 @@ replace res_dad_work_hours_v2_w2 = 0 if res_dad_pay_w2 == 0  | res_dad_occupatio
 
 * this version is a dummy version
 
-gen dad_full_time_child_report_v3_w1 = 2 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.     
-replace dad_full_time_child_report_v3_w1 = 1 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.  
-replace dad_full_time_child_report_v3_w1 = 0 if res_dad_work_hours_v2_w1 == 0 & res_dad_work_hours_v2_w1 !=.  
+gen dad_full_time_child_report_v2_w1 = 2 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.     
+replace dad_full_time_child_report_v2_w1 = 1 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.  
+replace dad_full_time_child_report_v2_w1 = 0 if res_dad_work_hours_v2_w1 == 0 
 
 
-gen dad_full_time_child_report_v3_w2 = 2 if res_dad_work_hours_v2_w2 >= 35 & res_dad_work_hours_v2_w2 !=.     
-replace dad_full_time_child_report_v3_w2 = 1 if res_dad_work_hours_v2_w2 < 35 & res_dad_work_hours_v2_w2 > 0 & res_dad_work_hours_v2_w2 !=.  
-replace dad_full_time_child_report_v3_w2 = 0 if res_dad_work_hours_v2_w2 == 0 & res_dad_work_hours_v2_w2 !=.  
+* this version is a dummy version + restricted to dad's report 
+gen dad_full_time_child_report_v3_w1 = 2 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . 
+replace dad_full_time_child_report_v3_w1 = 1 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . 
+replace dad_full_time_child_report_v3_w1 = 0 if res_dad_work_hours_v2_w1 == 0  & dad_full_time_mom_report_v2_w1  != . 
 
 
 
-
-* this version is a dummy version
-gen dad_full_time_child_report_v4_w1 = 1 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.     
-replace dad_full_time_child_report_v4_w1 = 0 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 !=.  
-
-
-gen dad_full_time_child_report_v4_w2 = 1 if res_dad_work_hours_v2_w2 >= 35 & res_dad_work_hours_v2_w2 !=.     
-replace dad_full_time_child_report_v4_w2 = 0 if res_dad_work_hours_v2_w2 < 35 & res_dad_work_hours_v2_w2 !=.  
 
 *********************** for panel_regression *****************************
 
