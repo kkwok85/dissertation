@@ -223,6 +223,12 @@ rename H1GH38 school_PE_min_w1
 rename H1GH48 health_cause_sch_absence_w1
 rename H1GH49 health_cause_soc_absence_w1
 rename H1GH50 sleep_time_w1
+
+gen sleep_b4_midnight_w1 = 1 if regexm(sleep_time_w1, "P$") == 1
+replace sleep_b4_midnight_w1 = 0 if regexm(sleep_time_w1, "A$") == 1
+
+
+
 rename H1GH51 sleep_hours_w1
 rename H1GH52 enough_sleep_w1
 rename H1GH53 night_outside_no_perm_w1
@@ -249,11 +255,40 @@ rename H2GH1 general_health_w2
 rename H2GH28 no_medical_care_but_should_w2
 rename H2GH30 weight_image_w2
 rename H2GH31 lose_weight_w2
+
+
+gen diet_for_weight_w2 = 1 if H2GH32A == 1
+replace diet_for_weight_w2 = 1 if H2GH33A == 1
+replace diet_for_weight_w2 = 0 if H2GH32A == 0
+replace diet_for_weight_w2 = 0 if H2GH33A == 0
+replace diet_for_weight_w2 = 0 if lose_weight_w2 == 4
+
+
+gen exercise_for_weight_w2 = 1 if H2GH32B == 1
+replace exercise_for_weight_w2 = 1 if H2GH33B == 1
+replace exercise_for_weight_w2 = 0 if H2GH32B == 0
+replace exercise_for_weight_w2 = 0 if H2GH33B == 0
+replace exercise_for_weight_w2 = 0 if lose_weight_w2 == 4
+
+
 rename H2GH34 school_PE_days_w2
 rename H2GH35 school_PE_min_w2
 rename H2GH40 health_cause_sch_absence_w2     // dont use this...lots of skipped
 rename H2GH41 health_cause_soc_absence_w2
-rename H2GH43 sleep_time_w2   // check this again!!!
+
+rename H2GH42 sleep_time_school_w2   // check this again!!!
+
+gen sleep_b4_midnight_school_w2 = 1 if regexm(sleep_time_school_w2, "P$") == 1
+replace sleep_b4_midnight_school_w2 = 0 if regexm(sleep_time_school_w2, "A$") == 1
+
+rename H2GH43 sleep_time_summer_w2   // check this again!!!
+
+
+gen sleep_b4_midnight_summer_w2 = 1 if regexm(sleep_time_summer_w2, "P$") == 1
+replace sleep_b4_midnight_summer_w2 = 0 if regexm(sleep_time_summer_w2, "A$") == 1
+
+
+
 rename H2GH44 sleep_hours_w2
 rename H2GH45 enough_sleep_w2
 rename H2GH46 night_outside_no_perm_w2	   
@@ -1753,7 +1788,7 @@ rename H1DS14 fight_with_group_w1
 
 rename H2DS1 paint_graffiti_w2
 rename H2DS2 damage_property_w2
-rename H2DS3 lie_to_parents_w2
+rename H2DS3 lie_to_parents_whereabout_w2
 rename H2DS4 steal_things_more_fifty_w2
 rename H2DS5 run_away_from_home_w2
 rename H2DS6 steal_car_w2

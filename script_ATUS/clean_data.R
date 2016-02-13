@@ -661,6 +661,7 @@ combine.data$wfh_mom.v2 <- factor(combine.data$wfh_mom.v2, levels=c(0,1,2), labe
 # subset data for regression + sum statistics
 combine.data.regress <-combine.data[which(combine.data$sex == "Female" & combine.data$presence.own.child == 1),]
 
+combine.data.regress.child.in.hh <-combine.data[which(combine.data$presence.own.child == 1),]
 
 
 

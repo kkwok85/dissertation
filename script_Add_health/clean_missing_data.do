@@ -83,14 +83,26 @@ replace H1GH23G = . if (H1GH23G == 6 | H1GH23G == 8)
 replace H1GH23J = . if (H1GH23J == 6 | H1GH23J == 8)
 
 
+replace H1GH29 = . if (H1GH29 == 6 | H1GH29 == 8)
+
 replace H1GH30A = . if (H1GH30A >= 6 & H1GH30A <= 8)
 replace H1GH30B = . if (H1GH30B >= 6 & H1GH30B <= 8)
+
+* sleep
+replace H1GH50 = "" if (H1GH50 == "999996" | H1GH50 ==  "999998" | H1GH50 ==  "999999") 
+replace H1GH51 = . if (H1GH51 >= 96 & H1GH51 <= 99)
+replace H1GH52 = . if (H1GH52 >= 6 & H1GH52 <= 8)
+
 
 
 
 replace H1GH59A = . if (H1GH59A == 96 | H1GH59A == 98 |H1GH59A == 99)
 replace H1GH59B = . if (H1GH59B == 96 | H1GH59B == 98 |H1GH59B == 99)
 replace H1GH60 = . if (H1GH60 == 996 | H1GH60 == 998 |H1GH60 == 999)
+
+
+
+
 
 
 
@@ -206,14 +218,21 @@ replace H2WP7 = . if (H2WP7 >= 6 & H2WP7 <= 8)
 
 
 * BMI 
+replace H2GH31 = . if (H2GH31 == 6 | H2GH31 == 8)
+
+replace H2GH42 = "" if (H2GH42 == "999996" | H2GH42 ==  "999998") 
+replace H2GH43 = "" if (H2GH43 == "999996" | H2GH43 ==  "999998") 
+replace H2GH44 = . if (H2GH44 >= 96 & H2GH44 <= 98)
+
+replace H2GH45 = . if (H2GH45 >= 6 & H2GH45 <= 8)
+
+
 
 replace H2GH52F = . if (H2GH52F == 96 | H2GH52F == 98)
 replace H2GH52I = . if (H2GH52I == 96 | H2GH52I == 98)
 
 
 replace H2GH53 = . if (H2GH53 == 996 | H2GH53 == 998)
-
-
 
 
 
