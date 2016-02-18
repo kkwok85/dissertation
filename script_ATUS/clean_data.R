@@ -223,14 +223,16 @@ atusresp$tespuhrs[atusresp$tespuhrs == -4 ] <- NA
 atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" = "spouse.presence.hh",
                                          "tespempnot" = "spouse.employ.status", "tespuhrs" ="spouse.work.hours",
                                          "trdtocc1" = "occupations", "trchildnum" = "num.children",
-                                         "trnumhou" = "num.family.member", "telfs"="employment.status" ,
+                                         "trnumhou" = "num.family.member", "telfs"="employment.status" ,"teernhry" = "hourly.status", "teernper" = "earnings.report.way", "teio1cow" = "class.worker",
+                                         "teernrt" = "hourly.rate.if.report.other", 
                                          "trspftpt" = "full.part.time.spouse", "trhhchild" = "presence.child", "trohhchild" = "presence.own.child"))
 
 
 
 
 atusresp.subset <- atusresp[c("tucaseid", "tulineno",  "work.hours", "spouse.presence.hh", "spouse.employ.status", "spouse.work.hours", 
-                              "occupations", "num.children", "num.family.member", "employment.status", "full.part.time.spouse", "presence.child", "presence.own.child"  )]
+                              "occupations", "num.children", "num.family.member", "employment.status", "hourly.status", "earnings.report.way", "class.worker","hourly.rate.if.report.other", 
+                              "hourly.rate.if.report.other", "full.part.time.spouse", "presence.child", "presence.own.child"  )]
 
 
 
@@ -438,6 +440,7 @@ table(combine.data$edited.spouse.work.hours.indicator)
 
 
 
+combine.data$hourly.status <- factor(combine.data$hourly.status, levels = c(1,2,-1), labels = c("hourly", "not hourly", "invalid"))
 
 
 

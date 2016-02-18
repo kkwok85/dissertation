@@ -38,7 +38,6 @@ stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result
 # include men and include ppl with children over 18 and with children not at home and woman/men who does not have children
 
 
-combine.data.regress <-combine.data[which(combine.data$sex == "Female" & combine.data$presence.own.child == 1),]
 
 combine.data.child <- combine.data[which(combine.data$presence.own.child == 1),]
 
