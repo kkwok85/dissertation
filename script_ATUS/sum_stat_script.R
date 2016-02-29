@@ -327,7 +327,7 @@ spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.
 family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator) + edited.weekly.earnings + factor(edited.weekly.earnings.indicator) 
                     + factor(weekly.earning.top.coded)  " )
 childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare + childcare.other + travel.use.childcare + phone.call.care.provider")
-children.sick.var <- c("provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
+children.sick.var <- c("+provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
 
 
 

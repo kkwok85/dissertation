@@ -31,6 +31,11 @@ result.wfh.vs.not.wfh.order <- result.wfh.vs.not.wfh[order(-result.wfh.vs.not.wf
 
 
 
+svyttest(formula, design, ...)
+
+
+
+
 
 
 
