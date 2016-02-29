@@ -49,3 +49,21 @@ summary(lm(paste0("spouse.work.hours"," ~ wfh.v2*num.children", demographic.var,
 
 summary(lm(paste0("edited.work.hours"," ~ wfh.v2*num.family.member", demographic.var,employ.var,family.var, time.var, location.var, family.inc.var,  childcare.service.var ), data = combine.data, weights = tufnwgtp ))
 
+
+
+# very interesting, put total time child change the coefficient a lot!!!
+
+full.model <- lm(paste0("total.main.job.time"," ~ wfh.v2+hourly.status ",demographic.var,family.var, location.var, spouse.var, family.inc.var,  childcare.service.var ), data = combine.combine.reg.atussum, weights = tufnwgtp )
+
+
+full.model <- lm(paste0("total.main.job.time"," ~ wfh.v2 + hourly.status + total.time.child",demographic.var,family.var, location.var, spouse.var, family.inc.var,  childcare.service.var ), data = combine.combine.reg.atussum, weights = tufnwgtp )
+
+# no effect
+
+full.model <- lm(paste0("total.main.job.time"," ~ wfh.v2*hourly.status + total.time.child",demographic.var,family.var, location.var, spouse.var, family.inc.var,  childcare.service.var ), data = combine.combine.reg.atussum, weights = tufnwgtp )
+
+
+
+*  hourly status affect a lot, especially work hours
+
+full.model <- lm(paste0("edited.work.hours"," ~ wfh.v2*hourly.status" ), data = combine.data.regress.v2, weights = tufnwgtp )

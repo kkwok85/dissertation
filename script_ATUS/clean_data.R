@@ -4,6 +4,15 @@
 #install.packages("sandwich")
 #install.packages("pastecs")
 #install.packages("xtable")
+#install.packages("survey")
+#install.packages("dummies")
+
+#install.packages("dplyr")
+#install.pacakges("srvyr")
+
+
+library(dplyr)
+library(srvyr)
 
 library(xtable)
 library(pastecs)
@@ -12,6 +21,8 @@ library(plyr)
 library(lmtest)
 library(sandwich)
 library(Hmisc)
+library(survey)
+library(dummies)
 
 
 rm(list = ls())
@@ -143,7 +154,66 @@ total.main.job <- total.main.job[c("tucaseid", "total.main.job.time", "total.mai
 
 
 
+# for creating secondary job wfh
 
+
+total.other.job <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50102  ), FUN=sum)
+
+
+
+# both are ok
+total.other.job.true.only <- subset(total.other.job, total.other.job$code == TRUE )
+total.other.job.true.only <- total.other.job.true.only[c("ID", "code", "x")] 
+
+
+# 2nd way is ok too
+#total.other.job$other.job.total.time <- 1440 - total.other.job$x
+#total.other.job.false.only <- subset(total.other.job, total.other.job$code == FALSE )
+
+merge.total.other.job.true.only.IDlist <- merge(ID.list, total.other.job.true.only , by="ID", all = T)
+merge.total.other.job.true.only.IDlist[is.na(merge.total.other.job.true.only.IDlist )] <- 0
+
+
+# change name of the file
+total.other.job <- merge.total.other.job.true.only.IDlist
+
+# for checking only
+#table(total.other.job.false.only$other.job.total.time-atussum$t050101)
+table(total.other.job$x-atussum$t050102)
+
+
+
+
+
+total.other.job.wfh <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50102, location = atusact$tewhere == 1  ), FUN=sum)
+
+total.other.job.wfh.true.only <- subset(total.other.job.wfh, total.other.job.wfh$code == TRUE & total.other.job.wfh$location == TRUE)
+
+
+colnames(total.other.job.wfh.true.only)[which(names(total.other.job.wfh.true.only) == "x")] <- "total.other.job.wfh.time" 
+
+colnames(total.other.job)[which(names(total.other.job) == "x")] <- "total.other.job.time" 
+
+
+
+
+total.other.job <- join(total.other.job, total.other.job.wfh.true.only, by="ID")
+
+
+total.other.job[is.na(total.other.job )] <- 0
+total.other.job$total.percent.other.job.wfh <- total.other.job$total.other.job.wfh.time/total.other.job$total.other.job.time
+
+
+total.other.job[is.na(total.other.job )] <- 0
+
+
+
+
+colnames(total.other.job)[which(names(total.other.job) == "ID")] <- "tucaseid" 
+
+
+# final product
+total.other.job <- total.other.job[c("tucaseid", "total.other.job.time", "total.other.job.wfh.time", "total.percent.other.job.wfh")]
 
 
 
@@ -155,20 +225,35 @@ total.main.job <- total.main.job[c("tucaseid", "total.main.job.time", "total.mai
 # generate y variables
 
 
-atussum$total.time.child = atussum$t030101+ atussum$t030102+ atussum$t030103+ atussum$t030104+ atussum$t030105+ atussum$t030186 + atussum$t030108+ atussum$t030109 + atussum$t030110 + atussum$t030111 + atussum$t030112 + atussum$t030199 + atussum$t030201 + atussum$t030202 + atussum$t030203 + atussum$t030204 + atussum$t030299 + atussum$t030301 + atussum$t030302 + atussum$t030303 + atussum$t030399
+atussum$total.time.child = atussum$t030101+ atussum$t030102+ atussum$t030103+ atussum$t030104+ atussum$t030105+ 
+  atussum$t030186 + atussum$t030108+ atussum$t030109 + atussum$t030110 + atussum$t030111 + atussum$t030112 + 
+  atussum$t030199 + atussum$t030201 + atussum$t030202 + atussum$t030203 + atussum$t030204 + atussum$t030299 + 
+  atussum$t030301 + atussum$t030302 + atussum$t030303 + atussum$t030399
 
 
+atussum$total.travel.work.time <- atussum$t180501 + atussum$t180502 + atussum$t180589
+
+atussum$total.grooming.time <- atussum$t010201 + atussum$t010299 
+
+
+
+
+combine.data$total.travel.work.time <- combine.data$travel.work + combine.data$travel.work.related + combine.data$travel.work.other
 
 atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201" = "food.drink.preparation", "t070103" = "purchasing.food",
                                        "t030101" = "physical.care.hh.children" , "t030102" = "reading.to.hh.children" , 
-                                       "t030103" = "play.with.hh.children", "t030105" = "play.sports.with.hh.children",
+                                       "t030103" = "play.with.hh.children", "t030105" = "play.sports.with.hh.children", "t030112" = "pick.drop.hh.child",
                                        "t030186" = "talk.listening.to.hh.children", 
                                        "t030108" = "organization.plan.for.hh.children", "t030109" = "supervision.hh.children",
                                        "t030201" = "homework.hh.children", "t030202" = "meetings.school.conference.hh.children",
                                        "t030203" = "home.school.hh.children",
-                                       "t030301" = "provide.medical.care.hh.children", "t030302" = "obtain.medical.care.hh.children",
-                                       "t080101" = "use.paid.childcare", "t080102" = "wait.to.meet.childcare", 
+                                       "t030301" = "provide.medical.care.hh.children", "t030302" = "obtain.medical.care.hh.children", 
+                                       "t030303" = "wait.child.health", "t030399" = "child.health.other", 
+                                       "t180381" = "travel.caring.help.hh.child", "t180501" = "travel.work", "t180502" = "travel.work.related", "t180589" ="travel.work.other",
+                                       "t080101" = "use.paid.childcare", "t080102" = "wait.to.meet.childcare", "t080199" = "childcare.other", "t180801" = "travel.use.childcare", "t160107" = "phone.call.care.provider", 
+                                       "t050101" = "work.main.job", "t050102" = "work.other.job", 
                                        "tuyear" = "interview.year", "trholiday" = "holiday.indicator" , 
+                                       
                                        "tudiaryday" = "diary.day", "teage" = "age" , "tesex" = "sex",  "ptdtrace" = "race"
 ))
 
@@ -176,14 +261,16 @@ atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201"
 
 
 
-atussum.subset <- atussum[c("tucaseid", "total.time.child", "grocery.shopping", "food.drink.preparation", "purchasing.food",
+atussum.subset <- atussum[c("tucaseid","total.travel.work.time", "total.grooming.time", "total.time.child", "grocery.shopping", "food.drink.preparation", "purchasing.food",
                             "physical.care.hh.children", "reading.to.hh.children", 
                             "play.with.hh.children", "play.sports.with.hh.children", "talk.listening.to.hh.children", 
                             "organization.plan.for.hh.children", "supervision.hh.children",
                             "homework.hh.children", "meetings.school.conference.hh.children",
                             "home.school.hh.children",
                             "provide.medical.care.hh.children", "obtain.medical.care.hh.children",
-                            "use.paid.childcare", "wait.to.meet.childcare", 
+                            "wait.child.health", "child.health.other",
+                            "use.paid.childcare", "wait.to.meet.childcare", "childcare.other", "travel.use.childcare", "phone.call.care.provider",
+                            "work.main.job", "work.other.job",
                             "interview.year", "holiday.indicator", 
                             "diary.day", "age", "sex", "race", "tufnwgtp")]
 
@@ -216,15 +303,43 @@ atusresp$tespempnot[atusresp$tespempnot == -1 ] <- 3
 atusresp$tespuhrs[atusresp$tespuhrs == -1 ] <- 0
 atusresp$tespuhrs[atusresp$tespuhrs == -4 ] <- NA
 
+atusresp$trernwa[atusresp$trernwa == -1 ] <- NA
+atusresp$trwernal[atusresp$trwernal == -1 ] <- NA
 
 
+atusresp$tudis[atusresp$tudis == -1 ] <- 0
+atusresp$tudis[atusresp$tudis == -2 ] <- NA
+atusresp$tudis[atusresp$tudis == -3 ] <- NA
+
+
+
+atusresp$tryhhchild[atusresp$tryhhchild == -1 ] <- NA
+
+
+
+atusresp$tubus[atusresp$tubus == -1 ] <- NA
+atusresp$tubus[atusresp$tubus == -2 ] <- NA
+atusresp$tubus[atusresp$tubus == -3 ] <- NA
+
+
+atusresp$tubus1[atusresp$tubus1 == -2 ] <- NA
+atusresp$tubus1[atusresp$tubus1 == -1 ] <- 2
+
+
+
+atusresp$teabsrsn[which(atusresp$telfs == 1)] <- 1
+atusresp$teabsrsn[which(atusresp$telfs >= 3)] <- 16
 
 
 atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" = "spouse.presence.hh",
                                          "tespempnot" = "spouse.employ.status", "tespuhrs" ="spouse.work.hours",
                                          "trdtocc1" = "occupations", "trchildnum" = "num.children",
+                                         "trernwa" = "weekly.earnings", "ttwk" = "weekly.earning.top.coded", "trwernal" = "allocation.flag.week.earn",
                                          "trnumhou" = "num.family.member", "telfs"="employment.status" ,"teernhry" = "hourly.status", "teernper" = "earnings.report.way", "teio1cow" = "class.worker",
                                          "teernrt" = "hourly.rate.if.report.other", 
+                                         "teabsrsn" = "reason.absent.last.week.atus",
+                                         "tudis" = "disability", "tryhhchild" = "age.youngest.child", 
+                                         "tubus" = "household.own.bus", "tubus1" = "unpaid.work.family.bus",
                                          "trspftpt" = "full.part.time.spouse", "trhhchild" = "presence.child", "trohhchild" = "presence.own.child"))
 
 
@@ -232,7 +347,8 @@ atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" =
 
 atusresp.subset <- atusresp[c("tucaseid", "tulineno",  "work.hours", "spouse.presence.hh", "spouse.employ.status", "spouse.work.hours", 
                               "occupations", "num.children", "num.family.member", "employment.status", "hourly.status", "earnings.report.way", "class.worker","hourly.rate.if.report.other", 
-                              "hourly.rate.if.report.other", "full.part.time.spouse", "presence.child", "presence.own.child"  )]
+                              "weekly.earnings", "weekly.earning.top.coded", "allocation.flag.week.earn", "reason.absent.last.week.atus", "disability", "age.youngest.child", 
+                              "hourly.rate.if.report.other", "full.part.time.spouse", "presence.child", "presence.own.child" , "household.own.bus", "unpaid.work.family.bus"  )]
 
 
 
@@ -256,13 +372,60 @@ atuscps$pemaritl[atuscps$pemaritl == -1 ] <- 7
 
 
 
+atuscps$pehractt[atuscps$pehractt == -1 ] <- 0
+
+
+
+atuscps$pehractt[atuscps$pehractt == -1 ] <- 0
+
+atuscps$penlfact[atuscps$penlfact == -1 ] <- 7
+
+
+atuscps$peschenr[atuscps$peschenr == -1 ] <- 3
+
+atuscps$peschft[atuscps$peschft == -1 ] <- 3
+
+atuscps$peschlvl[atuscps$peschlvl == -1 ] <- 3
+
+atuscps$prabsrea[atuscps$prabsrea == -1 ] <- 0
+
+atuscps$prabsrea[which(atuscps$pemlr>=3)] <- 41
+atuscps$prabsrea[which(atuscps$pemlr==1)] <- 42
+atuscps$prabsrea[which(atuscps$prpertyp==1)] <- 43
+atuscps$prabsrea[which(atuscps$prpertyp==3)] <- 44
+
+
+atuscps$peabsrsn[which(atuscps$pemlr>=3)] <- 41
+atuscps$peabsrsn[which(atuscps$pemlr==1)] <- 42
+atuscps$peabsrsn[which(atuscps$prpertyp==1)] <- 43
+atuscps$peabsrsn[which(atuscps$prpertyp==3)] <- 44
+
+
+
+
+atuscps$prptrea[which(atuscps$pemlr==2)] <- 40
+atuscps$prptrea[which(atuscps$pemlr>=3)] <- 41
+atuscps$prptrea[which(atuscps$prpertyp==1)] <- 43
+atuscps$prptrea[which(atuscps$prpertyp==3)] <- 44
+atuscps$prptrea[atuscps$prptrea == -1 ] <- 45 #dont mess up with the order!!!!
+
+
+
+
 
 atuscps <- rename(atuscps, replace = c("gereg" = "region", "gestfips" = "fips", "hefaminc" = "edited.family.income", "hufaminc" = "family.income",
-                                       "pemaritl" = "marital.status"))
+                                       "pemaritl" = "marital.status", "pehractt" = "work.hours.last.week", "penlfact" = "current.situation", "prabsrea" = "reason.not.work", 
+                                       "peschenr" = "enrolled.school", "peschft" = "full.part.stud", "peschlvl" = "hs.college",
+                                       "peabsrsn" = "reason.absent.last.week", "prptrea" = "reason.pt.work" ))
 
 
 
-atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.family.income", "family.income",  "marital.status" )]
+atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.family.income", "family.income",  "marital.status", "work.hours.last.week", "current.situation", "reason.not.work", "reason.absent.last.week" ,
+                            "enrolled.school", "full.part.stud","hs.college", "reason.pt.work" )]
+
+
+
+
 
 
 
@@ -278,6 +441,8 @@ atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.fa
 
 
 combine.data <- join(total.main.job,atussum.subset,  by="tucaseid", type = "full")
+combine.data <- join(combine.data, total.other.job,  by="tucaseid", type = "full")
+
 combine.data <- join(combine.data,atuscps.subset,  by="tucaseid", type = "full")
 combine.data <- join(combine.data,atusresp.subset, by=c("tucaseid","tulineno"), type = "full")
 
@@ -336,6 +501,22 @@ combine.data$wfh.v2[which(combine.data$wfh == "")] <- NA
 table(combine.data$wfh.v2)
 
 
+
+
+combine.data$total.job.time <- combine.data$total.main.job.time + combine.data$total.other.job.time
+combine.data$total.job.wfh.time <- combine.data$total.main.job.wfh.time + combine.data$total.other.job.wfh.time
+combine.data$total.percent.total.job.wfh <-  combine.data$total.job.wfh.time/combine.data$total.job.time
+
+combine.data$wfh.v3 <- c(0)
+combine.data$wfh.v3[which(combine.data$total.percent.total.job.wfh > 0.50 & (combine.data$employment.status ==  1 | combine.data$employment.status ==  2 )
+                          & combine.data$holiday.indicator == 0 & (combine.data$diary.day >1 & combine.data$diary.day < 7  ) &  combine.data$total.job.time > 60  ) ] <- 1
+combine.data$wfh.v3[which(combine.data$employment.status ==  3 | combine.data$employment.status ==  4 | combine.data$employment.status ==  5 ) ] <- 2
+combine.data$wfh.v3[which(combine.data$wfh == "")] <- NA
+table(combine.data$wfh.v3)
+
+
+
+
 # definition of wfh_mom
 combine.data$wfh_mom <- c("")
 combine.data$wfh_mom[which(combine.data$presence.own.child == 1 & combine.data$sex == 2 & combine.data$wfh == 1  )] <- 1
@@ -354,6 +535,9 @@ combine.data$wfh_mom.v2[which(combine.data$presence.own.child == 1 & combine.dat
 combine.data$wfh_mom.v2[which(combine.data$presence.own.child == 1 & combine.data$sex == 2 & combine.data$wfh.v2 == 2 )] <- 2
 combine.data$wfh_mom.v2[which(combine.data$wfh_mom.v2 == "")] <- NA
 table(combine.data$wfh_mom.v2)
+
+
+
 
 
 
@@ -390,6 +574,48 @@ combine.data$edited.family.income2[is.na(combine.data$family.income)] <- mode
 combine.data$edited.family.income2.indicator <- 0
 combine.data$edited.family.income2.indicator[is.na(combine.data$family.income)] <- 1 
 table(combine.data$edited.family.income2.indicator)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# check mean and match it with ATUS example. The first answer is 24.62, the second one is 114
+#weighted.mean(combine.data.complete$total.time.child[which(a$interview.year==2006)], combine.data.complete$tufnwgtp[which(combine.data.complete$interview.year==2006)], na.rm=TRUE)
+
+
+#b <- combine.data.complete[which(combine.data.complete$total.time.child > 0), ]
+#weighted.mean(b$total.time.child[which(b$interview.year==2006)], b$tufnwgtp[which(b$interview.year==2006)], na.rm=TRUE)
+
+
+data.for.earnings <- combine.data[which(is.na(combine.data$num.children)==FALSE), ]
+
+
+# at this moment use weighted mean
+
+mean.weekly.earnings <- weighted.mean(data.for.earnings$weekly.earnings, data.for.earnings$tufnwgtp, na.rm=TRUE)
+
+
+
+
+
+
+combine.data$edited.weekly.earnings <- c("")
+combine.data$edited.weekly.earnings <- combine.data$weekly.earnings
+combine.data$edited.weekly.earnings[is.na(combine.data$weekly.earnings)] <- mean.weekly.earnings
+
+combine.data$edited.weekly.earnings.indicator <- 0
+combine.data$edited.weekly.earnings.indicator[is.na(combine.data$weekly.earnings)] <- 1 
+table(combine.data$edited.weekly.earnings.indicator)
+
 
 
 
@@ -662,9 +888,51 @@ combine.data$wfh_mom.v2 <- factor(combine.data$wfh_mom.v2, levels=c(0,1,2), labe
 
 
 # subset data for regression + sum statistics
+
+combine.data.complete <-combine.data[which(is.na(combine.data$num.children)==FALSE), ]
+
+
 combine.data.regress <-combine.data[which(combine.data$sex == "Female" & combine.data$presence.own.child == 1),]
 
-combine.data.regress.child.in.hh <-combine.data[which(combine.data$presence.own.child == 1),]
+
+
+combine.data.regress.v2 <- combine.data[which(combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
+                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),]
+
+
+combine.data.regress.v2  <- join(combine.data.regress.v2,atussum, by=c("tucaseid"), type = "left")
+
+
+
+
+
+combine.data.regress.v2.male <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Male"),]
+combine.data.regress.v2.female <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Female"),]
+
+
+
+
+
+table(combine.data.regress.v2$holiday.indicator)
+table(combine.data.regress.v2$diary.day)
+table(combine.data.regress.v2$wfh)
+table(combine.data.regress.v2$wfh.v2)
+
+table(combine.data.regress.v2$presence.own.child)
+
+
+combine.data.regress.v2$holiday.indicator <- factor(combine.data.regress.v2$holiday.indicator)
+combine.data.regress.v2$diary.day <- factor(combine.data.regress.v2$diary.day)
+combine.data.regress.v2$wfh <- factor(combine.data.regress.v2$wfh)
+combine.data.regress.v2$wfh.v2 <- factor(combine.data.regress.v2$wfh.v2)
+combine.data.regress.v2$wfh.v3 <- factor(combine.data.regress.v2$wfh.v3)
+
+combine.data.regress.v2$edited.occupations <- factor(combine.data.regress.v2$edited.occupations)
+
+
+table(duplicated(combine.data.regress.v2$tucaseid) )
+
+
 
 
 
@@ -684,6 +952,15 @@ yvariables <-c( "total.time.child",
                 "reading.to.hh.children","talk.listening.to.hh.children", "organization.plan.for.hh.children","homework.hh.children", "home.school.hh.children", "supervision.hh.children")
 
 
+
+
+yvariables.v2 <-c( "total.time.child", "physical.care.hh.children",
+                "grocery.shopping", "food.drink.preparation", "purchasing.food",
+                "play.with.hh.children",
+                "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
+                "total.travel.work.time",  "total.grooming.time" )
+
+
 ## control
 #original
 #demographic.var <- c("+ age + sex+ factor(race) + marital.status")
@@ -695,197 +972,4 @@ yvariables <-c( "total.time.child",
 #family.inc.var <- c("+ factor(family.income)")
 #childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare ")
 
-
-
-
-
-# race is omitted
-demographic.var <- c("+ age + race + marital.status")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations + factor(edited.occupations.indicator)")
-family.var <- c("+ num.children + num.family.member ")
-time.var <- c("+ interview.year + holiday.indicator + diary.day ")
-location.var <- c("+ region + fips ")
-spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator)")
-childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare ")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-result1 <- lm(total.time.child ~ factor(wfh_mom), data = combine.data, weights = tufnwgtp )
-result2 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var), data = combine.data, weights = tufnwgtp )
-result3 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var,employ.var ), data = combine.data, weights = tufnwgtp )
-result4 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var,employ.var, family.var ), data = combine.data, weights = tufnwgtp )
-result5 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var,employ.var, family.var, time.var ), data = combine.data, weights = tufnwgtp )
-result6 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var,employ.var, family.var, time.var, location.var ), data = combine.data, weights = tufnwgtp )
-result7 <- lm(paste0("total.time.child ~ factor(wfh_mom)",demographic.var,employ.var, family.var, time.var, location.var, family.inc.var ), data = combine.data, weights = tufnwgtp )
-
-
-
-
-demographic.var <- c("+ age + race + marital.status")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations + factor(edited.occupations.indicator)")
-family.var <- c("+ num.children + num.family.member ")
-time.var <- c("+ interview.year + holiday.indicator + diary.day ")
-location.var <- c("+ region + fips ")
-spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator)")
-childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare ")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-coeftest(result, vcov = vcovHC(result, "HC1"))
-nrow(model.frame(result)) 
-
-coeftest(result2, vcov = vcovHC(result2, "HC1"))
-nrow(model.frame(result2))
-
-
-# for cleaning data http://www.princeton.edu/~otorres/sessions/s2r.pdf
-
-
-# http://www.personality-project.org/r/html/describe.by.html
-#http://www.ats.ucla.edu/stat/r/faq/basic_desc.htm
-
-
-
-
-combine.data$sex <- factor(combine.data$sex, levels = c(1,2), labels = c("male", "female")) 
-combine.data$wfh_mom <- factor(combine.data$wfh_mom, levels = c(0,1), labels = c("not work from home", "work from home"))
-combine.data$spouse.presence.hh <- factor(combine.data$spouse.presence.hh, levels = c(1,2,3), labels = c("a", "b", "c"))
-
-#lm(total.time.child ~ spouse.presence.hh, data = combine.data, weights = tufnwgtp )
-
-#lm(total.time.child ~ factor(spouse.presence.hh), data = combine.data, weights = tufnwgtp )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### trial
-
-
-# use this to do sum stat!!!
-sum.stat.data <- combine.data[!is.na(combine.data$wfh_mom),] 
-
-
-sum.stat <- summary(sum.stat.data$spouse.presence.hh)
-sum.stat <- stat.desc(combine.data$spouse.presence.hh, basic=F)
-
-
-
-
-
-
-stargazer(sum.stat, type = "text", title="Descriptive statistics", digits=1, out="trial.txt")
-
-
-
-
-
-
-ddply(dfx, .(id),summarize, mean = count(sex))
-
-stargazer(t1, t2, type="text")
-
-
-
-t <- ddply(sum.stat.data, .(marital.status),summarize, sum = table(marital.status))
-ddply(sum.stat.data, .(marital.status), sum = count(marital.status))
-
-t1 <- count(sum.stat.data,"marital.status")
-t1$percentage <- t1$freq/sum(t1$freq)
-
-t2 <- count(sum.stat.data,"wfh")
-
-
-
-
-stargazer(t1,t2, type="text")
-
-install.packages("tables")
-library(tables)
-library(Hmisc)
-
-# The table
-tabular(  (Work=wfh) ~  (Percent("row"))    ,data=sum.stat.data       )
-
-
-t1 <- count(sum.stat.data,"marital.status")
-t1$percentage <- t1$freq/sum(t1$freq)
-xtable(t1, caption = "a")
 
