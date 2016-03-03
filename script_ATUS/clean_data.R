@@ -9,7 +9,11 @@
 
 #install.packages("dplyr")
 #install.pacakges("srvyr")
+#install.packages("dummies")
+#install.packages("ggplot2")
+# install.packages("reshape")
 
+library(dummies)
 
 library(dplyr)
 library(srvyr)
@@ -23,6 +27,8 @@ library(sandwich)
 library(Hmisc)
 library(survey)
 library(dummies)
+library(ggplot2)
+library(reshape)
 
 
 rm(list = ls())
@@ -223,6 +229,73 @@ total.other.job <- total.other.job[c("tucaseid", "total.other.job.time", "total.
 
 
 # generate y variables
+# this is just to test this function
+#atussum$total.time.child <- as.data.frame(rowSums(subset(atussum, select=grep("^t0301|^t0302|t0303", names(atussum), value = TRUE))))
+
+#temp.data <- ""
+#for ( i in 1:3){ 
+#  if (i <10) {
+#    num <-paste0("0",i)
+#  }
+#  else {
+#    num <-i 
+#  } 
+  
+#  search.head <- paste0("^t",num)
+  
+#  temp.data <- subset(atussum, select=c(grep(search.head, names(atussum), value = TRUE) )) 
+#  temp.data <-cbind(atussum$tucaseid, temp.data)
+
+#  result[[i]] <- as.data.frame(rowSums(temp.data[,-1] ,na.rm=TRUE)) 
+
+#} 
+ 
+
+
+# for test 
+#test.care <- as.data.frame(rowSums(subset(atussum, select=grep("^t03", names(atussum), value = TRUE))))
+
+#table(result[[3]]- test.care)
+
+
+
+
+
+
+
+
+
+
+
+temp.data2 <- ""
+temp.data <- ""
+for ( i in c(1:16, 18)){ 
+  if (i <10) {
+    num <-paste0("0",i)
+  }
+  else {
+    num <-i 
+  } 
+
+  search.head <- paste0("^t",num)
+
+  temp.data <- subset(atussum, select=c(grep(search.head, names(atussum), value = TRUE) )) 
+  temp.data <-cbind(atussum$tucaseid, temp.data)
+
+  temp.data2 <- as.data.frame(rowSums(temp.data[,-1] ,na.rm=TRUE)) 
+  temp.data2 <-cbind(atussum$tucaseid, temp.data2)
+  colnames(temp.data2) <- c("tucaseid", paste0("total",num) )
+  atussum  <- join(atussum, temp.data2, by=c("tucaseid"), type = "full")
+  
+  
+} 
+
+
+# for testing. Table should have everything zero
+test.care <- as.data.frame(rowSums(subset(atussum, select=grep("^t03", names(atussum), value = TRUE))))
+table(atussum$total03 - test.care)
+
+
 
 
 atussum$total.time.child = atussum$t030101+ atussum$t030102+ atussum$t030103+ atussum$t030104+ atussum$t030105+ 

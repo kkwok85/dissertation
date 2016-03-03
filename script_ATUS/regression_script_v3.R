@@ -23,7 +23,7 @@ children.sick.var <- c("+ provide.medical.care.hh.children + obtain.medical.care
 summary(lm( total.time.child ~ wfh , data = combine.data.regress.v2, weights = tufnwgtp ))
 
 
-full.model <- lm(paste0(yvariables.v2[1]," ~ wfh.v3", demographic.var,employ.var, current.sit,family.bus, family.var, time.var, 
+full.model <- lm(paste0(names.y[1] ," ~ wfh.v3", demographic.var,employ.var, current.sit,family.bus, family.var, time.var, 
                         location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var  ), 
                  data = combine.data.regress.v2, weights = tufnwgtp )
 
@@ -38,6 +38,14 @@ full.model <- lm(paste0(yvariables.v2[1]," ~ wfh.v3", demographic.var,employ.var
 #weekly.earnings is crazy , but edited.weekly earning bias the result
 
 
+
+
+# hand change for all output:
+# column number change from (1) (2) ...to (8) (9)...
+# cross out yvariables.v2[i]
+# set box
+# cross out caption in the second table
+# cross out notes in the first table
 
 
 
@@ -57,18 +65,16 @@ for (i in 1:length(yvariables.v2) ) {
 
 stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],
           title = "OLS results for working from home", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
-          column.labels=c(yvariables.v2[1],yvariables.v2[2], yvariables.v2[3], yvariables.v2[4], yvariables.v2[5], yvariables.v2[6], yvariables.v2[7]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh.txt",
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 22158.", notes.align = "l", omit.table.layout = "s" )
+          column.labels=c(names.y[1] ,names.y[2], names.y[3], names.y[4], names.y[5], names.y[6], names.y[7]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh.tex",
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 22158.", notes.align = "l", omit.table.layout = "s" )
 
 
 stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], result[[13]], result[[14]],
           title = "OLS results for working from home", se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]),
-          column.labels=c(yvariables.v2[8], yvariables.v2[9], yvariables.v2[10], yvariables.v2[11], yvariables.v2[12], yvariables.v2[13], yvariables.v2[14]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh2.txt",
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 22158.", notes.align = "l", omit.table.layout = "s" )
-
-
+          column.labels=c(names.y[8], names.y[9], names.y[10], names.y[11], names.y[12], names.y[13], names.y[14]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh2.tex",
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 22158.", notes.align = "l", omit.table.layout = "s" )
 
 
 
@@ -106,16 +112,16 @@ for (i in 1:length(yvariables.v2) ) {
 
 stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],
           title = "OLS results for working from home", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
-          column.labels=c(yvariables.v2[1],yvariables.v2[2], yvariables.v2[3], yvariables.v2[4], yvariables.v2[5], yvariables.v2[6], yvariables.v2[7]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh.txt",
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 10546.", notes.align = "l", omit.table.layout = "s" )
+          column.labels=c(names.y[1] ,names.y[2], names.y[3], names.y[4], names.y[5], names.y[6], names.y[7]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh_male.tex",
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 10546.", notes.align = "l", omit.table.layout = "s" )
 
 
 stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], result[[13]], result[[14]],
           title = "OLS results for working from home", se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]),
-          column.labels=c(yvariables.v2[8], yvariables.v2[9], yvariables.v2[10], yvariables.v2[11], yvariables.v2[12], yvariables.v2[13], yvariables.v2[14]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh2.txt",
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 10546.", notes.align = "l", omit.table.layout = "s" )
+          column.labels=c(names.y[8], names.y[9], names.y[10], names.y[11], names.y[12], names.y[13], names.y[14]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh2_male.tex",
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 10546.", notes.align = "l", omit.table.layout = "s" )
 
 
 
@@ -137,16 +143,16 @@ for (i in 1:length(yvariables.v2) ) {
 
 stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],  
           title = "OLS results for working from home", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
-          column.labels=c(yvariables.v2[1],yvariables.v2[2], yvariables.v2[3], yvariables.v2[4], yvariables.v2[5], yvariables.v2[6], yvariables.v2[7]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh.txt",  
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 11612.", notes.align = "l", omit.table.layout = "s" )   
+          column.labels=c(names.y[1] ,names.y[2], names.y[3], names.y[4], names.y[5], names.y[6], names.y[7]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh_female.tex",  
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 11612.", notes.align = "l", omit.table.layout = "s" )   
 
 
 stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], result[[13]], result[[14]],
           title = "OLS results for working from home", se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]), 
-          column.labels=c(yvariables.v2[8], yvariables.v2[9], yvariables.v2[10], yvariables.v2[11], yvariables.v2[12], yvariables.v2[13], yvariables.v2[14]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), out = "D:/ATUS_result_R/result_wfh2.txt",
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office of other locations. Number of observations is 11612.", notes.align = "l", omit.table.layout = "s" )
+          column.labels=c(names.y[8], names.y[9], names.y[10], names.y[11], names.y[12], names.y[13], names.y[14]), 
+          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh2_female.tex", 
+          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 11612.", notes.align = "l", omit.table.layout = "s" )
  
 
 
