@@ -311,7 +311,7 @@ atussum$total.grooming.time <- atussum$t010201 + atussum$t010299
 
 
 
-combine.data$total.travel.work.time <- combine.data$travel.work + combine.data$travel.work.related + combine.data$travel.work.other
+#combine.data$total.travel.work.time <- combine.data$travel.work + combine.data$travel.work.related + combine.data$travel.work.other
 
 atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201" = "food.drink.preparation", "t070103" = "purchasing.food",
                                        "t030101" = "physical.care.hh.children" , "t030102" = "reading.to.hh.children" , 
@@ -336,12 +336,13 @@ atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201"
 
 atussum.subset <- atussum[c("tucaseid","total.travel.work.time", "total.grooming.time", "total.time.child", "grocery.shopping", "food.drink.preparation", "purchasing.food",
                             "physical.care.hh.children", "reading.to.hh.children", 
-                            "play.with.hh.children", "play.sports.with.hh.children", "talk.listening.to.hh.children", 
+                            "play.with.hh.children", "play.sports.with.hh.children", "pick.drop.hh.child", "talk.listening.to.hh.children", 
                             "organization.plan.for.hh.children", "supervision.hh.children",
                             "homework.hh.children", "meetings.school.conference.hh.children",
                             "home.school.hh.children",
                             "provide.medical.care.hh.children", "obtain.medical.care.hh.children",
                             "wait.child.health", "child.health.other",
+                            "travel.caring.help.hh.child", "travel.work", "travel.work.related", "travel.work.other", 
                             "use.paid.childcare", "wait.to.meet.childcare", "childcare.other", "travel.use.childcare", "phone.call.care.provider",
                             "work.main.job", "work.other.job",
                             "interview.year", "holiday.indicator", 
@@ -630,6 +631,11 @@ table(combine.data$edit.spouse.presence)
 ## fill in NA for family.income
 
 # for finding the mode of family.income
+
+# another way to see weighted mode:
+#sum((combine.data.regress.v2$family.income[which(combine.data.regress.v2$family.income==14)])*(combine.data.regress.v2$tufnwgtp[which(combine.data.regress.v2$family.income==14)]))
+
+
 atuscps.income.mode <- atuscps.subset[which(atuscps.subset$tulineno==1),]
 sort(table(atuscps.income.mode$family.income )) 
 mode <- names(which(table(atuscps.income.mode$family.income ) == max(table(atuscps.income.mode$family.income ))))
@@ -668,7 +674,7 @@ table(combine.data$edited.family.income2.indicator)
 #b <- combine.data.complete[which(combine.data.complete$total.time.child > 0), ]
 #weighted.mean(b$total.time.child[which(b$interview.year==2006)], b$tufnwgtp[which(b$interview.year==2006)], na.rm=TRUE)
 
-
+# num.children is taken simply to drop those NA. It is ok to use num.children
 data.for.earnings <- combine.data[which(is.na(combine.data$num.children)==FALSE), ]
 
 
@@ -706,11 +712,11 @@ table(combine.data$edited.occupations.indicator)
 
 
 
-
+mean.work.hours <- weighted.mean(data.for.earnings$work.hours, data.for.earnings$tufnwgtp, na.rm=TRUE)
 ## fill in NA work.hours
 combine.data$edited.work.hours <- c("")
 combine.data$edited.work.hours <- combine.data$work.hours
-combine.data$edited.work.hours[is.na(combine.data$work.hours)] <- 0
+combine.data$edited.work.hours[is.na(combine.data$work.hours)] <- mean.work.hours
 
 
 combine.data$edited.work.hours.indicator <- 0
@@ -892,24 +898,24 @@ combine.data$spouse.employ.status <- factor(combine.data$spouse.employ.status, l
 combine.data$full.part.time.spouse <- factor(combine.data$full.part.time.spouse, levels=c(1,2,3,4), labels = c("Full time", "Part time", "Hours vary", "No partner/not employed"))
 
 
-combine.data$family.income <- ordered(combine.data$family.income, levels=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), 
-                                      labels = c("Less than $5,000", 
-                                                 "$5,000 to $7,499",
-                                                 "$7,500 to $9,999",
-                                                 "$10,000 to $12,499",
-                                                 "$12,500 to $14,999",
-                                                 "$15,000 to $19,999",
-                                                 "$20,000 to $24,999",
-                                                 "$25,000 to $29,999",
-                                                 "$30,000 to $34,999",
-                                                 "$35,000 to $39,999",
-                                                 "$40,000 to $49,999",
-                                                 "$50,000 to $59,999",
-                                                 "$60,000 to $74,999",
-                                                 "$75,000 to $99,999",
-                                                 "$100,000 to $149,999",
-                                                 "$150,000 and over"
-                                      ))
+#combine.data$family.income <- ordered(combine.data$family.income, levels=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), 
+#                                      labels = c("Less than $5,000", 
+#                                                 "$5,000 to $7,499",
+#                                                 "$7,500 to $9,999",
+#                                                 "$10,000 to $12,499",
+#                                                 "$12,500 to $14,999",
+#                                                 "$15,000 to $19,999",
+#                                                 "$20,000 to $24,999",
+#                                                 "$25,000 to $29,999",
+#                                                 "$30,000 to $34,999",
+#                                                 "$35,000 to $39,999",
+#                                                 "$40,000 to $49,999",
+#                                                 "$50,000 to $59,999",
+#                                                 "$60,000 to $74,999",
+#                                                 "$75,000 to $99,999",
+#                                                "$100,000 to $149,999",
+#                                                 "$150,000 and over"
+#                                      ))
 
 
 
@@ -960,7 +966,7 @@ combine.data$wfh_mom.v2 <- factor(combine.data$wfh_mom.v2, levels=c(0,1,2), labe
 
 
 
-# subset data for regression + sum statistics
+# subset data for regression + sum statistics, remember to combine with atussum!!!!
 
 combine.data.complete <-combine.data[which(is.na(combine.data$num.children)==FALSE), ]
 
@@ -968,19 +974,25 @@ combine.data.complete <-combine.data[which(is.na(combine.data$num.children)==FAL
 combine.data.regress <-combine.data[which(combine.data$sex == "Female" & combine.data$presence.own.child == 1),]
 
 
+combine.data.regress.female.employ <- combine.data[which(combine.data$sex == "Female"& combine.data$presence.own.child == 1 &
+                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
 
-combine.data.regress.v2 <- combine.data[which(combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
-                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),]
-
-
-combine.data.regress.v2  <- join(combine.data.regress.v2,atussum, by=c("tucaseid"), type = "left")
 
 
 
 
 
-combine.data.regress.v2.male <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Male"),]
-combine.data.regress.v2.female <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Female"),]
+combine.data.regress.v2 <- combine.data[which(combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
+                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
+
+
+
+
+
+
+
+combine.data.regress.v2.male <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Male"),] 
+combine.data.regress.v2.female <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Female"),] 
 
 
 

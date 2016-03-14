@@ -63,20 +63,21 @@ print(xtable(empty.frame, caption = "Summary Statistics for the dependent variab
 
 
 
+# regression
+# factor(edited.occupations.indicator) skilled cuz it is cut out  ,+ factor(reason.not.work)  + factor(reason.absent.last.week) + factor(reason.absent.last.week.atus) +edited.work.hours + factor(edited.work.hours.indicator)
+# factor(allocation.flag.week.earn)  cut 
 
 demographic.var <- c("+ age + race + sex + marital.status ")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week")
-current.sit <- c("+ factor(current.situation) + factor(reason.not.work) + factor(reason.absent.last.week) + factor(enrolled.school) + factor(reason.absent.last.week.atus)") 
+employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week +factor(employment.status)")
+current.sit <- c("+ factor(current.situation)   + factor(enrolled.school) ") 
 family.bus <- c("+ factor(household.own.bus) + factor(unpaid.work.family.bus)")
 family.var <- c("+ num.children + num.family.member + age.youngest.child" )
 time.var <- c("+ interview.year  + diary.day" )
 location.var <- c("+ region + fips")
 spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator) + edited.weekly.earnings + factor(edited.weekly.earnings.indicator) 
-                    + factor(weekly.earning.top.coded)  " )
+family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator) + edited.weekly.earnings + factor(edited.weekly.earnings.indicator) + factor(weekly.earning.top.coded) " )
 childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare + childcare.other + travel.use.childcare + phone.call.care.provider")
-children.sick.var <- c("+provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
-
+children.sick.var <- c("+ provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
 
 
 
@@ -164,7 +165,7 @@ print(xtable(empty.frame, caption = "Summary Statistics for the independent vari
 #interview.year.dum$interview.year  <- factor(interview.year.dum$interview.year)
 #interview.year.dum <- dummy.data.frame(interview.year.dum)
 
-
+# this is to expand factor variables (for the ordered variables)
 combine.data.regress.v2.dum <- combine.data.regress.v2 
 combine.data.regress.v2.dum$interview.year  <- unclass(combine.data.regress.v2.dum$interview.year)
 combine.data.regress.v2.dum$interview.year  <- factor(combine.data.regress.v2.dum$interview.year)
@@ -183,6 +184,11 @@ combine.data.regress.v2.dum <- dummy.data.frame(combine.data.regress.v2.dum)
 gender <- combine.data.regress.v2[c("tucaseid", "sex")]
 combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum, gender , by="tucaseid")
 
+
+# this is to expand factor variables (for the non factor variables)
+employment.status.dum  <- combine.data.regress.v2[c("tucaseid", "employment.status")]
+employment.status.dum$employment.status <- factor(employment.status.dum$employment.status)
+employment.status.dum <- dummy.data.frame(employment.status.dum) 
 
 
 
@@ -224,6 +230,7 @@ reason.absent.last.week.atus.dum <- dummy.data.frame(reason.absent.last.week.atu
 
 
 
+combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,employment.status.dum  , by="tucaseid")
 
 combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,current.situation.dum  , by="tucaseid")
 combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,reason.not.work.dum ,by="tucaseid")
@@ -242,7 +249,8 @@ combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,reason.absent.la
 xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale", "sexFemale",
                 "marital.statusMarried-spouse present", "marital.statusMarried-spouse absent",
                 "marital.statusWidowed","marital.statusDivorced" , "marital.statusSeparated", 
-                "marital.statusNever married", "work.hours", 
+                "marital.statusNever married", 
+                "employment.status1","employment.status2", "work.hours", 
                 "occupationsBusiness and financial operations",                    
                 "occupationsComputer and mathematical science",                    
                 "occupationsArchitecture and engineering",                         
@@ -264,67 +272,14 @@ xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale"
                 "occupationsInstallation, maintenance, and repair",                
                 "occupationsProduction",                                           
                 "occupationsTransportation and material moving", 
-                "total.other.job.time", "total.main.job.time", "work.hours.last.week",
+                "total.main.job.time","total.other.job.time", "work.hours.last.week",
                 "current.situation1", "current.situation2", "current.situation3", "current.situation4", "current.situation5",
                 "current.situation6", "current.situation7", 
-                "reason.not.work1",
-                "reason.not.work2",
-                "reason.not.work3",
-                "reason.not.work4",
-                "reason.not.work5",
-                
-                "reason.not.work7",
-                "reason.not.work8",
-                
-                "reason.not.work10",
-                "reason.not.work11",
-                "reason.not.work12",
-                "reason.not.work13",
-                "reason.not.work14",
-                "reason.not.work15",
-                "reason.not.work16",
-                "reason.not.work17",
-                "reason.not.work18",
-                "reason.not.work19",
-                "reason.not.work20",
-                "reason.not.work21",
-                "reason.not.work22",
-                "reason.not.work23",
-                "reason.not.work24",
-                "reason.not.work25",
+
                 
                 
                 
-                
-                "reason.not.work30",
-                "reason.not.work31",
-                "reason.not.work32",
-                "reason.not.work33",
-                "reason.not.work34",
-                "reason.not.work35",
-                
-                "reason.not.work37",
-                
-                
-                "reason.not.work40",
-                "reason.not.work41",
-                "reason.not.work42",
-                
-                
-                "reason.absent.last.week4",
-                "reason.absent.last.week5",
-                "reason.absent.last.week6",
-                "reason.absent.last.week7",
-                "reason.absent.last.week8",
-                "reason.absent.last.week9",
-                "reason.absent.last.week10",
-                "reason.absent.last.week11",
-                "reason.absent.last.week12",
-                
-                "reason.absent.last.week14",
-                
-                "reason.absent.last.week41",
-                "reason.absent.last.week42",
+       
                 
                 "enrolled.school1",
                 "enrolled.school2",
@@ -400,25 +355,16 @@ xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale"
                 "provide.medical.care.hh.children", 
                 "obtain.medical.care.hh.children", 
                 "wait.child.health", 
-                "child.health.other", 
+                "child.health.other"
                 
                 
-                "reason.absent.last.week.atus1",
-                "reason.absent.last.week.atus4",
-                "reason.absent.last.week.atus5",
-                "reason.absent.last.week.atus6",
-                "reason.absent.last.week.atus7",
-                "reason.absent.last.week.atus8",
-                "reason.absent.last.week.atus9",
-                "reason.absent.last.week.atus10",
-                "reason.absent.last.week.atus11",
-                "reason.absent.last.week.atus14"
+
                 
                 )
 
-names <- c("1 if work at office of other locations", "1 if work from home", "age", "1 if white", "1 if black", "1 if asian", "1 if male", "1 if female",
+names <- c("1 if work at office of other locations", "1 if work from home", "Age", "1 if white", "1 if black", "1 if asian", "1 if male", "1 if female",
            "1 if married-spouse present", "1 if married-spouse absent", "1 if widowed", "1 if divorced","1 if separated", "1 if never married",
-           "weekly work hours if employed", 
+           "1 employed-at work", "1 employed-absent", "Weekly work hours*", 
            "1 if business and financial operations",                    
            "1 if computer and mathematical science",                    
            "1 if architecture and engineering" ,                        
@@ -440,75 +386,19 @@ names <- c("1 if work at office of other locations", "1 if work from home", "age
            "1 if installation, maintenance, and repair"   ,             
            "1 if production"     ,                                      
            "1 if transportation and material moving", 
-           "daily work hours-other jobs", "daily work hours-main job", "work hours last week", 
+           "Daily work hours-main job","Daily work hours-other jobs", "Work hours last week", 
            "1 if disabled",
            "1 if ill", 
            "1 if in school", 
            "1 if taking care of house or family", 
            "1 if in retirement",
            "1 if other", 
-           "1 if not valid(either over 49 years old or retired)", 
-           "1 if full time paid - vacation",
-           "1 if full time paid - own illness",
-           "1 if full time paid - childcare problems",
-           "1 if full time paid - other family/personal obligation",
-           "1 if full time paid - maternity/paternity leave",
-           
-           "1 if full time paid - weather affected job",
-           "1 if full time paid - school/training",
-           
-           "1 if full time paid - other",
-           "1 if full time unpaid - vacation",
-           "1 if full time unpaid - own illness",
-           "1 if full time unpaid - childcare problems",
-           "1 if full time unpaid - other family/personal obligation",
-           "1 if full time unpaid - maternity/paternity leave",
-           "1 if full time unpaid - labor dispute",
-           "1 if full time unpaid - weather affected job",
-           "1 if full time unpaid - school/training",
-           "1 if full time unpaid - civic/military duty",
-           "1 if full time unpaid - other",
-           "1 if part time paid - vacation",
-           "1 if part time paid - own illness",
-           "1 if part time paid - childcare problems",
-           "1 if part time paid - other family/personal obligation",
-           "1 if part time paid - maternity/paternity leave",
-           
-           
-           
-           
-           "1 if part time paid - other",
-           "1 if part time unpaid - vacation",
-           "1 if part time unpaid - own illness",
-           "1 if part time unpaid - childcare problems",
-           "1 if part time unpaid - other family/personal obligation",
-           "1 if part time unpaid - maternity/paternity leave",
-           
-           "1 if part time unpaid - weather affected job",
-           
-           
-           "1 if part time unpaid - other",
-           "1 if unemployed/not in labor force",
-           "reason-employed but not work-cps: employed at work", 
-           
-           
-           "1 if vacation/personal days",
-           "1 if own illness/injury/medical problems",
-           "1 if childcare problems",
-           "1 if other family/personal obligation",
-           "1 if maternity/paternity leave",
-           "1 if labor dispute",
-           "1 if weather affected job",
-           "1 if school/training",
-           "1 if civic/military duty",
-           
-           "1 if other",
-           "1 if unemployed/not in labor force",
-           "1 if employed at work",
+           "1 if either over 49 years old or retired", 
+  
            
            "1 if hs, college or university",
            "1 if not enrolled",
-           "1 if not valid(either a child, in armed forces or over 54 years old)",
+           "1 if either a child, in armed forces or over 54 years old",
            
            "1 if someone in household own business/farm: yes",
            "1 if someone in household own business/farm: no",
@@ -516,9 +406,9 @@ names <- c("1 if work at office of other locations", "1 if work from home", "age
            "1 if do unpaid work in family business/farm: yes",
            "1 if do unpaid work in family business/farm: no",
            
-           "num of children",
-           "num of family members",
-           "age of youngest child",           
+           "Number of children",
+           "Number of family members",
+           "Age of youngest child",           
            "1 if year = 2003",
            "1 if year = 2004",
            "1 if year = 2005",
@@ -545,14 +435,14 @@ names <- c("1 if work at office of other locations", "1 if work from home", "age
            "1 if not employed",
            "1 if no spouse/partner present",           
            
-           "1 if spouse/partner weekly work hours if spouse/partner is present", 
+           "Spouse/partner weekly work hours if spouse/partner is present*", 
            
            "1 if full time",
            "1 if part time",
            "1 if hours vary",
            "1 if no spouse/partner present or not employed",           
            
-           "1 if less than $5,000",
+           "1 if less than $5,000*",
            "1 if $5,000 to $7,499",
            "1 if $7,500 to $9,999",
            "1 if $10,000 to $12,499",
@@ -569,32 +459,21 @@ names <- c("1 if work at office of other locations", "1 if work from home", "age
            "1 if $100,000 to $149,999",
            "1 if $150,000 and over",
            
-           "weekly earnings if reported",
+           "Week earnings if reported*",
            
-           "minutes used in paid childcare services",
-           "minutes used in waiting associated with childcare services",
-           "minutes used in childcare - other", 
-           "minutes used in childcare related travel", 
-           "minutes used in childcare related phone call",
+           "Minutes used in paid childcare services",
+           "Minutes used in waiting associated with childcare services",
+           "Minutes used in childcare - other", 
+           "Minutes used in childcare related travel", 
+           "Minutes used in childcare related phone call",
            
-           "minutes used in provide medical care to child", 
-           "minutes used in obtain medical care child", 
-           "minutes used in waiting for child health related act.", 
-           "minutes used in child health - other", 
+           "Minutes used in provide medical care to child", 
+           "Minutes used in obtain medical care child", 
+           "Minutes used in waiting for child health related act.", 
+           "Minutes used in child health - other"
            
            
-           "1 if on layoff (temporary or indefinite)",
-           "1 if vacation/personal days",
-           "1 if own illness/injury/medical problems",
-           "1 if childcare problems",
-           "1 if other family/personal obligation",
-           "1 if maternity/paternity leave",
-           "1 if labor dispute",
-           "1 if weather affected job",
-           "1 if school/training",
-           "1 if other"
            
-
 )
 
 
@@ -646,6 +525,9 @@ print(xtable(empty.frame, caption = "Summary Statistics for the independent vari
 
 
 
+# clean the table by yourself by dividing the table up. 
+# Change the note. 
+# add title
 
 
 
@@ -654,248 +536,4 @@ print(xtable(empty.frame, caption = "Summary Statistics for the independent vari
 
 
 
-
-
-
-
-
-svymean(combine.data.regress.v2.dum)
-
-
-
-
-
-
-### test ####
-
-
-empty.frame <- data.frame(matrix(ncol = 5, nrow = 2)) 
-
-z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.regress.v2.dum)
-colnames(empty.frame) <-c("Variables group" ,"Variables","Mean(SD)", "Mean(SD) (Women)", "Mean(SD) (Men)") 
-
-row <- seq(from = 1 , to = 500, by = 2)
-
-for (i in 1:5) {    
-  
-  
-  
-  a <- svyby( ~get(xvariables[i]),~sex, z, svymean, na.rm = TRUE)
-  b <- svyby( ~get(xvariables[i]),~sex, z, svyvar, na.rm = TRUE)
-  
-  c <- svymean( ~get(xvariables[i]) , z , na.rm = TRUE)
-  d <- sqrt(svyvar( ~get(xvariables[i]) , z , na.rm = TRUE))
-  
-  
-  
-  
-  
-  
-  empty.frame[row[i],2] <- names[i]
-  empty.frame[row[i],3] <- c
-  empty.frame[row[i]+1,3] <- paste0( "(",signif(d, digits = 3),")")
-  
-  empty.frame[row[i],4] <- signif(a[2,2], digits = 3)
-  empty.frame[row[i]+1,4] <- paste0( "(",signif(sqrt(b[2,2]), digits = 3),")")
-  empty.frame[row[i],5] <- signif(a[1,2], digits = 3) 
-  empty.frame[row[i]+1,5] <- paste0( "(",signif(sqrt(b[1,2]), digits = 3),")")
-  
-
-  
-}   
-
-
-
-addtorow <- list()
-addtorow$pos <- list(0, 0)
-addtorow$command <- c(" &  & & Women & Men  \\\\\n",
-                      "Variables group & Variables & Mean(SD) & Mean(SD) (Women) & Mean(SD) (Men) \\\\\n")
-print(xtable(empty.frame, caption = "Summary Statistics for the independent variables")
-      , add.to.row = addtorow, include.rownames = FALSE, include.colnames = FALSE )
-
-
-
-
-
-
-
-names <- c("1 if Work at office of other locations", "1 if Work from home", "age", "1 if White", "1 if Black", "1 if Asian", "1 if Male", "1 if Female",
-           "1 if Married-spouse present", "1 if Married-spouse absent", "1 if Widowed", "1 if Divorced","1 if Separated", "1 if Never married",
-           "Weekly Work hours if employed", 
-           "1 if Business and financial operations",                    
-           "1 if Computer and mathematical science",                    
-           "1 if Architecture and engineering" ,                        
-           "1 if Life, physical, and social science" ,                  
-           "1 if Community and social service"    ,                     
-           "1 if Legal"              ,                                  
-           "1 if Education, training, and library"  ,                   
-           "1 if Arts, design, entertainment, sports, and media"       ,
-           "1 if Healthcare practitioner and technical"  ,              
-           "1 if Healthcare support"      ,                             
-           "1 if Protective service"     ,                              
-           "1 if Food preparation and serving related"    ,             
-           "1 if Building and grounds cleaning and maintenance" ,       
-           "1 if Personal care and service"   ,                         
-           "1 if Sales and related"    ,                                
-           "1 if Office and administrative support"   ,                 
-           "1 if Farming, fishing, and forestry"     ,                  
-           "1 if Construction and extraction"       ,                   
-           "1 if Installation, maintenance, and repair"   ,             
-           "1 if Production"     ,                                      
-           "1 if Transportation and material moving", 
-           "Daily Work hours-other jobs", "Daily Work hours-main job", "Work hours last week", 
-           "1 if Current situation-CPS: Disabled",
-           "1 if Current situation-CPS: Ill", 
-           "1 if Current situation-CPS: In School", 
-           "1 if Current situation-CPS: Taking care of house or family", 
-           "1 if Current situation-CPS: In retirement",
-           "1 if Current situation-CPS: Other", 
-           "1 if Current situation-CPS: Not valid(either over 49 years old or retired)", 
-           "Reason-employed but not work-CPS: Full time paid - vacation",
-           "Reason-employed but not work-CPS: Full time paid - own illness",
-           "Reason-employed but not work-CPS: Full time paid - childcare problems",
-           "Reason-employed but not work-CPS: Full time paid - other family/personal obligation",
-           "Reason-employed but not work-CPS: Full time paid - maternity/paternity leave",
-           
-           "Reason-employed but not work-CPS: Full time paid - weather affected job",
-           "Reason-employed but not work-CPS: Full time paid - school/training",
-           
-           "Reason-employed but not work-CPS: Full time paid - other",
-           "Reason-employed but not work-CPS: Full time unpaid - vacation",
-           "Reason-employed but not work-CPS: Full time unpaid - own illness",
-           "Reason-employed but not work-CPS: Full time unpaid - childcare problems",
-           "Reason-employed but not work-CPS: Full time unpaid - other family/personal obligation",
-           "Reason-employed but not work-CPS: Full time unpaid - maternity/paternity leave",
-           "Reason-employed but not work-CPS: Full time unpaid - labor dispute",
-           "Reason-employed but not work-CPS: Full time unpaid - weather affected job",
-           "Reason-employed but not work-CPS: Full time unpaid - school/training",
-           "Reason-employed but not work-CPS: Full time unpaid - civic/military duty",
-           "Reason-employed but not work-CPS: Full time unpaid - other",
-           "Reason-employed but not work-CPS: Part time paid - vacation",
-           "Reason-employed but not work-CPS: Part time paid - own illness",
-           "Reason-employed but not work-CPS: Part time paid - childcare problems",
-           "Reason-employed but not work-CPS: Part time paid - other family/personal obligation",
-           "Reason-employed but not work-CPS: Part time paid - maternity/paternity leave",
-           
-           
-           
-           
-           "Reason-employed but not work-CPS: Part time paid - other",
-           "Reason-employed but not work-CPS: Part time unpaid - vacation",
-           "Reason-employed but not work-CPS: Part time unpaid - own illness",
-           "Reason-employed but not work-CPS: Part time unpaid - childcare problems",
-           "Reason-employed but not work-CPS: Part time unpaid - other family/personal obligation",
-           "Reason-employed but not work-CPS: Part time unpaid - maternity/paternity leave",
-           
-           "Reason-employed but not work-CPS: Part time unpaid - weather affected job",
-           
-           
-           "Reason-employed but not work-CPS: Part time unpaid - other",
-           "Reason-employed but not work-CPS: Unemployed/not in labor force",
-           "Reason-employed but not work-CPS: Employed at work", 
-           
-           
-           "Reason-employed but absent last week-CPS: Vacation/personal days",
-           "Reason-employed but absent last week-CPS: Own illness/injury/medical problems",
-           "Reason-employed but absent last week-CPS: Childcare problems",
-           "Reason-employed but absent last week-CPS: Other family/personal obligation",
-           "Reason-employed but absent last week-CPS: Maternity/paternity leave",
-           "Reason-employed but absent last week-CPS: Labor dispute",
-           "Reason-employed but absent last week-CPS: Weather affected job",
-           "Reason-employed but absent last week-CPS: School/training",
-           "Reason-employed but absent last week-CPS: Civic/military duty",
-           
-           "Reason-employed but absent last week-CPS: Other",
-           "Reason-employed but absent last week-CPS: Unemployed/not in labor force",
-           "Reason-employed but absent last week-CPS: Employed at work",
-           
-           "enroll scholl-CPS: HS, college or university",
-           "enroll scholl-CPS: Not enrolled",
-           "enroll school-CPS: Not valid(either a child, in armed forces or over 54 years old)",
-           
-           "Anyone in household own business/farm: Yes",
-           "Anyone in household own business/farm: No",
-           
-           "Do unpaid work in family business/farm: Yes",
-           "Do unpaid work in family business/farm: No",
-           
-           "num of children",
-           "num of family members",
-           "age of youngest child",           
-           "Year = 2003",
-           "Year = 2004",
-           "Year = 2005",
-           "Year = 2006",
-           "Year = 2007",
-           "Year = 2008",
-           "Year = 2009",
-           "Year = 2010",
-           "Year = 2011",
-           "Year = 2012",
-           "Year = 2013",
-           "Year = 2014",
-           
-           "Monday",
-           "Tuesday",
-           "Wednesday",
-           "Thursday",
-           "Friday", 
-           
-           "Spouse/partner present",
-           "Spouse/partner not present",
-           
-           "spouse employ status: Employed",
-           "spouse employ status: Not Employed",
-           "spouse employ status: No spouse/partner present",           
-           
-           "Spouse/partner weekly work hours if spouse/partner is present", 
-           
-           "Spouse/partner employ staus: Full time",
-           "Spouse/partner employ staus: Part time",
-           "Spouse/partner employ staus: Hours vary",
-           "Spouse/partner employ staus: No spouse/partner present or not employed",           
-           
-           "Less than $5,000",
-           "$5,000 to $7,499",
-           "$7,500 to $9,999",
-           "$10,000 to $12,499",
-           "$12,500 to $14,999",
-           "$15,000 to $19,999",
-           "$20,000 to $24,999",
-           "$25,000 to $29,999",
-           "$30,000 to $34,999",
-           "$35,000 to $39,999",
-           "$40,000 to $49,999",
-           "$50,000 to $59,999",
-           "$60,000 to $74,999",
-           "$75,000 to $99,999",
-           "$100,000 to $149,999",
-           "$150,000 and over",
-           
-           "weekly earnings if reported",
-           
-           "Minutes used in paid childcare services",
-           "Minutes used in waiting associated with childcare services",
-           "Minutes used in childcare - other", 
-           "Minutes used in childcare related travel", 
-           "Minutes used in childcare related phone call",
-           
-           "Minutes used in provide medical care to child", 
-           "Minutes used in obtain medical care child", 
-           "Minutes used in waiting for child health related act.", 
-           "Minutes used in child health - other", 
-           
-           
-           "Reason-employed but absent last week: On layoff (temporary or indefinite)",
-           "Reason-employed but absent last week: Vacation/personal days",
-           "Reason-employed but absent last week: Own illness/injury/medical problems",
-           "Reason-employed but absent last week: Childcare problems",
-           "Reason-employed but absent last week: Other family/personal obligation",
-           "Reason-employed but absent last week: Maternity/paternity leave",
-           "Reason-employed but absent last week: Labor dispute",
-           "Reason-employed but absent last week: Weather affected job",
-           "Reason-employed but absent last week: School/training",
-           "Reason-employed but absent last week: Other"
-           
-)
 
