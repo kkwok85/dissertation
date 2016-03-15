@@ -1,8 +1,8 @@
 
-names.y <- c("Total time for childcare", "Physical care", 
+names.y <- c("Total time for child care", "Physical care", 
              "Grocery shopping", "Cooking", "Purchasing prepared food",
              "Playing with children", 
-             "Reading to children", "Talking and listening to children", "Helping homework", "Supervising children", "Picking or droping off children", "Travel time for helping children",
+             "Reading to children", "Talking and listening to children", "Helping homework", "Supervising children", "Picking or dropping off children", "Travel time for helping children",
              "Travel time for work", "Total grooming time" )
 
 
@@ -52,7 +52,7 @@ children.sick.var <- c("+ provide.medical.care.hh.children + obtain.medical.care
 # cross out caption in the second table
 # cross out notes in the first table
 # change work hours table box comment line. It is too long
-
+# set footnote size urself
 
 ############################
 # Regression for wfh 
@@ -260,32 +260,37 @@ stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], re
 
 # average effect of employment
 
-combine.data.regress.v2
+empty.frame <- data.frame(matrix(ncol = 2, nrow = length(yvariables.v2))) 
 
+colnames(empty.frame) <- c("Variables", "Marginal effect at the mean")
 
+mean.work.hours <- weighted.mean(combine.data.regress.female.employ$total.job.time[which(combine.data.regress.female.employ$edited.employ.status=="Employed")],combine.data.regress.female.employ$tufnwgtp[which(combine.data.regress.female.employ$edited.employ.status=="Employed")], na.rm=TRUE)
 
-
-result <- list()
-robust.result <- list()
 
 
 for (i in 1:length(yvariables.v2) ) { 
-  dep.var <- yvariables.v2[i]
-  full.model <- lm(paste0(yvariables.v2[i]," ~ total.job.time.2 + edited.employ.status + factor(wfh.v3) + edited.occupations + work.hours.last.week ", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ, weights = tufnwgtp )
-  result[[i]] <- full.model 
-  <-predict(full.model)
-  
-} 
+
+full.model <- lm(paste0(yvariables.v2[i]," ~ total.job.time + edited.employ.status + factor(wfh.v3) + edited.occupations + work.hours.last.week ", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ, weights = tufnwgtp , na.action=na.exclude)
 
 
-full.model <- lm(paste0(yvariables.v2[2]," ~ total.job.time.2 + edited.employ.status + factor(wfh.v3) + edited.occupations + work.hours.last.week ", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ, weights = tufnwgtp , na.action=na.exclude)
-combine.data.regress.female.employ$predict <- predict(full.model, na.action=na.exclude)
 
-mean(combine.data.regress.female.employ$predict[which(combine.data.regress.female.employ$edited.employ.status=="Employed")], na.rm=TRUE)
+  empty.frame[i,1] <- names.y[i]
+  empty.frame[i,2] <- mean.work.hours*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] 
 
-# in case he wants just 2 variables 
-#summary(full.model)$coefficients[2,1]
-#summary(full.model)$coefficients[3,1]
 
-combine.data.regress.female.employ$predict2 <- combine.data.regress.female.employ$edited.employ.status*summary(full.model)$coefficients[3,1]
+
+}
+
+
+print(xtable(empty.frame, caption = "Marginal Effect of Maternal Employment"), include.rownames = FALSE, include.colnames = TRUE  )
+
+
+
+
+
+
+
+
+
+
 
