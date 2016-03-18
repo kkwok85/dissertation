@@ -238,6 +238,8 @@ global time_panel  i.month_year_w
 
 
 
+* change + to add, delete constant 
+
 *************new *******
 
 foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
