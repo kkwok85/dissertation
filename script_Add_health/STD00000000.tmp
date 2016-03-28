@@ -1,1 +1,1 @@
-use "F:\temp_data\constructed_variables", clear
+svy: regress  AH_PVT age_w1 BIO_SEX tv_hours_per_week_w1

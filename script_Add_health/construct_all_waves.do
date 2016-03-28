@@ -1078,6 +1078,19 @@ gen mom_stay_home_out_w2 = .
 replace mom_stay_home_out_w2 = 1 if res_mom_at_home_or_outside_w2 == 1 | res_mom_pay_w2 == 0 | res_mom_occupation_w2 == 16
 replace mom_stay_home_out_w2 = 2 if res_mom_at_home_or_outside_w2 == 2
 replace mom_stay_home_out_w2 = 3 if res_mom_at_home_or_outside_w2 == 3
+
+
+
+gen mom_stay_home_out_v2_w2 = .
+replace mom_stay_home_out_v2_w2 = 99 if no_mom_w2 == 1
+replace mom_stay_home_out_v2_w2 = 0 if res_mom_occupation_w2 == 16 
+replace mom_stay_home_out_v2_w2 = 1 if res_mom_at_home_or_outside_w2 == 1  
+replace mom_stay_home_out_v2_w2 = 2 if res_mom_at_home_or_outside_w2 == 2
+replace mom_stay_home_out_v2_w2 = 3 if res_mom_at_home_or_outside_w2 == 3
+replace mom_stay_home_out_v2_w2 = 4 if res_mom_pay_w2 == 0
+
+
+
  
 rename H2RM9 res_mom_public_assistance_w2
 rename H2RM10 res_mom_handicapped_w2
