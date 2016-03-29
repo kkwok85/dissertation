@@ -130,6 +130,9 @@ stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], re
 
 
 
+
+
+
 ############################
 # Regression for wfh and female
 
@@ -309,31 +312,21 @@ print(xtable(empty.frame, caption = "Marginal Effect of Maternal Employment"), i
 
 
 
+############################
+# Regression for work hours and female
+
+# employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week +factor(employment.status)")
 
 
+#remember to factor wfh!!!!!
 
 
+#+ edited.work.hours + factor(edited.work.hours.indicator)
 
 
+employ.no.wh.var <- c("     ")
 
-
-
-demographic.var <- c("+ age + race + sex + marital.status ")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.job.time + work.hours.last.week +factor(employment.status)")
-current.sit <- c("+ factor(current.situation)   + factor(enrolled.school) ") 
-family.bus <- c("+ factor(household.own.bus) + factor(unpaid.work.family.bus)")
-family.var <- c("+ num.children + num.family.member + age.youngest.child" )
-time.var <- c("+ interview.year  + diary.day" )
-location.var <- c("+ region + fips")
-spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator) + edited.weekly.earnings + factor(edited.weekly.earnings.indicator) + factor(weekly.earning.top.coded) " )
-childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare + childcare.other + travel.use.childcare + phone.call.care.provider")
-children.sick.var <- c("+ provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
-
-
-
-
-
+combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
 
 
 
@@ -343,25 +336,75 @@ robust.result <- list()
 
 for (i in 1:length(yvariables.v2) ) { 
   dep.var <- yvariables.v2[i]
-  full.model <- lm(paste0(yvariables.v2[i]," ~ factor(wfh.v3)", demographic.no.sex.var ,employ.var, current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.v2.female , weights = tufnwgtp )
+  full.model <- lm(paste0(yvariables.v2[i]," ~   total.job.time.2 + edited.employ.status +factor(wfh.v3)  + edited.occupations + work.hours.last.week + edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ , weights = tufnwgtp )
   result[[i]] <- full.model 
   robust.result[[i]] <- sqrt(diag(vcovHC(full.model, type = "HC1"))) 
 } 
 
 
-
-stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],  
-          title = "OLS results for working from home: Mother", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
+stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],
+          title = "OLS results for maternal employment", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
           column.labels=c(names.y[1] ,names.y[2], names.y[3], names.y[4], names.y[5], names.y[6], names.y[7]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh_female.tex",  
-          notes.align = "l", omit.table.layout = "s" )   
+          keep= c("wfh.v3", "total.job.time.2", "edited.employ.status", "edited.work.hours" , "edited.work.hours.indicator"  ) ,covariate.labels =c("Work hours (divided by 8)",  "Employed" , "Work from home"), out = "D:/ATUS_result_R/result_test.txt",
+          notes.align = "l")
 
 
 stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], result[[13]], result[[14]],
-          se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]), 
+          se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]),
           column.labels=c(names.y[8], names.y[9], names.y[10], names.y[11], names.y[12], names.y[13], names.y[14]), 
-          keep= c("wfh.v3" ), covariate.labels =c("Work from home"), type = "latex", out = "D:/ATUS_result_R/result_wfh2_female.tex", 
-          notes = "Sampling weights are applied and robust standard errors are used. Base category is work at office or other locations. Number of observations is 11612.", notes.align = "l", omit.table.layout = "s" )
+          keep= c("wfh.v3", "total.job.time.2", "edited.employ.status", "edited.work.hours" , "edited.work.hours.indicator"  ),covariate.labels =c("Work hours (divided by 8)",  "Employed" , "Work from home"),    out = "D:/ATUS_result_R/result_test2.txt",
+          notes = "Sampling weights are applied and robust standard errors are used. Work hours is a continuous variable from the work hours on diary day divided by 8 hours. Employed is a dichotomous variable indicating employment status. Base category is unemployed/out of labor force. Number of observations is 16914.", notes.align = "l")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+employ.no.wh.var <- c("     ")
+
+combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
+
+
+
+result <- list()
+robust.result <- list()
+
+
+for (i in 1:length(yvariables.v2) ) { 
+  dep.var <- yvariables.v2[i]
+  full.model <- lm(paste0(yvariables.v2[i]," ~   total.job.time.2 + edited.employ.status +factor(wfh.v3)  + edited.occupations + work.hours.last.week ", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ , weights = tufnwgtp )
+  result[[i]] <- full.model 
+  robust.result[[i]] <- sqrt(diag(vcovHC(full.model, type = "HC1"))) 
+} 
+
+
+stargazer(result[[1]], result[[2]],result[[3]], result[[4]], result[[5]], result[[6]], result[[7]],
+          title = "OLS results for maternal employment", se = list(robust.result[[1]], robust.result[[2]],robust.result[[3]], robust.result[[4]], robust.result[[5]], robust.result[[6]], robust.result[[7]]),
+          column.labels=c(names.y[1] ,names.y[2], names.y[3], names.y[4], names.y[5], names.y[6], names.y[7]), 
+          keep= c("wfh.v3", "total.job.time.2", "edited.employ.status" ) ,covariate.labels =c("Work hours (divided by 8)",  "Employed" , "Work from home"), out = "D:/ATUS_result_R/result_test3.txt",
+          notes.align = "l")
+
+
+stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], result[[13]], result[[14]],
+          se = list( robust.result[[8]], robust.result[[9]], robust.result[[10]], robust.result[[11]], robust.result[[12]], robust.result[[13]], robust.result[[14]]),
+          column.labels=c(names.y[8], names.y[9], names.y[10], names.y[11], names.y[12], names.y[13], names.y[14]), 
+          keep= c("wfh.v3", "total.job.time.2", "edited.employ.status"  ),covariate.labels =c("Work hours (divided by 8)",  "Employed" , "Work from home"),    out = "D:/ATUS_result_R/result_test4.txt",
+          notes = "Sampling weights are applied and robust standard errors are used. Work hours is a continuous variable from the work hours on diary day divided by 8 hours. Employed is a dichotomous variable indicating employment status. Base category is unemployed/out of labor force. Number of observations is 16914.", notes.align = "l")
 
 
 
