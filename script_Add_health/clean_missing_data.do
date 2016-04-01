@@ -56,12 +56,26 @@ replace H1RM7 = . if (H1RM7 >= 996 & H1RM7 <= 999)
 
 
 
+* no mom will be filled in in contruct_all_waves
+replace H1RM11 = . if (H1RM11 == 96 | H1RM11 == 97 | H1RM11 == 98 | H1RM11 == 99)
+replace H1RM12 = . if (H1RM12 == 96 | H1RM12 == 97 | H1RM12 == 98 | H1RM12 == 99)
+replace H1RM13 = . if (H1RM13 == 96 | H1RM13 == 97 | H1RM13 == 98 | H1RM13 == 99)
+
+
+
+
+
+
+
 * dad educ + work hours + occupations
 replace H1RF1 = . if (H1RF1 == 96 | H1RF1 == 97 | H1RF1 == 98 | H1RF1 == 99)
 
 replace H1RF4 = . if (H1RF4 >= 96 & H1RF4 <= 99)
 replace H1RF7 = . if (H1RF7 >= 996 & H1RF7 <= 999)
 
+replace H1RF11 = . if (H1RF11 == 96 | H1RF11 == 97 | H1RF11 == 98 | H1RF11 == 99)
+replace H1RF12 = . if (H1RF12 == 96 | H1RF12 == 97 | H1RF12 == 98 | H1RF12 == 99)
+replace H1RF13 = . if (H1RF13 == 96 | H1RF13 == 97 | H1RF13 == 98 | H1RF13 == 99)
 
 * family income
 replace PA55 = . if (PA55 == 9996)
@@ -75,6 +89,10 @@ replace H1WP4 = . if (H1WP4 >= 6 & H1WP4 <= 9)
 replace H1WP5 = . if (H1WP5 >= 6 & H1WP5 <= 9)
 replace H1WP6 = . if (H1WP6 >= 6 & H1WP6 <= 9)
 replace H1WP7 = . if (H1WP7 >= 6 & H1WP7 <= 9)
+
+replace H1WP8 = . if (H1WP8 >= 96 & H1WP8 <= 98)
+
+
 
 
 * eat and BMI
@@ -194,12 +212,24 @@ replace H2RM1 = . if (H2RM1 == 97)
 replace H2RM4 = . if (H2RM4 >= 96 & H2RM4 <= 98)
 replace H2RM7 = . if (H2RM7 >= 996 & H2RM7 <= 998)
 
+replace H2RM11 = . if (H2RM11 == 96 | H2RM11 == 97 | H2RM11 == 98 )
+replace H2RM12 = . if (H2RM12 == 96 | H2RM12 == 97 | H2RM12 == 98 )
+replace H2RM13 = . if (H2RM13 == 96 | H2RM13 == 97 | H2RM13 == 98 )
+
+
 
 * dad educ + work hours + occupations
 replace H2RF1 = . if (H2RF1 == 96 | H2RF1 == 97)
 
 replace H2RF4 = . if (H2RF4 >= 96 & H2RF4 <= 98)
 replace H2RF7 = . if (H2RF7 >= 996 & H2RF7 <= 998)
+
+
+replace H2RF11 = . if (H2RF11 == 96 | H2RF11 == 97 | H2RF11 == 98 )
+replace H2RF12 = . if (H2RF12 == 96 | H2RF12 == 97 | H2RF12 == 98 )
+replace H2RF13 = . if (H2RF13 == 96 | H2RF13 == 97 | H2RF13 == 98 )
+
+
 
 * supervision
 
@@ -212,6 +242,7 @@ replace H2WP5 = . if (H2WP5 >= 6 & H2WP5 <= 8)
 replace H2WP6 = . if (H2WP6 >= 6 & H2WP6 <= 8)
 replace H2WP7 = . if (H2WP7 >= 6 & H2WP7 <= 8)
 
+replace H2WP8 = . if (H2WP8 >= 96 & H2WP8 <= 98)
 
 
 
@@ -267,6 +298,18 @@ replace H2TO22 = . if (H2TO22 == 96 | H2TO22 == 97 | H2TO22 == 98)
 
 * sex
 replace H2CO1 = . if (H2CO1 == 6 | H2CO1 == 8)
+
+
+
+
+* nutrition
+forvalues i = 10(1)28 {
+replace H2NU`i' = . if H2NU`i' == 8
+
+}
+
+
+
 
 
 

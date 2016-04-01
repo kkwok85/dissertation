@@ -79,10 +79,7 @@ replace H2NU80 = . if H2NU80 >= 8
 gen bad_food_w2 =  H2NU60 + H2NU62 +  H2NU63 + H2NU66 + H2NU70 
 
 
-forvalues i = 10(1)28 {
-replace H2NU`i' = . if H2NU`i' == 8
 
-}
 
 gen vege_fruits_w2 = H2NU10 + H2NU11 + H2NU12 + H2NU13 + H2NU14 + H2NU15 + H2NU16 + H2NU18 + H2NU19 + H2NU20 + H2NU21 + H2NU22 + H2NU23 + H2NU24 + H2NU25 + H2NU26 + H2NU27 + H2NU28 
 
@@ -135,6 +132,44 @@ reg H2NU79 res_mom_work_hours_v2_w2 i.res_mom_at_home_leave_school_w2 $demograph
 reg H2NU80 res_mom_work_hours_v2_w2 i.res_mom_at_home_leave_school_w2  $demographic $mom_occupation  $mom_edu $dad_educ_career $family_income_panel  $time  [pw=GSWGT2], vce(cluster PSUSCID_w2 )
 
 reg vege_fruits_w2  res_mom_work_hours_v2_w2 i.res_mom_at_home_return_school_w2    $demographic $mom_occupation  $mom_edu $dad_educ_career $family_income_panel   $time  [pw=GSWGT2], vce(cluster PSUSCID_w2 )
+
+
+
+gen before_school_supervision_w2 = 1 if (res_mom_at_home_leave_school_w2 == 1 | res_mom_at_home_leave_school_w2  == 2 | res_mom_at_home_leave_school_w2 == 6 | ///
+                                      res_dad_at_home_leave_school_w2 == 1 | res_dad_at_home_leave_school_w2  == 2 | res_dad_at_home_leave_school_w2 == 6 )
+
+replace before_school_supervision_w2 = 0 if (before_school_supervision_w2 != 1 & res_mom_at_home_leave_school_w2 != .)
+									  
+gen after_school_supervision_w2 = 1 if (res_mom_at_home_return_school_w2  == 1 | res_mom_at_home_return_school_w2   == 2 | res_mom_at_home_return_school_w2  == 6 | ///
+                                     res_dad_at_home_return_school_w2  == 1 | res_dad_at_home_return_school_w2   == 2 | res_dad_at_home_return_school_w2  == 6 )
+
+replace after_school_supervision_w2 = 0 if (after_school_supervision_w2 != 1 & res_mom_at_home_return_school_w2 != .)
+
+
+gen bedtime_supervision_w2 = 1 if (res_mom_at_home_go_to_bed_w2  == 1 | res_mom_at_home_go_to_bed_w2 == 2 | res_mom_at_home_go_to_bed_w2  == 6 | ///
+                                res_dad_at_home_go_to_bed_w2  == 1 | res_dad_at_home_go_to_bed_w2 == 2 | res_dad_at_home_go_to_bed_w2  == 6 )
+
+replace bedtime_supervision_w2 = 0 if (bedtime_supervision_w2 != 1 & res_mom_at_home_go_to_bed_w2 != .)
+
+
+
+reg vege_fruits_w2  res_mom_work_hours_v2_w2 i.bedtime_supervision_w2    $demographic $mom_occupation  $mom_edu $dad_educ_career $family_income_panel   $time  [pw=GSWGT2], vce(cluster PSUSCID_w2 )
+
+
+foreach yvariable in H2NU77 H2NU78 H2NU79 H2NU80 vege_fruits_w2  bad_food_w2 {
+
+	foreach xvariable in before_school_supervision_w2 after_school_supervision_w2 bedtime_supervision_w2  parent_present_when_eat_w2 decision_w2 {
+
+
+		reg `yvariable' `xvariable' res_mom_work_hours_v2_w2 $demographic $mom_occupation  $mom_edu $dad_educ_career $family_income_panel   $time  [pw=GSWGT2], vce(cluster PSUSCID_w2 )
+	    outreg2 using "F:/test",  nocons excel tex append  keep(`xvariable') 
+
+	}
+
+
+
+}
+
 
 
 

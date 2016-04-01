@@ -1094,9 +1094,23 @@ replace mom_stay_home_out_v2_w2 = 4 if res_mom_pay_w2 == 0
  
 rename H2RM9 res_mom_public_assistance_w2
 rename H2RM10 res_mom_handicapped_w2
+
 rename H2RM11 res_mom_at_home_leave_school_w2
+replace res_mom_at_home_leave_school_w2 = 99 if no_mom_w2 == 1
+tab res_mom_at_home_leave_school_w2
+
+
 rename H2RM12 res_mom_at_home_return_school_w2
+replace res_mom_at_home_return_school_w2 = 99 if no_mom_w2 == 1
+tab res_mom_at_home_return_school_w2
+
 rename H2RM13 res_mom_at_home_go_to_bed_w2
+replace res_mom_at_home_go_to_bed_w2 = 99 if no_mom_w2 == 1
+tab res_mom_at_home_go_to_bed_w2
+
+
+
+
 rename H2RM14 res_mom_smoked_w2
 
 
@@ -1261,9 +1275,24 @@ replace dad_stay_home_out_w2 = 3 if res_dad_at_home_or_outside_w2 == 3
 
 rename H2RF9 res_dad_public_assistance_w2
 rename H2RF10 res_dad_handicapped_w2
+
 rename H2RF11 res_dad_at_home_leave_school_w2
+replace res_dad_at_home_leave_school_w2 = 99 if no_dad_w2 == 1
+tab res_dad_at_home_leave_school_w2
+
+
+
 rename H2RF12 res_dad_at_home_return_school_w2
+replace res_dad_at_home_return_school_w2 = 99 if no_dad_w2 == 1
+tab res_dad_at_home_return_school_w2
+
+
+
+
 rename H2RF13 res_dad_at_home_go_to_bed_w2
+replace res_dad_at_home_go_to_bed_w2 = 99 if no_dad_w2 == 1
+tab res_dad_at_home_go_to_bed_w2
+
 rename H2RF14 res_dad_smoked_w2
 	   	   
 

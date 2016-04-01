@@ -263,29 +263,273 @@ stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], re
 
 # average effect of employment
 
-empty.frame <- data.frame(matrix(ncol = 2, nrow = length(yvariables.v2))) 
+empty.frame <- data.frame(matrix(ncol = 3, nrow = length(yvariables.v2))) 
 
-colnames(empty.frame) <- c("Variables", "Marginal effect at the mean")
+colnames(empty.frame) <- c("Variables", "Marginal effect at the mean: wfh", "Marginal effect at the mean: nwfh")
 
 mean.work.hours <- weighted.mean(combine.data.regress.female.employ$total.job.time[which(combine.data.regress.female.employ$edited.employ.status=="Employed")],combine.data.regress.female.employ$tufnwgtp[which(combine.data.regress.female.employ$edited.employ.status=="Employed")], na.rm=TRUE)
 
+mean.work.hours.wfh <- weighted.mean(combine.data.regress.female.employ$total.job.time[which(combine.data.regress.female.employ$edited.employ.status=="Employed" & combine.data.regress.female.employ$wfh.v3 == 0 )],combine.data.regress.female.employ$tufnwgtp[which(combine.data.regress.female.employ$edited.employ.status=="Employed" & combine.data.regress.female.employ$wfh.v3 == 0)], na.rm=TRUE)
+mean.work.hours.nwfh <- weighted.mean(combine.data.regress.female.employ$total.job.time[which(combine.data.regress.female.employ$edited.employ.status=="Employed" & combine.data.regress.female.employ$wfh.v3 == 1 )],combine.data.regress.female.employ$tufnwgtp[which(combine.data.regress.female.employ$edited.employ.status=="Employed" & combine.data.regress.female.employ$wfh.v3 == 1)], na.rm=TRUE)
 
 
 for (i in 1:length(yvariables.v2) ) { 
 
-full.model <- lm(paste0(yvariables.v2[i]," ~ total.job.time + edited.employ.status + factor(wfh.v3) + edited.occupations + work.hours.last.week ", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ, weights = tufnwgtp , na.action=na.exclude)
-
+  full.model <- lm(paste0(yvariables.v2[i]," ~   total.job.time + edited.employ.status +factor(wfh.v3)  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ , weights = tufnwgtp )
+  
 
 
   empty.frame[i,1] <- names.y[i]
-  empty.frame[i,2] <- mean.work.hours*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] 
-
+  empty.frame[i,2] <- mean.work.hours.wfh*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] + summary(full.model)$coefficients[4,1]  
+  empty.frame[i,3] <- mean.work.hours.nwfh*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] 
+  
 
 
 }
 
 
 print(xtable(empty.frame, caption = "Marginal Effect of Maternal Employment"), include.rownames = FALSE, include.colnames = TRUE  )
+
+
+
+
+
+
+
+
+
+
+
+
+star.function <- function(p.value)  {
+if (p.value < 0.01) {
+  star <- "***"
+} else if (p.value < 0.05) {
+  star <- "**"
+} else if (p.value < 0.1) {
+  star <- "*"
+}  else {
+  star <- ""
+}
+  return(star)
+}
+
+
+
+
+
+combine.data.regress.female.employ$wfh.v3 <- factor(combine.data.regress.female.employ$wfh.v3, levels=c(0,1,2), labels = c("Work.at.office", "Work.from.home", "Unemployed/out.of.labor.force"))
+
+
+
+
+
+
+
+################*****************************************####### use this regression
+
+empty.frame <- data.frame(matrix(ncol = 6, nrow = length(yvariables.v2))) 
+colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home mother", "Work at other locations mother")
+
+
+combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
+
+
+
+result <- list()
+robust.result <- list()
+
+for (i in 1:length(yvariables.v2) ) { 
+  dep.var <- yvariables.v2[i]
+  full.model <- lm(paste0(yvariables.v2[i]," ~   total.job.time + edited.employ.status +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.female.employ , weights = tufnwgtp )
+  robust.result[[i]] <- coeftest(full.model, vcov = vcovHC(full.model, "HC1")) 
+  
+  
+  
+  empty.frame[i,1] <- names.y[i]
+  
+  P_value.4 <- robust.result[[i]][4,4]
+  
+
+  
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][4,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  
+  P_value.2 <- robust.result[[i]][2,4]
+  
+  empty.frame[i,3] <- paste0(format(round(robust.result[[i]][2,1],digits=3), nsmall = 3),star.function(P_value.2),"(",format(round(robust.result[[i]][2,2],digits=3), nsmall = 3),")" )  #work hours
+  
+  P_value.3 <- robust.result[[i]][3,4]
+  
+  empty.frame[i,4] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.3),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )   #employ.status
+  
+  
+
+  
+
+  # get rid of NA in the model
+  full.model.update <- full.model
+  
+  full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
+  
+  
+  me.wfh <- summary(glht(full.model.update, linfct = c("480*total.job.time + edited.employ.statusEmployed +wfh.v3Work.from.home =0") ))
+  me.nwfh <- summary(glht(full.model.update, linfct = c("480*total.job.time + edited.employ.statusEmployed  =0") ))
+  
+  
+  P_value.5 <- me.wfh$test$pvalues
+  empty.frame[i,5] <- paste0(format(round(me.wfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.5), "(", format(round(me.wfh$test$sigma, digits=3), nsmall = 3), ")")  
+  
+  
+  P_value.6 <- me.nwfh$test$pvalues
+  empty.frame[i,6] <- paste0(format(round(me.nwfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.6), "(", format(round(me.nwfh$test$sigma, digits=3), nsmall = 3), ")")  
+  
+  
+  
+  #empty.frame[i,5] <- 480*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] + summary(full.model)$coefficients[4,1]  
+
+  
+  
+  #empty.frame[i,6] <- 480*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] 
+  
+  
+  
+} 
+
+
+print(xtable(empty.frame, caption = "OLS Results of working from home and Marginal Effect of Maternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############# for father ####################
+
+
+
+combine.data.regress.male.employ$wfh.v3 <- factor(combine.data.regress.male.employ$wfh.v3, levels=c(0,1,2), labels = c("Work.at.office", "Work.from.home", "Unemployed/out.of.labor.force"))
+
+
+
+
+
+################*****************************************####### use this regression
+
+empty.frame <- data.frame(matrix(ncol = 6, nrow = length(yvariables.v2))) 
+colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home father", "Work at other locations father")
+
+
+combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
+
+
+
+result <- list()
+robust.result <- list()
+
+for (i in 1:length(yvariables.v2) ) { 
+  dep.var <- yvariables.v2[i]
+  full.model <- lm(paste0(yvariables.v2[i]," ~   total.job.time + edited.employ.status +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , current.sit,family.bus, family.var, time.var, location.var, spouse.var, family.inc.var,  childcare.service.var, children.sick.var ), data = combine.data.regress.male.employ , weights = tufnwgtp )
+  robust.result[[i]] <- coeftest(full.model, vcov = vcovHC(full.model, "HC1")) 
+  
+  
+  
+  empty.frame[i,1] <- names.y[i]
+  
+  P_value.4 <- robust.result[[i]][4,4]
+  
+  
+  
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][4,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  
+  P_value.2 <- robust.result[[i]][2,4]
+  
+  empty.frame[i,3] <- paste0(format(round(robust.result[[i]][2,1],digits=3), nsmall = 3),star.function(P_value.2),"(",format(round(robust.result[[i]][2,2],digits=3), nsmall = 3),")" )  #work hours
+  
+  P_value.3 <- robust.result[[i]][3,4]
+  
+  empty.frame[i,4] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.3),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )   #employ.status
+  
+  
+  
+  
+  
+  # get rid of NA in the model
+  full.model.update <- full.model
+  
+  full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
+  
+  
+  me.wfh <- summary(glht(full.model.update, linfct = c("480*total.job.time + edited.employ.statusEmployed +wfh.v3Work.from.home =0") ))
+  me.nwfh <- summary(glht(full.model.update, linfct = c("480*total.job.time + edited.employ.statusEmployed  =0") ))
+  
+  
+  P_value.5 <- me.wfh$test$pvalues
+  empty.frame[i,5] <- paste0(format(round(me.wfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.5), "(", format(round(me.wfh$test$sigma, digits=3), nsmall = 3), ")")  
+  
+  
+  P_value.6 <- me.nwfh$test$pvalues
+  empty.frame[i,6] <- paste0(format(round(me.nwfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.6), "(", format(round(me.nwfh$test$sigma, digits=3), nsmall = 3), ")")  
+  
+  
+  
+  #empty.frame[i,5] <- 480*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] + summary(full.model)$coefficients[4,1]  
+  
+  
+  
+  #empty.frame[i,6] <- 480*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] 
+  
+  
+  
+} 
+
+
+print(xtable(empty.frame, caption = "OLS Results of working from home and Marginal Effect of Paternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

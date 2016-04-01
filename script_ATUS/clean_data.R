@@ -979,6 +979,9 @@ combine.data.regress.female.employ <- combine.data[which(combine.data$sex == "Fe
 
 
 
+combine.data.regress.male.employ <- combine.data[which(combine.data$sex == "Male"& combine.data$presence.own.child == 1 &
+                                                           combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
+
 
 
 
