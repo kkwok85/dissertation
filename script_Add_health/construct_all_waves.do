@@ -196,6 +196,40 @@ gen tv_video_comp_games_w2 = tv_hours_per_week_w2 + video_hours_per_week_w2 + co
 
 * section 3  w1, w2
 rename H1GH1 general_health_w1
+rename H1GH2 headache_w1
+rename H1GH3 feeling_hot_w1
+rename H1GH4 stomach_ache_w1
+rename H1GH5 cold_sweats_w1
+rename H1GH6 physical_weak_w1
+rename H1GH7 sore_throat_w1
+rename H1GH8 tired_w1
+rename H1GH9 pain_urination_w1
+rename H1GH10 sick_w1
+rename H1GH11 wake_up_tired_w1
+rename H1GH12 skin_problem_w1
+rename H1GH13 dizziness_w1
+rename H1GH14 chest_pain_w1
+rename H1GH15 muscle_pain_w1
+
+rename H1GH17 poor_appetite_w1
+rename H1GH18 trouble_sleep_w1
+rename H1GH19 trouble_relax_w1
+rename H1GH20 moodiness_w1
+rename H1GH21 freq_crying_w1
+rename H1GH22 fearful_w1
+
+
+
+
+
+
+
+
+
+
+
+
+
 rename H1GH26 no_medical_care_but_should_w1
 rename H1GH28 weight_image_w1
 rename H1GH29 lose_weight_w1
@@ -252,6 +286,32 @@ rename H1GH23J eat_breakfast_w1
 
 
 rename H2GH1 general_health_w2
+
+
+rename H2GH8 headache_w2
+rename H2GH9 feeling_hot_w2
+rename H2GH10 stomach_ache_w2
+rename H2GH11 cold_sweats_w2
+rename H2GH12 physical_weak_w2
+rename H2GH13 sore_throat_w2
+rename H2GH14 tired_w2
+rename H2GH15 pain_urination_w2
+rename H2GH16 sick_w2
+rename H2GH17 wake_up_tired_w2
+rename H2GH18 skin_problem_w2
+rename H2GH19 dizziness_w2
+rename H2GH20 chest_pain_w2
+rename H2GH21 muscle_pain_w2
+rename H2GH22 poor_appetite_w2
+rename H2GH23 trouble_sleep_w2
+rename H2GH24 trouble_relax_w2
+rename H2GH25 moodiness_w2
+rename H2GH26 freq_crying_w2
+rename H2GH27 fearful_w2
+
+
+
+
 rename H2GH28 no_medical_care_but_should_w2
 rename H2GH30 weight_image_w2
 rename H2GH31 lose_weight_w2
@@ -2303,8 +2363,31 @@ rename PC48 son_sex_age
 * PC49 when talk about intergeneration
 	   
 
+
 	   
 	   
+rename H2NU77 num_fast_food_w2
+rename H2NU78 num_eat_breakfast_w2
+rename H2NU79 num_eat_lunch_w2
+rename H2NU80 num_eat_dinner_w2
+	   
+	   
+									
+gen before_school_supervision_w1 = 1 if (res_mom_at_home_leave_school_w1 == 1 | res_mom_at_home_leave_school_w1  == 2 | res_mom_at_home_leave_school_w1 == 6 | ///									
+                                      res_dad_at_home_leave_school_w1 == 1 | res_dad_at_home_leave_school_w1  == 2 | res_dad_at_home_leave_school_w1 == 6 )									
+									
+replace before_school_supervision_w1 = 0 if (before_school_supervision_w1 != 1 & res_mom_at_home_leave_school_w1 != .)									
+									  
+gen after_school_supervision_w1 = 1 if (res_mom_at_home_return_school_w1  == 1 | res_mom_at_home_return_school_w1   == 2 | res_mom_at_home_return_school_w1  == 6 | ///									
+                                     res_dad_at_home_return_school_w1  == 1 | res_dad_at_home_return_school_w1   == 2 | res_dad_at_home_return_school_w1  == 6 )									
+									
+replace after_school_supervision_w1 = 0 if (after_school_supervision_w1 != 1 & res_mom_at_home_return_school_w1 != .)									
+									
+									
+gen bedtime_supervision_w1 = 1 if (res_mom_at_home_go_to_bed_w1  == 1 | res_mom_at_home_go_to_bed_w1 == 2 | res_mom_at_home_go_to_bed_w1  == 6 | ///									
+                                res_dad_at_home_go_to_bed_w1  == 1 | res_dad_at_home_go_to_bed_w1 == 2 | res_dad_at_home_go_to_bed_w1  == 6 )									
+									
+replace bedtime_supervision_w1 = 0 if (bedtime_supervision_w1 != 1 & res_mom_at_home_go_to_bed_w1 != .)									
 
 	   
 	   
@@ -2312,13 +2395,40 @@ rename PC48 son_sex_age
 	   
 	   
 	   
+gen before_school_supervision_w2 = 1 if (res_mom_at_home_leave_school_w2 == 1 | res_mom_at_home_leave_school_w2  == 2 | res_mom_at_home_leave_school_w2 == 6 | ///
+                                      res_dad_at_home_leave_school_w2 == 1 | res_dad_at_home_leave_school_w2  == 2 | res_dad_at_home_leave_school_w2 == 6 )
+
+replace before_school_supervision_w2 = 0 if (before_school_supervision_w2 != 1 & res_mom_at_home_leave_school_w2 != .)
+									  
+gen after_school_supervision_w2 = 1 if (res_mom_at_home_return_school_w2  == 1 | res_mom_at_home_return_school_w2   == 2 | res_mom_at_home_return_school_w2  == 6 | ///
+                                     res_dad_at_home_return_school_w2  == 1 | res_dad_at_home_return_school_w2   == 2 | res_dad_at_home_return_school_w2  == 6 )
+
+replace after_school_supervision_w2 = 0 if (after_school_supervision_w2 != 1 & res_mom_at_home_return_school_w2 != .)
+
+
+gen bedtime_supervision_w2 = 1 if (res_mom_at_home_go_to_bed_w2  == 1 | res_mom_at_home_go_to_bed_w2 == 2 | res_mom_at_home_go_to_bed_w2  == 6 | ///
+                                res_dad_at_home_go_to_bed_w2  == 1 | res_dad_at_home_go_to_bed_w2 == 2 | res_dad_at_home_go_to_bed_w2  == 6 )
+
+replace bedtime_supervision_w2 = 0 if (bedtime_supervision_w2 != 1 & res_mom_at_home_go_to_bed_w2 != .)
 	   
 	   
 	   
 	   
-	   
-	   
-	   
+gen bad_food_w2 =  H2NU60 + H2NU62 +  H2NU63 + H2NU66 + H2NU70 
+
+
+
+
+gen vege_fruits_w2 = H2NU10 + H2NU11 + H2NU12 + H2NU13 + H2NU14 + H2NU15 + H2NU16 + H2NU18 + H2NU19 + H2NU20 + H2NU21 + H2NU22 + H2NU23 + H2NU24 + H2NU25 + H2NU26 + H2NU27 + H2NU28 
+
+gen decision_w1 = decide_time_at_home_weekend_w1 + decide_hang_around_with_w1 + decide_what_u_wear_w1 + decide_how_much_tv_w1 + decide_what_tv_programs_w1 + decide_what_time_go_bed_w1 + decide_what_you_eat_w1
+
+replace  decision_w1 = 7-decision_w1
+
+gen decision_w2 =  decide_time_at_home_weekend_w2 + decide_hang_around_with_w2 + decide_what_u_wear_w2 + decide_how_much_tv_w2 + decide_what_tv_programs_w2 + decide_what_time_go_bed_w2 + decide_what_you_eat_w2
+
+
+replace  decision_w2 = 7-decision_w2
 	   
 	   
 	   

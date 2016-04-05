@@ -28,12 +28,16 @@ rename BIO_SEX BIO_SEX1
 
 
 
+
 * BIO_SEX race conscientiousness
 * sleep_time_w
 
 reshape long BIO_SEX age_mom_w age_dad_w  res_mom_educ_w res_dad_educ_w month_year_w ///
 smoke_frds_w drink_frds_w ///
 GSWGT BMI_w BMI_zscore_w overweight_w obese_w    ///
+general_health_w headache_w feeling_hot_w stomach_ache_w cold_sweats_w physical_weak_w sore_throat_w tired_w pain_urination_w sick_w wake_up_tired_w ///
+skin_problem_w dizziness_w chest_pain_w muscle_pain_w poor_appetite_w  trouble_sleep_w  trouble_relax_w moodiness_w freq_crying_w  fearful_w ///
+before_school_supervision_w after_school_supervision_w bedtime_supervision_w  parent_present_when_eat_w decision_w ///
 dwh_impute_indicator_w mwh_impute_indicator_w dad_edu_impute_indicator_w mom_edu_impute_indicator_w ///
 tv_hours_per_week_w video_hours_per_week_w computer_games_hours_per_week_w tv_video_comp_games_w ///
 sleep_hours_w  enough_sleep_w ///

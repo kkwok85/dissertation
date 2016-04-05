@@ -159,10 +159,14 @@ replace PB22 = . if (PB22 == 96 | PB22 == 98)
 
 
 
-
-
+forvalues i = 1(1)15 {
+	replace H1GH`i' = . if (H1GH`i' == 6 | H1GH`i' == 8)
+}
 
  
+forvalues i = 17(1)22 {
+	replace H1GH`i' = . if (H1GH`i' == 6 | H1GH`i' == 8)
+}
 
 
 
@@ -309,7 +313,25 @@ replace H2NU`i' = . if H2NU`i' == 8
 }
 
 
+replace H2NU60 = . if H2NU60 == 8
+replace H2NU62 = . if H2NU62 == 8
+replace H2NU63 = . if H2NU63 == 8
+replace H2NU66 = . if H2NU66 == 8
+replace H2NU70 = . if H2NU70 == 8
 
+replace H2NU77 = . if H2NU77 >= 8
+replace H2NU78 = . if H2NU78 >= 8
+replace H2NU79 = . if H2NU79 >= 8
+replace H2NU80 = . if H2NU80 >= 8
+
+
+
+
+replace H2GH1 = . if (H2GH1 == 6 | H2GH1 == 8)
+
+forvalues i = 8(1)27 {
+	replace H2GH`i' = . if (H2GH`i' == 6 | H2GH`i' == 8)
+}
 
 
 
