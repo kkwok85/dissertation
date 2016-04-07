@@ -139,17 +139,18 @@ foreach yvariable in num_fast_food_w2 num_eat_breakfast_w2 num_eat_lunch_w2 num_
 }
 
 
+*trouble_sleep_w 
 
 use F:\temp_data\panel_data, clear
 
 foreach xvariable in before_school_supervision_w after_school_supervision_w bedtime_supervision_w parent_present_when_eat_w decision_w {
 
-	foreach yvariable in general_health_w headache_w feeling_hot_w stomach_ache_w cold_sweats_w physical_weak_w sore_throat_w tired_w pain_urination_w sick_w wake_up_tired_w  skin_problem_w dizziness_w chest_pain_w muscle_pain_w poor_appetite_w  trouble_sleep_w  trouble_relax_w moodiness_w freq_crying_w  fearful_w  {
+	foreach yvariable in general_health_w headache_w feeling_hot_w stomach_ache_w cold_sweats_w physical_weak_w sore_throat_w tired_w pain_urination_w sick_w wake_up_tired_w  skin_problem_w dizziness_w chest_pain_w muscle_pain_w poor_appetite_w   trouble_relax_w moodiness_w freq_crying_w  fearful_w  {
 
 
 
 		oprobit `yvariable' `xvariable' res_mom_work_hours_v2_w zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $time_panel  [pw=GSWGT], vce(cluster PSUSCID_w )
-	    outreg2 using "F:/proposal_2",  nocons excel tex append  keep(`xvariable')  
+	    outreg2 using "F:/proposal_2",  nocons excel tex append  keep(`xvariable' res_mom_work_hours_v2_w)  
 
 	}
 
