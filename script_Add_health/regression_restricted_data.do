@@ -1,7 +1,7 @@
 * new regression
 
 set maxvar 32767
-use "F:\temp_data\panel_data", clear
+e
 
 cd "F:\temp_result"
 

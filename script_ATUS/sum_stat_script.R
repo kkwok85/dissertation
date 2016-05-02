@@ -1,4 +1,4 @@
-# sum stat
+# old sum stat for dep variables
 
 
 #########################################################################
@@ -59,7 +59,10 @@ print(xtable(empty.frame, caption = "Summary Statistics for the dependent variab
 
 
 
+# new sum stat for dep variables
 
+
+#########################################################################
 
 
 

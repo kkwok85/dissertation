@@ -2,7 +2,7 @@
 
 
 
-
+* this script is to find out why wave 1 and wave 2 have different stat significant
 
 
 
@@ -70,3 +70,85 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 }	
 
 }
+
+
+
+
+
+
+
+
+
+
+forvalues i = 1(1)2 {
+
+
+foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
+
+
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("No control") excel  title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1)    replace
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Demographic") excel  keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
+
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Mom occupation") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
+	
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Mom education") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Dad career and education") excel    keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
+	
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Family income") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
+	
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Supervision") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
+	
+
+	
+	reg `yvariable' c.res_mom_work_hours_v2_w c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_no_int_w`i', ctitle("+ Time") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
+	
+	
+	
+	
+}	
+
+}
+
+
+
+
+
+
+* indicate that it might not be measurement error...
+
+
+forvalues i = 1(1)2 {
+
+
+foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
+
+
+	reg `yvariable'  c.zConscientiousness_w1  [pw=GSWGT] if wave == `i', vce(cluster AID)
+	outreg2 using `yvariable'_conscient_w`i', ctitle("No control") excel  title("Table: `yvariable'")  keep(c.zConscientiousness_w1)    replace
+	
+
+	
+	
+	
+	
+}	
+
+}
+

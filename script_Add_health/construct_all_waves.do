@@ -251,6 +251,15 @@ replace exercise_for_weight_w1 = 0 if lose_weight_w1 == 4
 rename H1GH23A breakfast_milk_w1
 rename H1GH23G breakfast_snack_w1
 
+rename H1GH33 fruit_juice_w1
+rename H1GH34 vege_w1
+rename H1GH36 cookies_w1
+gen cookies_dum_w1 = 0 if cookies_w1 == 0 
+replace cookies_dum_w1 = 1 if (cookies_w1 == 1 | cookies_w1 == 2)
+
+
+
+
 
 rename H1GH37 school_PE_days_w1
 rename H1GH38 school_PE_min_w1
@@ -1721,8 +1730,51 @@ rename H1TO29 drink_frds_w1
 rename H1TO31 how_many_times_marijuana_w1       
 replace how_many_times_marijuana_w1 = 0 if H1TO30 == 0     
 
+
+
+
 rename H1TO32 how_many_times_marijuana_30_w1                 // this one is better since the previous questions ask lifetime use
 replace how_many_times_marijuana_30_w1 = 0 if H1TO30 == 0 
+
+
+gen ever_marijuana_30_w1 = 0 if  how_many_times_marijuana_30_w1 == 0
+replace ever_marijuana_30_w1 = 1 if (how_many_times_marijuana_30_w1 > 0 & how_many_times_marijuana_30_w1 !=. )
+
+
+
+
+
+rename H1TO36 how_many_times_cocaine_30_w1                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_cocaine_30_w1 = 0 if H1TO34 == 0 
+
+gen ever_cocaine_30_w1 = 0 if  how_many_times_cocaine_30_w1   == 0
+replace ever_cocaine_30_w1 = 1 if (how_many_times_cocaine_30_w1   > 0 & how_many_times_cocaine_30_w1   !=. )
+
+
+
+
+rename H1TO39 how_many_times_inhalants_30_w1                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_inhalants_30_w1 = 0 if H1TO37 == 0 
+
+gen ever_inhalants_30_w1 = 0 if  how_many_times_inhalants_30_w1   == 0
+replace ever_inhalants_30_w1 = 1 if (how_many_times_inhalants_30_w1   > 0 & how_many_times_inhalants_30_w1   !=. )
+
+
+
+
+
+
+rename H1TO42 how_many_times_other_drug_30_w1                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_other_drug_30_w1 = 0 if H1TO40 == 0 
+
+gen ever_other_drug_30_w1 = 0 if  how_many_times_other_drug_30_w1   == 0
+replace ever_other_drug_30_w1 = 1 if (how_many_times_other_drug_30_w1   > 0 & how_many_times_other_drug_30_w1   !=. )
+
+
+
+
+
+
 
 
 rename H1TO33 marijuana_frds_w1
@@ -1856,6 +1908,45 @@ rename H2TO46 how_many_times_marijuana_30_w2    // this one is better since the 
 replace how_many_times_marijuana_30_w2 = 0 if H2TO44 == 0
 
 rename H2TO48 marijuana_frds_w2
+
+
+
+
+gen ever_marijuana_30_w2 = 0 if  how_many_times_marijuana_30_w2 == 0
+replace ever_marijuana_30_w2 = 1 if (how_many_times_marijuana_30_w2 > 0 & how_many_times_marijuana_30_w2 !=. )
+
+
+
+
+
+rename H2TO52 how_many_times_cocaine_30_w2                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_cocaine_30_w2 = 0 if H2TO50 == 0 
+
+gen ever_cocaine_30_w2 = 0 if  how_many_times_cocaine_30_w2   == 0
+replace ever_cocaine_30_w2 = 1 if (how_many_times_cocaine_30_w2   > 0 & how_many_times_cocaine_30_w2   !=. )
+
+
+
+
+rename H2TO56 how_many_times_inhalants_30_w2                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_inhalants_30_w2 = 0 if H2TO54 == 0 
+
+gen ever_inhalants_30_w2 = 0 if  how_many_times_inhalants_30_w2   == 0
+replace ever_inhalants_30_w2 = 1 if (how_many_times_inhalants_30_w2   > 0 & how_many_times_inhalants_30_w2   !=. )
+
+
+
+
+
+rename H2TO60 how_many_times_other_drug_30_w2                 // this one is better since the previous questions ask lifetime use
+replace how_many_times_other_drug_30_w2 = 0 if H2TO58 == 0 
+
+gen ever_other_drug_30_w2 = 0 if  how_many_times_other_drug_30_w2   == 0
+replace ever_other_drug_30_w2 = 1 if (how_many_times_other_drug_30_w2   > 0 & how_many_times_other_drug_30_w2   !=. )
+
+
+
+
 
 
 * controls
@@ -2418,8 +2509,29 @@ gen bad_food_w2 =  H2NU60 + H2NU62 +  H2NU63 + H2NU66 + H2NU70
 
 
 
+gen vege_fruits_w1 = fruit_juice_w1 + vege_w1
 
-gen vege_fruits_w2 = H2NU10 + H2NU11 + H2NU12 + H2NU13 + H2NU14 + H2NU15 + H2NU16 + H2NU18 + H2NU19 + H2NU20 + H2NU21 + H2NU22 + H2NU23 + H2NU24 + H2NU25 + H2NU26 + H2NU27 + H2NU28 
+
+
+* bean is veggies!!
+gen fruit_juice_w2 = H2NU5 + H2NU6 + H2NU10 + H2NU11 + H2NU12 + H2NU13 + H2NU14 + H2NU15 + H2NU17 + H2NU18 
+gen vege_w2 =  H2NU16 + H2NU19 + H2NU20 + H2NU21 + H2NU22 + H2NU23 + H2NU24 + H2NU25 + H2NU26 + H2NU27 + H2NU28 + H2NU30
+ 
+
+ 
+ 
+gen vege_fruits_w2 =  H2NU10 + H2NU11 + H2NU12 + H2NU13 + H2NU14 + H2NU15 + H2NU16 + H2NU17 + H2NU19 + H2NU20 + H2NU21 + H2NU22 + H2NU23 + H2NU24 + H2NU25 + H2NU26 + H2NU27 + H2NU28 + H2NU30
+
+
+rename H2NU63 cookies_dum_w2 
+
+gen vege_fruits_dum_w1 = 0 if vege_fruits_w1 == 0
+replace vege_fruits_dum_w1 = 1 if (vege_fruits_w1 > 0 & vege_fruits_w1 !=. )
+ 
+gen vege_fruits_dum_w2 = 0 if vege_fruits_w2 == 0
+replace vege_fruits_dum_w2 = 1 if (vege_fruits_w2 > 0 & vege_fruits_w2 !=. )
+
+ 
 
 gen decision_w1 = decide_time_at_home_weekend_w1 + decide_hang_around_with_w1 + decide_what_u_wear_w1 + decide_how_much_tv_w1 + decide_what_tv_programs_w1 + decide_what_time_go_bed_w1 + decide_what_you_eat_w1
 
@@ -2429,6 +2541,11 @@ gen decision_w2 =  decide_time_at_home_weekend_w2 + decide_hang_around_with_w2 +
 
 
 replace  decision_w2 = 7-decision_w2
+	   
+	   
+	   
+	   
+	   
 	   
 	   
 	   
@@ -2539,10 +2656,18 @@ replace mom_full_time_child_report_v2_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & 
 replace mom_full_time_child_report_v2_w1 = 0 if res_mom_work_hours_v2_w1 == 0 
 
 
+gen mom_full_time_child_report_v2_w2 = 2 if res_mom_work_hours_v2_w2 >= 35 & res_mom_work_hours_v2_w2 !=.     
+replace mom_full_time_child_report_v2_w2 = 1 if res_mom_work_hours_v2_w2 < 35 & res_mom_work_hours_v2_w2 > 0 & res_mom_work_hours_v2_w2 !=.  
+replace mom_full_time_child_report_v2_w2 = 0 if res_mom_work_hours_v2_w2 == 0 
+
+
+
+
 * this version is a dummy version + restricted to mom's report 
 gen mom_full_time_child_report_v3_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != .  
 replace mom_full_time_child_report_v3_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != . 
 replace mom_full_time_child_report_v3_w1 = 0 if res_mom_work_hours_v2_w1 == 0  & mom_full_time_mom_report_v2_w1  != . 
+
 
 
 

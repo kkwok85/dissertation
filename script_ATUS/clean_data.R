@@ -12,6 +12,11 @@
 #install.packages("dummies")
 #install.packages("ggplot2")
 # install.packages("reshape")
+# install.packages("haven")
+# install.packages("readstata13")
+
+library(readstata13)
+library(haven)
 
 library(dummies)
 
@@ -29,6 +34,7 @@ library(survey)
 library(dummies)
 library(ggplot2)
 library(reshape)
+library(foreign)
 
 
 rm(list = ls())
@@ -43,6 +49,8 @@ load('D:/ATUS/0314/atusrost.rda')
 load('D:/ATUS/0314/atussum.rda')
 load('D:/ATUS/0314/atuswgts.rda')
 load('D:/ATUS/0314/atuswho.rda')
+lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
+lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
 
 
 
@@ -526,6 +534,13 @@ combine.data <- join(combine.data,atusresp.subset, by=c("tucaseid","tulineno"), 
 
 
 
+combine.data <- join(combine.data,lv.data , by=c("tucaseid","tulineno"), type = "full")
+
+combine.data <- join(combine.data,lvwgts.data , by=c("tucaseid"), type = "full")
+
+
+
+
 
 
 
@@ -577,6 +592,8 @@ table(combine.data$wfh.v2)
 
 
 
+
+# wfh.v3 combine first job and second job
 combine.data$total.job.time <- combine.data$total.main.job.time + combine.data$total.other.job.time
 combine.data$total.job.wfh.time <- combine.data$total.main.job.wfh.time + combine.data$total.other.job.wfh.time
 combine.data$total.percent.total.job.wfh <-  combine.data$total.job.wfh.time/combine.data$total.job.time

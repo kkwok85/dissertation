@@ -96,6 +96,18 @@ replace H1WP8 = . if (H1WP8 >= 96 & H1WP8 <= 98)
 
 
 * eat and BMI
+
+
+* diet
+replace H1GH33 = . if (H1GH33 == 6 | H1GH33 == 8)
+replace H1GH34 = . if (H1GH34 == 6 | H1GH34 == 8)
+replace H1GH36 = . if (H1GH36 == 6 | H1GH36 == 8)
+
+
+
+
+
+* breakfast
 replace H1GH23A = . if (H1GH23A == 6 | H1GH23A == 8)
 replace H1GH23G = . if (H1GH23G == 6 | H1GH23G == 8)
 replace H1GH23J = . if (H1GH23J == 6 | H1GH23J == 8)
@@ -140,10 +152,27 @@ replace H1TO17 = . if (H1TO17 == 96 | H1TO17 == 97 | H1TO17 == 98)
 replace H1TO18 = . if (H1TO18 == 96 | H1TO18 == 97 | H1TO18 == 98)
 
 
+
+* marijuana
+replace H1TO32 = . if (H1TO32 == 996 | H1TO32 == 997 | H1TO32 == 998 | H1TO32 == 999)
+* cocaine
+replace H1TO36 = . if (H1TO36 == 996 | H1TO32 == 997 | H1TO32 == 998 | H1TO32 == 999)
+
+* inhalants
+replace H1TO39 = . if (H1TO39 == 996 | H1TO39 == 997 | H1TO39 == 998 | H1TO39 == 999)
+
+* other illegal drugs
+replace H1TO42 = . if (H1TO42 == 996 | H1TO42 == 997 | H1TO42 == 998 | H1TO42 == 999)
+
+
 * sex
 replace H1CO1 = . if (H1CO1 == 6 | H1CO1 == 8 | H1CO1 == 9)
 replace PC47 = . if (PC47 == 6 | PC47 == 8)
 replace PC41 = . if (PC41 == 6 | PC41 == 8)
+
+
+
+
 
 
 
@@ -297,17 +326,32 @@ replace H2TO20 = . if (H2TO20 == 96 | H2TO20 == 97 | H2TO20 == 98)
 replace H2TO21 = . if (H2TO21 == 96 | H2TO21 == 97 | H2TO21 == 98)
 replace H2TO22 = . if (H2TO22 == 96 | H2TO22 == 97 | H2TO22 == 98)
 
+* marijuana
+replace H2TO46 = . if (H2TO46 == 996 | H2TO46 == 997 | H2TO46 == 998 )
 
+* cocaine
+replace H2TO52 = . if (H2TO52 == 996 | H2TO52 == 997 | H2TO52 == 998)
+
+* inhalants
+replace H2TO56 = . if (H2TO56 == 996 | H2TO56 == 997 | H2TO56 == 998)
+
+* other illegal drugs
+replace H2TO60 = . if (H2TO60 == 996 | H2TO60 == 997 | H2TO60 == 998)
 
 
 * sex
-replace H2CO1 = . if (H2CO1 == 6 | H2CO1 == 8)
+replace H2CO2 = . if (H2CO2 == 6 | H2CO2 == 8)
 
 
 
 
 * nutrition
-forvalues i = 10(1)28 {
+
+replace H2NU5 = . if H2NU5 == 8
+replace H2NU6 = . if H2NU6 == 8
+
+
+forvalues i = 10(1) 30 {
 replace H2NU`i' = . if H2NU`i' == 8
 
 }
