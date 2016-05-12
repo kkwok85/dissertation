@@ -45,7 +45,19 @@ global time  i.month_year_w2
 
 
 
+global demographic age_w1 i.BIO_SEX i.race num_siblings_w1 AH_PVT i.no_mom_w1 i.no_dad_w1 age_mom_w1 age_dad_w1
 
+global mom_occupation i.res_mom_occupation_w1
+
+global mom_edu i.res_mom_educ_w1 i.mom_edu_impute_indicator_w1 
+
+global dad_educ_career res_dad_work_hours_v2_w1  i.res_dad_occupation_w1  i.dwh_impute_indicator_w1 i.res_dad_educ_w1 i.dad_edu_impute_indicator_w1
+
+global family_income family_income_1994 i.fam_income_impute_ind
+
+global supervision  i.decide_time_at_home_weekend_w1 i.decide_hang_around_with_w1 i.decide_what_u_wear_w1 i.decide_how_much_tv_w1 i.decide_what_tv_programs_w1 i.decide_what_time_go_bed_w1 i.decide_what_you_eat_w1
+
+global time  i.month_year_w1
 
 
 gen fam_income_impute_ind = 1 if family_income_1994 ==.

@@ -35,6 +35,7 @@ library(dummies)
 library(ggplot2)
 library(reshape)
 library(foreign)
+require(MASS)
 
 
 rm(list = ls())

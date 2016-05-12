@@ -14,6 +14,19 @@ use Add_Health_merged_w1_to_w4, clear
 
 
 
+* can check age_mom/age_dad, dwh_impute_indicator_w,dad_edu_impute_indicator_w   later again 
+
+* checked variables:
+* c.res_mom_work_hours_v2_w1, zConscientiousness_w1, zNeuroticism_w2, age_w1, BIO_SEX, race, num_siblings_w1, AH_PVT, no_mom_w1, no_dad_w1, age_mom_w1,  
+* res_mom_occupation_w1, res_mom_educ_w1, mom_edu_impute_indicator_w,  res_dad_work_hours_v2_w1,  res_dad_occupation_w1, res_dad_educ_w, family_income_1994
+* i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w
+* all smoking, drinking and drugs, BMI, lose_weight
+
+* c.res_mom_work_hours_v2_w2, zConscientiousness_w2, zNeuroticism_w2, age_w2, num_siblings_w2, no_mom_w2, no_dad_w2, age_mom_w2 , 
+* res_mom_occupation_w2,  res_mom_educ_w2, mom_edu_impute_indicator_w, res_dad_work_hours_v2_w2,  res_dad_occupation_w2, res_dad_educ_w 
+*i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w
+* all smoking, drinking and drugs, BMI, lose_weight
+
 
 
 
@@ -202,6 +215,24 @@ forvalues i = 17(1)22 {
 
 
 
+
+* personality
+
+forvalues i = 18(1)21 {
+	replace H1PF`i' = . if (H1PF`i' == 6 | H1PF`i' == 8 | H1PF`i' == 9)
+}
+
+
+
+foreach  variables in H1PF30 H1PF32 H1PF33 H1PF34 H1PF35 H1PF36 {
+	replace `variables' = . if (`variables' == 6 | `variables' == 8 | `variables'  == 9)
+}
+
+
+
+foreach variables in S62B  S62E  S62O {
+	replace `variables' = . if  (`variables' == 9)
+}
 
 
 

@@ -2575,10 +2575,10 @@ replace  decision_w2 = 7-decision_w2
 
 
 * checked 1 time
-gen dad_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 1
-replace dad_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 1
-replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 0
-replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0
+gen dad_full_time_mom_report_w1 = 1 if (sex_mom_or_dad == 1 & full_time_mom_or_dad == 1)
+replace dad_full_time_mom_report_w1 = 1 if (sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 1)
+replace dad_full_time_mom_report_w1 = 0 if (sex_mom_or_dad == 1 & full_time_mom_or_dad == 0)
+replace dad_full_time_mom_report_w1 = 0 if (sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0)
 
 
 
@@ -2589,10 +2589,10 @@ replace dad_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse == 1
 
 
 * checked 1 time
-gen mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
-replace mom_full_time_mom_report_w1 = 1 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
-replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0
+gen mom_full_time_mom_report_w1 = 1 if (sex_mom_or_dad == 2 & full_time_mom_or_dad == 1)
+replace mom_full_time_mom_report_w1 = 1 if (sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1)
+replace mom_full_time_mom_report_w1 = 0 if (sex_mom_or_dad == 2 & full_time_mom_or_dad == 0)
+replace mom_full_time_mom_report_w1 = 0 if (sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0)
 
 
 
@@ -2602,12 +2602,12 @@ replace mom_full_time_mom_report_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2
 
 
 * checked 1 time  (version 2 means 0 is added here)
-gen mom_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 1
-replace mom_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1
-replace mom_full_time_mom_report_v2_w1 = 1 if sex_mom_or_dad == 2 & full_time_mom_or_dad == 0
-replace mom_full_time_mom_report_v2_w1 = 1 if sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0
-replace mom_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 2 & work_outside_mom_or_dad == 0
-replace mom_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse == 2 & work_outside_spouse == 0
+gen mom_full_time_mom_report_v2_w1 = 2 if (sex_mom_or_dad == 2 & full_time_mom_or_dad == 1)
+replace mom_full_time_mom_report_v2_w1 = 2 if (sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 1)
+replace mom_full_time_mom_report_v2_w1 = 1 if (sex_mom_or_dad == 2 & full_time_mom_or_dad == 0)
+replace mom_full_time_mom_report_v2_w1 = 1 if (sex_mom_or_dad == 1 & sex_spouse == 2 & full_time_spouse == 0)
+replace mom_full_time_mom_report_v2_w1 = 0 if (sex_mom_or_dad == 2 & work_outside_mom_or_dad == 0)
+replace mom_full_time_mom_report_v2_w1 = 0 if (sex_mom_or_dad == 1 & sex_spouse == 2 & work_outside_spouse == 0)
 
 
 
@@ -2617,13 +2617,13 @@ replace mom_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 1 & sex_spouse =
 
 
 * checked 1 time
-gen dad_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 1
-replace dad_full_time_mom_report_v2_w1 = 2 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 1
-replace dad_full_time_mom_report_v2_w1 = 1 if sex_mom_or_dad == 1 & full_time_mom_or_dad == 0
-replace dad_full_time_mom_report_v2_w1 = 1 if sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0
-replace dad_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 1 & work_outside_mom_or_dad == 0
-replace dad_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 1 & work_outside_mom_or_dad == 0
-replace dad_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse == 1 & work_outside_spouse == 0
+gen dad_full_time_mom_report_v2_w1 = 2 if (sex_mom_or_dad == 1 & full_time_mom_or_dad == 1)
+replace dad_full_time_mom_report_v2_w1 = 2 if (sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 1)
+replace dad_full_time_mom_report_v2_w1 = 1 if (sex_mom_or_dad == 1 & full_time_mom_or_dad == 0)
+replace dad_full_time_mom_report_v2_w1 = 1 if (sex_mom_or_dad == 2 & sex_spouse == 1 & full_time_spouse == 0)
+replace dad_full_time_mom_report_v2_w1 = 0 if (sex_mom_or_dad == 1 & work_outside_mom_or_dad == 0)
+replace dad_full_time_mom_report_v2_w1 = 0 if (sex_mom_or_dad == 1 & work_outside_mom_or_dad == 0)
+replace dad_full_time_mom_report_v2_w1 = 0 if (sex_mom_or_dad == 2 & sex_spouse == 1 & work_outside_spouse == 0)
 
 
 
@@ -2640,33 +2640,33 @@ replace dad_full_time_mom_report_v2_w1 = 0 if sex_mom_or_dad == 2 & sex_spouse =
 
 * version of mom working hours are the one with imputed mom working hours with mom does not work for pay and mom without occupation
 gen res_mom_work_hours_v2_w1 = res_mom_work_hours_w1    
-replace res_mom_work_hours_v2_w1 = 0 if res_mom_pay_w1 == 0  | res_mom_occupation_w1 == 16
+replace res_mom_work_hours_v2_w1 = 0 if (res_mom_pay_w1 == 0  | res_mom_occupation_w1 == 16)
 
 
 
 gen res_mom_work_hours_v2_w2 = res_mom_work_hours_w2
-replace res_mom_work_hours_v2_w2 = 0 if res_mom_pay_w2 == 0  | res_mom_occupation_w2 == 16
+replace res_mom_work_hours_v2_w2 = 0 if (res_mom_pay_w2 == 0  | res_mom_occupation_w2 == 16)
 
 
 
 
 * this version is a dummy version
-gen mom_full_time_child_report_v2_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.     
-replace mom_full_time_child_report_v2_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.  
+gen mom_full_time_child_report_v2_w1 = 2 if (res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=. )    
+replace mom_full_time_child_report_v2_w1 = 1 if (res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.  )
 replace mom_full_time_child_report_v2_w1 = 0 if res_mom_work_hours_v2_w1 == 0 
 
 
-gen mom_full_time_child_report_v2_w2 = 2 if res_mom_work_hours_v2_w2 >= 35 & res_mom_work_hours_v2_w2 !=.     
-replace mom_full_time_child_report_v2_w2 = 1 if res_mom_work_hours_v2_w2 < 35 & res_mom_work_hours_v2_w2 > 0 & res_mom_work_hours_v2_w2 !=.  
+gen mom_full_time_child_report_v2_w2 = 2 if (res_mom_work_hours_v2_w2 >= 35 & res_mom_work_hours_v2_w2 !=.)     
+replace mom_full_time_child_report_v2_w2 = 1 if (res_mom_work_hours_v2_w2 < 35 & res_mom_work_hours_v2_w2 > 0 & res_mom_work_hours_v2_w2 !=. ) 
 replace mom_full_time_child_report_v2_w2 = 0 if res_mom_work_hours_v2_w2 == 0 
 
 
 
 
 * this version is a dummy version + restricted to mom's report 
-gen mom_full_time_child_report_v3_w1 = 2 if res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != .  
-replace mom_full_time_child_report_v3_w1 = 1 if res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != . 
-replace mom_full_time_child_report_v3_w1 = 0 if res_mom_work_hours_v2_w1 == 0  & mom_full_time_mom_report_v2_w1  != . 
+gen mom_full_time_child_report_v3_w1 = 2 if (res_mom_work_hours_v2_w1 >= 35 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != .  )
+replace mom_full_time_child_report_v3_w1 = 1 if (res_mom_work_hours_v2_w1 < 35 & res_mom_work_hours_v2_w1 > 0 & res_mom_work_hours_v2_w1 !=.   & mom_full_time_mom_report_v2_w1  != . )
+replace mom_full_time_child_report_v3_w1 = 0 if (res_mom_work_hours_v2_w1 == 0  & mom_full_time_mom_report_v2_w1  != . )
 
 
 
@@ -2680,26 +2680,26 @@ replace mom_full_time_child_report_v3_w1 = 0 if res_mom_work_hours_v2_w1 == 0  &
 
 * version of mom working hours are the one with imputed mom working hours
 gen res_dad_work_hours_v2_w1 = res_dad_work_hours_w1 
-replace res_dad_work_hours_v2_w1 = 0 if res_dad_pay_w1 == 0  | res_dad_occupation_w1 == 16
+replace res_dad_work_hours_v2_w1 = 0 if (res_dad_pay_w1 == 0  | res_dad_occupation_w1 == 16)
 
 
 
 gen res_dad_work_hours_v2_w2 = res_dad_work_hours_w2
-replace res_dad_work_hours_v2_w2 = 0 if res_dad_pay_w2 == 0  | res_dad_occupation_w2 == 16
+replace res_dad_work_hours_v2_w2 = 0 if (res_dad_pay_w2 == 0  | res_dad_occupation_w2 == 16)
 
 
 
 * this version is a dummy version
 
-gen dad_full_time_child_report_v2_w1 = 2 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.     
-replace dad_full_time_child_report_v2_w1 = 1 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.  
-replace dad_full_time_child_report_v2_w1 = 0 if res_dad_work_hours_v2_w1 == 0 
+gen dad_full_time_child_report_v2_w1 = 2 if (res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=. )    
+replace dad_full_time_child_report_v2_w1 = 1 if (res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.  )
+replace dad_full_time_child_report_v2_w1 = 0 if res_dad_work_hours_v2_w1 == 0
 
 
 * this version is a dummy version + restricted to dad's report 
-gen dad_full_time_child_report_v3_w1 = 2 if res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . 
-replace dad_full_time_child_report_v3_w1 = 1 if res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . 
-replace dad_full_time_child_report_v3_w1 = 0 if res_dad_work_hours_v2_w1 == 0  & dad_full_time_mom_report_v2_w1  != . 
+gen dad_full_time_child_report_v3_w1 = 2 if (res_dad_work_hours_v2_w1 >= 35 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . )
+replace dad_full_time_child_report_v3_w1 = 1 if (res_dad_work_hours_v2_w1 < 35 & res_dad_work_hours_v2_w1 > 0 & res_dad_work_hours_v2_w1 !=.    & dad_full_time_mom_report_v2_w1  != . )
+replace dad_full_time_child_report_v3_w1 = 0 if (res_dad_work_hours_v2_w1 == 0  & dad_full_time_mom_report_v2_w1  != . )
 
 
 

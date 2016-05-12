@@ -4,7 +4,7 @@
 
 install.packages("readstata13")
 library(readstata13)
-
+require(MASS)
 
 
 demographic.var <- c("+ age + race + sex + marital.status ")
@@ -29,11 +29,11 @@ names.y <- c("Total time for child care", "Physical care",
 
 
 
-lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
+#lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
 
 
 
-lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
+#lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
 
 combine.data.regress.test <- combine.data[which(combine.data$lufinlwgt != "NA" & combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
                                                   combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday" & combine.data$holiday.indicator == "Not holiday"),] 
@@ -41,43 +41,106 @@ combine.data.regress.test <- combine.data[which(combine.data$lufinlwgt != "NA" &
 
 
 
-
-combine.data.regress.test$luadloc <- as.numeric(combine.data.regress.test$luadloc)
-combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 1 )] <- NA
-combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 2 )] <- 4
-combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 3 )] <- 5
-
+combine.data$luadloc <- as.numeric(combine.data$luadloc)
+combine.data$luadloc[which(combine.data$luadloc== 1 )] <- NA
+combine.data$luadloc[which(combine.data$luadloc== 2 )] <- 4
+combine.data$luadloc[which(combine.data$luadloc== 3 )] <- 5
 
 
-combine.data.regress.test$luaddy <- as.numeric(combine.data.regress.test$luaddy)
-combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 1 )] <- NA
-combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 2 )] <- 4
-combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 3 )] <- 5
-
-
-combine.data.regress.test$luadhr <- as.numeric(combine.data.regress.test$luadhr)
-combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 1 )] <- NA
-combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 2 )] <- 4
-combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 3 )] <- 5
-
-combine.data.regress.test$legnhth <- as.numeric(combine.data.regress.test$legnhth)
+combine.data$luaddy <- as.numeric(combine.data$luaddy)
+combine.data$luaddy[which(combine.data$luaddy== 1 )] <- NA
+combine.data$luaddy[which(combine.data$luaddy== 2 )] <- 4
+combine.data$luaddy[which(combine.data$luaddy== 3 )] <- 5
 
 
 
-combine.data.regress.test$edited.family.income2 <- as.numeric(combine.data.regress.test$edited.family.income2)
+combine.data$luadhr <- as.numeric(combine.data$luadhr)
+combine.data$luadhr[which(combine.data$luadhr== 1 )] <- NA
+combine.data$luadhr[which(combine.data$luadhr== 2 )] <- 4
+combine.data$luadhr[which(combine.data$luadhr== 3 )] <- 5
 
 
 
 
 
+#combine.data.regress.test$luadloc <- as.numeric(combine.data.regress.test$luadloc)
+#combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 1 )] <- NA
+#combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 2 )] <- 4
+#combine.data.regress.test$luadloc[which(combine.data.regress.test$luadloc== 3 )] <- 5
+
+
+
+#combine.data.regress.test$luaddy <- as.numeric(combine.data.regress.test$luaddy)
+#combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 1 )] <- NA
+#combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 2 )] <- 4
+#combine.data.regress.test$luaddy[which(combine.data.regress.test$luaddy== 3 )] <- 5
+
+
+#combine.data.regress.test$luadhr <- as.numeric(combine.data.regress.test$luadhr)
+#combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 1 )] <- NA
+#combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 2 )] <- 4
+#combine.data.regress.test$luadhr[which(combine.data.regress.test$luadhr== 3 )] <- 5
+
+#combine.data.regress.test$legnhth <- as.numeric(combine.data.regress.test$legnhth)
+
+#combine.data.regress.test$legnhth <- as.factor(combine.data.regress.test$legnhth)
+
+
+#combine.data.regress.test$edited.family.income2 <- as.numeric(combine.data.regress.test$edited.family.income2)
+
+
+
+combine.data$legnhth <- as.numeric(combine.data$legnhth)
+
+
+#combine.data$legnhth <- as.factor(combine.data$legnhth)
+
+
+
+combine.data$health.status.dum <- "NA"
+combine.data$health.status.dum[which(combine.data$legnhth == 3 | combine.data$legnhth == 4 | combine.data$legnhth == 5 )] <- 0
+combine.data$health.status.dum[which(combine.data$legnhth == 1 | combine.data$legnhth == 2 )] <- 1
+
+combine.data$health.status.dum <- as.numeric(combine.data$health.status.dum)
+
+
+
+combine.data$luleave <- as.numeric(combine.data$luleave)
+combine.data$leave.dum <- combine.data$luleave
+combine.data$leave.dum[which(combine.data$luleave == 1 | combine.data$luleave == 2 | combine.data$luleave == 3 )] <- "NA"
+table(combine.data$leave.dum)
+
+combine.data$leave.dum <- as.numeric(combine.data$leave.dum)
 
 
 
 
+combine.data$lupaid <- as.numeric(combine.data$lupaid)
+combine.data$lupaid.dum <- combine.data$lupaid
+combine.data$lupaid.dum[which(combine.data$lupaid == 1 | combine.data$lupaid == 2  )] <- "NA"
+table(combine.data$lupaid.dum)
+
+combine.data$lupaid.dum <- as.numeric(combine.data$lupaid.dum)
 
 
 
 
+combine.data$lradto <- as.numeric(combine.data$lradto)
+combine.data$lradto.dum <- combine.data$lradto
+combine.data$lradto.dum[which(combine.data$lradto == 1 | combine.data$lradto== 2  )] <- "NA"
+table(combine.data$lradto.dum)
+
+combine.data$lradto.dum <- as.numeric(combine.data$lradto.dum)
+
+
+
+summary(lm(paste0("combine.data$health.status.dum"," ~ factor(luadloc) + num.children + diary.day + edited.weekly.earnings + factor(edited.weekly.earnings.indicator)+ factor(weekly.earning.top.coded) "
+                  ,demographic.var, employ.var , current.sit, family.bus, spouse.var), data = combine.data, weights = lufinlwgt ))
+
+
+# this regression is shorter cuz employ.var has problem
+summary(lm(paste0("leave.dum"," ~ factor(luadhr) + num.children + diary.day + edited.weekly.earnings + factor(edited.weekly.earnings.indicator)+ factor(weekly.earning.top.coded) ",
+                  demographic.var, current.sit, family.bus, spouse.var), data = combine.data, weights = lufinlwgt ))
 
 
 
@@ -541,5 +604,17 @@ stargazer(result[[1]], result[[2]], result[[3]], result[[4]],
           notes = "Sampling weights are applied and robust standard errors are used. Base category is no flexible work arrangements. Number of observations is 1454.", notes.align = "l", omit.table.layout = "s" )
 
 
+
+
+
+
+
+# flexible work vs different things. It affect time in education a lot!!!
+combine.data.regress.test2  <- join(combine.data,atussum, by=c("tucaseid"), type = "left")
+
+
+
+summary(lm(paste0("combine.data$health.status.dum"," ~ factor(luadloc) + num.children + diary.day + edited.weekly.earnings + factor(edited.weekly.earnings.indicator)+ factor(weekly.earning.top.coded) "
+                  ,demographic.var, employ.var , current.sit, family.bus, spouse.var), data = combine.data.regress.test2, weights = lufinlwgt ))
 
 

@@ -5,6 +5,7 @@ cd "F:\temp_data"
 clear
 
 
+set maxvar 32767
 
 use constructed_variables, clear
 
@@ -42,6 +43,7 @@ skin_problem_w dizziness_w chest_pain_w muscle_pain_w poor_appetite_w  trouble_s
 before_school_supervision_w after_school_supervision_w bedtime_supervision_w  parent_present_when_eat_w decision_w ///
 dwh_impute_indicator_w mwh_impute_indicator_w dad_edu_impute_indicator_w mom_edu_impute_indicator_w ///
 tv_hours_per_week_w video_hours_per_week_w computer_games_hours_per_week_w tv_video_comp_games_w ///
+grade_ELA_w grade_math_w grade_history_w grade_science_w ///
 sleep_hours_w  enough_sleep_w ///
 lose_weight_w exercise_for_weight_w diet_for_weight_w ///
 ever_had_sex_w  how_many_times_marijuana_w how_many_times_marijuana_30_w   ///
