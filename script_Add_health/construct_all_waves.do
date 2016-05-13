@@ -93,6 +93,7 @@ foreach personality in Neuroticism_w1 Conscientiousness_w1 Extraversion_w1 {
 replace zConscientiousness_w1 = zConscientiousness_w1*(-1)
 
 
+replace zNeuroticism_w1 = zNeuroticism_w1*(-1)
 
 
 
@@ -823,7 +824,7 @@ replace age_dad_w2 = 0 if no_dad_w2 == 1
 
 
 
-egen num_bro_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q)  , values(8)
+egen num_bro_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q)  , values(5)
 egen num_sis_w2 = anycount(H2HR4A H2HR4B H2HR4C H2HR4D H2HR4E H2HR4F H2HR4G H2HR4H H2HR4I H2HR4J H2HR4K H2HR4L H2HR4M H2HR4N H2HR4O H2HR4P H2HR4Q)  , values(8)
 
 

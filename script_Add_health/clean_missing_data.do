@@ -5,7 +5,7 @@ clear
 
 
 cd "F:\temp_data"
-* set maxvar 32767
+*set maxvar 32767
 
 use Add_Health_merged_w1_to_w4, clear
 

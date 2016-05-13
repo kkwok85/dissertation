@@ -1,7 +1,8 @@
 * new regression
 
 set maxvar 32767
-e
+
+
 
 cd "F:\temp_result"
 
@@ -183,7 +184,7 @@ xi: regress tried_cigarette_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_
 * do impute, mi impute
 
 
-
+/*
 
 
 egen month_PSUSCID =group(IMONTH PSUSCID)
@@ -199,25 +200,18 @@ egen wave_PSUSCID = group(wave PSUSCID)
 egen wave_PSUSCID_state = group(wave PSUSCID STATE_w) 
 egen wave_PSUSCID_state_FAMILY = group(wave PSUSCID STATE_w FAMID) 
 
+*/
 
 
 
 
 
+use  F:\temp_data\panel_data, clear
 
 
 
 
 
-
-new control
-age_mom_w age_dad_w i.res_mom_educ_w i.res_dad_educ_w i.month_year_w
-
-
-
-BMI_w1 BMI_zscore_w1 overweight_w1 obese_w1
-
-tried_cigarette_w1 regular_cigarette_w1 how_many_days_smoke_w1 how_many_cigarettes_w1 total_smoke_a_month_w1 
 
 
 * need regression on sleep hours
@@ -284,141 +278,6 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 
 
 
-
-* check if mom report has problem
-
-foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
-tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
-BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
-
-
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("No control") excel  title("Table: `yvariable'")  keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1)    replace
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Demographic") excel  keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append
-
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Mom occupation") excel   keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append
-	
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Mom education") excel   keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append	
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Dad career and education") tex    keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Family income") excel    keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Supervision") excel    keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append	
-	
-
-	
-	reg `yvariable' i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_int_no_star_w1, noaster ctitle("+ Time") excel    keep(i.mom_full_time_mom_report_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	
-	
-}	
-
-
-
-
-
-
-foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
-tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
-BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
-
-
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("No control") excel  title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1)    replace
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Demographic") excel keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
-
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Mom occupation") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Mom education") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Dad career and education") excel    keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Family income") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Supervision") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT] if wave == 1, vce(cluster AID)
-	outreg2 using `yvariable'_no_star_w1, noaster ctitle("+ Time") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	
-	
-}	
-
-
-
-
-
-
-
-
-
-
-
-
-foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
-tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
-BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
-
-
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("No control") excel  title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1)    replace
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Demographic") excel keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
-
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Mom occupation") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Mom education") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Dad career and education") excel    keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Family income") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Supervision") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-
-	
-	reg `yvariable' c.res_mom_work_hours_v2_w##c.zConscientiousness_w1 i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT] if (wave == 1 & mom_full_time_mom_report_v2_w !=.), vce(cluster AID)
-	outreg2 using `yvariable'_no_star_mom_miss_w1, noaster ctitle("+ Time") excel   keep(c.res_mom_work_hours_v2_w##c.zConscientiousness_w1) append	
-	
-	
-	
-	
-}	
 
 
 
