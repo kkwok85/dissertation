@@ -5,7 +5,7 @@ cd "F:\temp_data"
 clear
 
 
-set maxvar 32767
+*set maxvar 32767
 
 use constructed_variables, clear
 
@@ -54,7 +54,7 @@ tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_
 lie_to_parents_whereabout_w run_away_from_home_w steal_car_w steal_things_w go_into_house_w  steal_things_less_fifty_w fight_with_group_w paint_graffiti_w damage_property_w ///
 ever_drink_alcohol_w  drink_days_v2_w drink_amount_w drink_5_a_row_v2_w drink_very_high_v2_w total_drink_per_year_w ///
 no_mom_w no_dad_w age_w num_siblings_w res_mom_occupation_w  res_dad_occupation_w res_mom_work_hours_v2_w res_dad_work_hours_v2_w mom_full_time_child_report_v2_w ///
-mom_full_time_mom_report_v2_w ///
+mom_full_time_mom_report_v2_w mom_full_time_child_report_v3_w ///
 decide_time_at_home_weekend_w decide_hang_around_with_w decide_what_u_wear_w decide_how_much_tv_w decide_what_tv_programs_w decide_what_time_go_bed_w decide_what_you_eat_w   ///
 res_mom_at_home_leave_school_w res_mom_at_home_return_school_w res_mom_at_home_go_to_bed_w res_dad_at_home_leave_school_w res_dad_at_home_return_school_w res_dad_at_home_go_to_bed_w youngest_sib_age_w   PSUSCID_w STATE_w ///
 , i(AID) j(wave)
