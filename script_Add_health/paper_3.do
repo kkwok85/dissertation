@@ -348,3 +348,8 @@ foreach yvariable in num_fast_food_w2 num_eat_breakfast_w2 num_eat_lunch_w2 num_
 
 
 reg H4EC2 c.zNeuroticism_w1 ##ib3.H4LM25 BIO_SEX AH_PVT  i.race i.IMONTH4 i.H4OD4 i.H4GH1 H4BMI [pweight = GSWGT4_2 ] if (H4EC2 < 9999996 & H4LM25 <5)
+
+
+
+works! neuroticism also works
+areg H4EC2 c.zExtraversion_w4##ib3.H4LM25 BIO_SEX AH_PVT  i.race i.IMONTH4 i.H4OD4 i.H4GH1 H4BMI [pweight = GSWGT4_2 ] if (H4EC2 < 9999996 & H4LM25 <5), absorb(FAMID)

@@ -42,3 +42,85 @@ sum BIO_SEX
 sum  $demographic_panel [aweight = GSWGT]
 
 sutex $demographic_panel [aweight = GSWGT] ,nobs minmax
+
+
+ever_drink_alcohol_w  drink_days_v2_w drink_amount_w total_drink_per_year_w ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+ever_marijuana_30_w ever_all_but_m_drugs_w ///
+BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w
+
+
+
+
+cd "D:\temp_result_panel"
+
+
+estpost sum BMI_zscore_w lose_weight_dum_w tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+ever_drink_alcohol_w drink_days_v2_w drink_amount_w total_drink_per_year_w ever_marijuana_30_w  ever_all_but_m_drugs_w [aweight = GSWGT]
+
+
+
+
+
+estout using summary_stat.tex ,  prehead(\scalebox{0.7}{\begin{tabular}{l*{1}{ccccc}}\hline ) ///
+varlabels(BMI_zscore_w "BMI Z-score" ///
+lose_weight_dum_w  "Lose weight" tried_cigarette_w  "Ever smoked" ///
+ regular_cigarette_w "Regular smoker" how_many_days_smoke_w "Num. of smoke days" ///
+ how_many_cigarettes_w "Num. of cigarettes" total_smoke_a_month_w  "Total num. of cigarettes" ///
+ever_drink_alcohol_w    "Ever drank alcohol" drink_days_v2_w "Num. of drink days"  /// 
+ drink_amount_w "Num. of drink amount"  total_drink_per_year_w "Total num. of drink" ///
+ ever_marijuana_30_w  "Smoked marijuana in past 30 days" ever_all_but_m_drugs_w  "Used other drugs in past 30 days")  ///
+style(tex)  cells("count mean sd min max") replace postfoot(\hline\end{tabular}})
+
+
+global demographic_panel age_w BIO_SEX zNeuroticism_w1 zConscientiousness_w1 i.race num_siblings_w AH_PVT i.no_mom_w i.no_dad_w age_mom_w age_dad_w
+
+global mom_occupation_panel i.res_mom_occupation_w
+
+global mom_edu_panel i.res_mom_educ_w i.mom_edu_impute_indicator_w 
+
+global dad_educ_career_panel res_dad_work_hours_v2_w  i.res_dad_occupation_w  i.dwh_impute_indicator_w i.res_dad_educ_w i.dad_edu_impute_indicator_w 
+
+global family_income_panel family_income_1994 i.fam_income_impute_ind
+
+global supervision_panel  i.decide_time_at_home_weekend_w i.decide_hang_around_with_w i.decide_what_u_wear_w i.decide_how_much_tv_w i.decide_what_tv_programs_w i.decide_what_time_go_bed_w i.decide_what_you_eat_w
+
+global time_panel  i.month_year_w
+
+
+
+BIO_SEX race res_mom_occupation_w res_mom_educ_w res_dad_occupation_w res_dad_educ_w
+
+* c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel 
+
+
+
+estpost sum res_mom_work_hours_v2_w zConscientiousness_w1 zNeuroticism_w1 age_w BIO_SEX num_siblings_w AH_PVT no_mom_w no_dad_w  age_mom_w age_dad_w ///
+res_dad_work_hours_v2_w family_income_1994 decide_time_at_home_weekend_w decide_hang_around_with_w decide_what_u_wear_w decide_how_much_tv_w decide_what_tv_programs_w ///
+decide_what_time_go_bed_w decide_what_you_eat_w [aweight = GSWGT]
+
+
+
+estout using summary_stat_2.tex ,  prehead(\scalebox{0.7}{\begin{tabular}{l*{1}{ccccc}}\hline ) ///
+varlabels(res_mom_work_hours_v2_w "Mom work hours"   ///
+zConscientiousness_w1  "Child's conscientiousness" zNeuroticism_w1  "Child's neuroticism" ///
+age_w "Age"  ///
+num_siblings_w "Num. of siblings" AH_PVT " Add Health Picture Vocabulary Test (AHPVT) score" ///
+no_mom_w "No mom" no_dad_w "No dad" ///
+age_mom_w "Mom's age" age_dad_w "Dad's age" ///
+res_dad_work_hours_v2_w  "Dad work hours" ///
+family_income_1994 "family income" ///
+decide_time_at_home_weekend_w "Supervision: decide the time at home on weekend nights" ///
+decide_hang_around_with_w "Supervision: decide the people that the child hangs around with" ///
+decide_what_u_wear_w "Supervision: decide what to wears" ///
+decide_how_much_tv_w  "Supervision: decide how much TV to watch" ///
+decide_what_tv_programs_w "Supervision: decide TV program" ///
+decide_what_time_go_bed_w "Supervision: decide the time to go to bed on week nights" ///
+decide_what_you_eat_w "Supervision: decide time at home during weekend" ) ///
+style(tex)  cells("count mean sd min max") replace postfoot(\hline\end{tabular}})
+
+
+
+
+
+

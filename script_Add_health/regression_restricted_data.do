@@ -298,33 +298,33 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 
 
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w [pw=GSWGT], absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("No control") tex excel  nocons nor2 title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.`personality')    replace addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("No control") tex excel  nocons nor2 title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.`personality')    replace addtext(FE, Sibling)
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append  addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append  addtext(FE, Sibling)
 
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT], absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	 addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	 addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, FAMILY)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 	
 	

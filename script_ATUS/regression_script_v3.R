@@ -329,7 +329,7 @@ combine.data.regress.female.employ$wfh.v3 <- factor(combine.data.regress.female.
 ################*****************************************####### use this regression
 
 empty.frame <- data.frame(matrix(ncol = 6, nrow = length(yvariables.v2))) 
-colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home mother", "Work at other locations mother")
+colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home mothers", "Work at other locations mothers")
 
 
 combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
@@ -396,7 +396,7 @@ for (i in 1:length(yvariables.v2) ) {
 } 
 
 
-print(xtable(empty.frame, caption = "OLS Results of working from home and Marginal Effect of Maternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
+print(xtable(empty.frame, caption = "OLS Results of Working from Home and Marginal Effect of Maternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
 
 
 
@@ -431,7 +431,7 @@ combine.data.regress.male.employ$wfh.v3 <- factor(combine.data.regress.male.empl
 ################*****************************************####### use this regression
 
 empty.frame <- data.frame(matrix(ncol = 6, nrow = length(yvariables.v2))) 
-colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home father", "Work at other locations father")
+colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours", "Employ. status" ,"Work from home fathers", "Work at other locations fathers")
 
 
 combine.data.regress.female.employ$total.job.time.2 <- (combine.data.regress.female.employ$total.job.time)/480
@@ -498,7 +498,7 @@ for (i in 1:length(yvariables.v2) ) {
 } 
 
 
-print(xtable(empty.frame, caption = "OLS Results of working from home and Marginal Effect of Paternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
+print(xtable(empty.frame, caption = "OLS Results of Working from Home and Marginal Effect of Paternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
 
 
 
