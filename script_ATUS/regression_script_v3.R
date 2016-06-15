@@ -84,7 +84,7 @@ stargazer(result[[8]], result[[9]], result[[10]], result[[11]], result[[12]], re
 
 
 
-
+class.worker
 
 
 

@@ -38,169 +38,6 @@ http://www.csos.jhu.edu/contact/staff/jwayman_pub/wayman_multimp_aera2003.pdf
 https://www3.nd.edu/~rwilliam/stats2/l13.pdf: good
 */
 
-/*
-gen fam_income_impute_ind = 1 if family_income_1994 ==.
-replace fam_income_impute_ind = 0 if family_income_1994 !=.
-
-
-
-mi set wide 
-mi register imputed family_income_1994
-mi register  regular res_mom_occupation_w1 res_dad_occupation_w1 res_mom_work_hours_v2_w1 res_dad_work_hours_v2_w1 race res_mom_at_home_leave_school_w1 res_mom_at_home_return_school_w1 res_dad_at_home_leave_school_w1 res_dad_at_home_return_school_w1
-
-mi impute regress family_income_1994   i.res_mom_occupation_w1 i.res_dad_occupation_w1 res_mom_work_hours_v2_w1 res_dad_work_hours_v2_w1 i.race i.res_mom_at_home_leave_school_w1 i.res_mom_at_home_return_school_w1 i.res_dad_at_home_leave_school_w1 i.res_dad_at_home_return_school_w1, add(15) force
-
-mi rename res_mom_at_home_leave_school_w1  mom_leave_school_w1
-mi rename res_mom_at_home_return_school_w1 mom_return_school_w1, noupdate
-mi rename res_dad_at_home_leave_school_w1 dad_leave_school_w1, noupdate
-mi rename res_dad_at_home_return_school_w1 dad_return_school_w1, noupdate
-
-
-*/
-
-* for panel
-
-/*
-gen fam_income_impute_ind = 1 if family_income_1994 ==.
-replace fam_income_impute_ind = 0 if family_income_1994 !=.
-
-
-
-mi set wide 
-mi register imputed family_income_1994
-mi register  regular res_mom_occupation_w res_dad_occupation_w res_mom_work_hours_v2_w res_dad_work_hours_v2_w race res_mom_at_home_leave_school_w res_mom_at_home_return_school_w res_dad_at_home_leave_school_w res_dad_at_home_return_school_w
-
-mi impute regress family_income_1994   i.res_mom_occupation_w i.res_dad_occupation_w res_mom_work_hours_v2_w res_dad_work_hours_v2_w i.race i.res_mom_at_home_leave_school_w i.res_mom_at_home_return_school_w i.res_dad_at_home_leave_school_w i.res_dad_at_home_return_school_w, add(15) force
-
-mi rename res_mom_at_home_leave_school_w  mom_leave_school_w, noupdate
-mi rename res_mom_at_home_return_school_w mom_return_school_w, noupdate
-mi rename res_dad_at_home_leave_school_w dad_leave_school_w, noupdate
-mi rename res_dad_at_home_return_school_w dad_return_school_w, noupdate
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* this is just for 5 imputations
-mi xeq 0 1 5: sum family_income_1994
-
-
-m=0 data:
--> sum family_income_1994
-
-Variable         Obs	Mean	Std. Dev.	Min	Max
-				
-family_~1994      15,351	45.72816	51.61657	0	999
-
-m=1 data:
--> sum family_income_1994
-
-Variable         Obs	Mean	Std. Dev.	Min	Max
-				
-family_~1994      20,567	45.09695	51.49319	-134.7672	999
-
-m=5 data:
--> sum family_income_1994
-
-Variable         Obs	Mean	Std. Dev.	Min	Max
-				
-family_~1994      20,567	45.08111	51.83985	-138.8117	999
-*/
-
-
-
-
-
-
-
-/*
-
-destring FAMILY_ID, replace
-
-destring SCID, replace
-destring PSUSCID, replace
-
-
-
-
-
-
-
-
-
-
-
-
-
-* do school fixed effect (ask why some data are dropped?)
-
-xtset SSCHLCDE
-
-xtset PSUSCID
-
-xtset FAMILY_ID
-
-xtset    W1COUNTY
-xtset	W1STATE
-xtreg tried_cigarette_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic  i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1   family_income_1994  i.decide_time_at_home_weekend_w1 i.decide_hang_around_with_w1 i.decide_what_u_wear_w1 i.decide_how_much_tv_w1 i.decide_what_tv_programs_w1 i.decide_what_time_go_bed_w1 i.decide_what_you_eat_w1 , fe 
-
-egen month_PSUSCID =group(IMONTH PSUSCID)
-
-areg tried_cigarette_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic  i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1   family_income_1994  i.decide_time_at_home_weekend_w1 i.decide_hang_around_with_w1 i.decide_what_u_wear_w1 i.decide_how_much_tv_w1 i.decide_what_tv_programs_w1 i.decide_what_time_go_bed_w1 i.decide_what_you_eat_w1 , absorb(month_PSUSCID)
-
-xtset month_PSUSCID 
-xtreg tried_cigarette_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic  i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1   family_income_1994  i.decide_time_at_home_weekend_w1 i.decide_hang_around_with_w1 i.decide_what_u_wear_w1 i.decide_how_much_tv_w1 i.decide_what_tv_programs_w1 i.decide_what_time_go_bed_w1 i.decide_what_you_eat_w1 , fe
-
-
-xi: regress tried_cigarette_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic  i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1   family_income_1994  i.decide_time_at_home_weekend_w1 i.decide_hang_around_with_w1 i.decide_what_u_wear_w1 i.decide_how_much_tv_w1 i.decide_what_tv_programs_w1 i.decide_what_time_go_bed_w1 i.decide_what_you_eat_w1  i.month_PSUSCID 
-
-
-
-
-
-
-
-* testing
- mi xeq 0: reg tv_hours_per_week_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1 family_income_1994  [pw=GSWGT1] , r
- reg tv_hours_per_week_w1 c.res_mom_work_hours_v2_w1##c.zConscientiousness_w1 $demographic i.res_mom_occupation_w1 res_dad_work_hours_v2_w1  i.res_dad_occupation_w1 family_income_1994  [pw=GSWGT1] , r
-
-*/
-
- 
- 
-
-
-* do impute, mi impute
-
-
-/*
-
-
-egen month_PSUSCID =group(IMONTH PSUSCID)
-egen month_W1STATE =group(IMONTH W1STATE)
-egen month_FAMILY_ID =group(IMONTH FAMID)
-egen month_PSUSCID_W1STATE = group(IMONTH PSUSCID W1STATE)
-egen month_PSUSCID_W1STATE_FAMID = group(IMONTH PSUSCID W1STATE FAMID)
-
-
-egen wave_FAMILY_ID = group(wave FAMID) 
-egen wave_state = group(wave STATE_w) 
-egen wave_PSUSCID = group(wave PSUSCID) 
-egen wave_PSUSCID_state = group(wave PSUSCID STATE_w) 
-egen wave_PSUSCID_state_FAMILY = group(wave PSUSCID STATE_w FAMID) 
-
-*/
 
 
 
@@ -230,7 +67,7 @@ global supervision_panel  i.decide_time_at_home_weekend_w i.decide_hang_around_w
 
 global time_panel  i.month_year_w
 
-
+/*
 
 * change + to add, delete constant 
 
@@ -249,30 +86,30 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 	outreg2 using `yvariable'_`personality', ctitle("No control") tex excel  nocons nor2 title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.`personality')    replace
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append
+	outreg2 using `yvariable'_`personality', ctitle("Add Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append
 
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append
+	outreg2 using `yvariable'_`personality', ctitle("Add Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append
 	
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
+	outreg2 using `yvariable'_`personality', ctitle("Add Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
+	outreg2 using `yvariable'_`personality', ctitle("Add Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
 	
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
+	outreg2 using `yvariable'_`personality', ctitle("Add Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
 	
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
+	outreg2 using `yvariable'_`personality', ctitle("Add Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
 	
 
 	
 	reg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality', ctitle("+ Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
+	outreg2 using `yvariable'_`personality', ctitle("Add Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	
 	
 	
 	
@@ -301,30 +138,94 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 	outreg2 using `yvariable'_`personality'_FE, ctitle("No control") tex excel  nocons nor2 title("Table: `yvariable'")  keep(c.res_mom_work_hours_v2_w##c.`personality')    replace addtext(FE, Sibling)
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append  addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Demographic") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append  addtext(FE, Sibling)
 
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT], absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Mom occupation") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Mom education") tex excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	 addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Dad career and education") tex excel   nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	 addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Family income") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Supervision") tex  excel  nocons nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
 	
 
 	
 	areg `yvariable' c.res_mom_work_hours_v2_w##c.`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
-	outreg2 using `yvariable'_`personality'_FE, ctitle("+ Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
+	outreg2 using `yvariable'_`personality'_FE, ctitle("Add Time") tex excel  nocons  nor2 keep(c.res_mom_work_hours_v2_w##c.`personality') append	addtext(FE, Sibling)
+	
+	
+	
+	
+}	
+
+}
+
+
+*/
+
+
+cd C:\Users\jkwok\Desktop\results
+
+generate int_zConscientiousness_w1 =  res_mom_work_hours_v2_w*zConscientiousness_w1
+generate int_zNeuroticism_w1 =  res_mom_work_hours_v2_w*zNeuroticism_w1
+
+label variable res_mom_work_hours_v2_w "Mom work hours" 
+label variable zConscientiousness_w1 "Child's conscient." 
+label variable zNeuroticism_w1 "Child's neuroticism" 
+label variable int_zConscientiousness_w1 "Mom work hours X child's conscient." 
+label variable int_zNeuroticism_w1 "Mom work hours X child's neuroticism" 
+
+
+
+
+
+foreach personality in zConscientiousness_w1 zNeuroticism_w1 {
+
+
+foreach yvariable in ever_drink_alcohol_w  drink_days_v2_w drink_amount_w total_drink_per_year_w ///
+tried_cigarette_w regular_cigarette_w how_many_days_smoke_w how_many_cigarettes_w total_smoke_a_month_w ///
+ever_marijuana_30_w ever_all_but_m_drugs_w ///
+BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
+
+
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("No control") tex excel  nocons nor2 title("Table: `yvariable'")  keep(res_mom_work_hours_v2_w `personality' int_`personality')    replace  label
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Demographic") tex excel  nocons nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append label
+
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Mom occupation") tex excel   nocons nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append label
+	
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Mom education") tex excel  nocons nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append	label
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Dad career and education") tex excel   nocons nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append	 label
+	
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Family income") tex excel  nocons  nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append	label
+	
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Supervision") tex  excel  nocons nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append	label
+	
+
+	
+	reg `yvariable' res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+	outreg2 using `yvariable'_`personality', ctitle("Add Time") tex excel  nocons  nor2 keep(res_mom_work_hours_v2_w `personality' int_`personality') append	label
 	
 	
 	
@@ -343,19 +244,65 @@ BMI_w BMI_zscore_w overweight_w obese_w lose_weight_dum_w {
 
 
 
+* Generate tables for panel + OLS!
+
+
+
+foreach personality in zConscientiousness_w1 zNeuroticism_w1 { 
+
+eststo clear
+
+eststo A`personality': quietly reg BMI_zscore_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo B`personality': quietly areg BMI_zscore_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo C`personality': quietly reg lose_weight_dum_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo D`personality': quietly areg lose_weight_dum_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo E`personality': quietly reg tried_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo F`personality': quietly areg tried_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo G`personality': quietly reg regular_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo H`personality': quietly areg regular_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo I`personality': quietly reg how_many_days_smoke_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo J`personality': quietly areg how_many_days_smoke_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo K`personality': quietly reg how_many_cigarettes_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo L`personality': quietly areg how_many_cigarettes_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo M`personality': quietly reg total_smoke_a_month_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo N`personality': quietly areg total_smoke_a_month_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo O`personality': quietly reg ever_drink_alcohol_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo P`personality': quietly areg ever_drink_alcohol_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo Q`personality': quietly reg drink_days_v2_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo R`personality': quietly areg drink_days_v2_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo S`personality': quietly reg drink_amount_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo T`personality': quietly areg drink_amount_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo U`personality': quietly reg total_drink_per_year_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo V`personality': quietly areg total_drink_per_year_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo W`personality': quietly reg ever_marijuana_30_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo X`personality': quietly areg ever_marijuana_30_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+
+eststo Y`personality': quietly reg ever_all_but_m_drugs_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo Z`personality': quietly areg ever_all_but_m_drugs_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
 
 
 
 
 
+esttab A`personality' B`personality' C`personality' D`personality' E`personality' F`personality' G`personality' H`personality' I`personality' J`personality' K`personality' L`personality' M`personality' N`personality' using `personality'_OLS_FE.tex, label title(OLS versus Sibling FE: Mom work hours X child's `personality') ///
+se star(* 0.1 ** 0.05 *** 0.01) keep(res_mom_work_hours_v2_w `personality' int_`personality') booktabs mtitles("OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" ) mgroups("BMI Z-score" "Lose weight" "Ever smoked" "Regular smoker" "Num. of smoke days" "Num. of cigarettes" "Total num. of cigarettes", pattern(1 0 1 0 1 0 1 0 1 0 1 0 1 0 ) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) replace
 
+esttab O`personality' P`personality' Q`personality' R`personality' S`personality' T`personality' U`personality' V`personality' W`personality' X`personality' Y`personality' Z`personality' using `personality'_OLS_FE2.tex, label  title(OLS versus Sibling FE: Mom work hours X child's `personality') ///
+se star(* 0.1 ** 0.05 *** 0.01) keep(res_mom_work_hours_v2_w `personality' int_`personality') booktabs mtitles( "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" "OLS" "SFE" ) mgroups( "Ever drank alcohol" "Num. of drink days" "Num. of drink amount" "Total num. of drink" "Smoked marijuana" "Used other drugs" , pattern(1 0 1 0 1 0 1 0 1 0 1 0  ) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+replace addnotes("Robust Standard errors in parentheses. Sampling weights are applied. The controls are listed in the summary statistics table and they are the same as the last column of the previous OLS tables. Missing values of the controls such as family income and mother working hours are imputed either using the mean value of the sample or filled with 0. Missing indicators are applied in the regression models.")
 
-
-
-
-
-
-
+}
 
 
 

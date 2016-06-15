@@ -61,7 +61,7 @@ foreach personality in Extraversion_w4 Agreeableness_w4 Conscientiousness_w4 Neu
 }
 
 
-
+* Item Reversal of personality test
 gen H1PF30_reverse =  6 - H1PF30
 gen H1PF32_reverse =  6 - H1PF32
 gen H1PF33_reverse =  6 - H1PF33
@@ -120,7 +120,21 @@ gen month_year_w1 = IMONTH*IYEAR
 gen month_year_w2 = IMONTH2*IYEAR2
 
 * section 1
+
 gen race = .
+replace race = 1 if H1GI4==1  /* Hispanic, All Races */ 
+replace race = 2 if (H1GI6B==1 & H1GI4 == 0) /* Black or African American, Non-Hispanic */
+replace race = 3 if (H1GI6D==1 & H1GI4 == 0 & H1GI6B == 0 ) /* Asian, Non-Hispanic */ 
+replace race = 4 if (H1GI6C==1 & H1GI4 == 0 & H1GI6B == 0 & H1GI6D == 0) /* Native American, Non-Hispanic */ 
+replace race = 5 if (H1GI6E==1 & H1GI4 == 0 & H1GI6B == 0 & H1GI6D == 0 & H1GI6C == 0 ) /* Other, Non-Hispanic */ 
+replace race = 6 if (H1GI6A==1 & H1GI4 == 0 & H1GI6B == 0 & H1GI6D == 0 & H1GI6C == 0 & H1GI6E == 0) /* White, Non-Hispanic */ 
+
+
+
+
+
+
+/*
 
 * replace race = 1 if H1GI4 == 1   // Hispanic, All Races
 replace race = 1 if H1GI6A == 1  // White
@@ -130,7 +144,7 @@ replace race = 4 if H1GI6D == 1  // Asian
 replace race = 5 if H1GI6E == 1  // Other
 gen race_2 =  H1GI6A + H1GI6B + H1GI6C + H1GI6D + H1GI6E
 replace race = 6 if race_2 == 2 | race_2 == 3 | race_2 == 4 // 2 races
-
+*/
 
 recode H1GI1M (96=.), gen (w1bmonth)
 recode H1GI1Y (96=.), gen (w1byear)
@@ -366,7 +380,13 @@ rename H2GH52F height_feet_w2
 rename H2GH52I height_inch_w2
 gen height_w2 = (height_feet_w2*12) + height_inch_w2
 rename H2GH53 weight_w2
-gen BMI_w2 = (weight_w2*0.454)/((height_w2*0.0254)^2)
+*gen BMI_w2 = (weight_w2*0.454)/((height_w2*0.0254)^2)
+
+gen height_meas_w2 = (H2WS16HF*12) + H2WS16HI
+
+gen BMI_w2 = (H2WS16W*0.454)/((height_meas_w2*0.0254)^2)
+
+
 egen BMI_zscore_w2 = zanthro(BMI_w2,ba,US), xvar(age_w2) gender(BIO_SEX) gencode(male=1,female=2)
 gen BMIZ_percentile_w2 = normal(BMI_zscore_w2)
 gen overweight_w2 = .
@@ -1109,13 +1129,13 @@ tab res_mom_smoked_w1
 
 * not yet cleaned!!!!!!
 * check 1
-gen mom_edu_impute_indicator_w2 = 1 if no_mom_w2 == 1 | (res_mom_educ_w1 != . & H2RM1 == .)
+gen mom_edu_impute_indicator_w2 = 1 if no_mom_w2 == 1 | (res_mom_educ_w1 != .  & no_mom_w2 !=. & res_mom_educ_w1 ! = 99 & H2RM1 == .)
 replace mom_edu_impute_indicator_w2 = 0 if H2RM1 != .
 
 
 rename H2RM1 res_mom_educ_w2
 replace res_mom_educ_w2 = 99 if no_mom_w2 == 1
-replace res_mom_educ_w2 = res_mom_educ_w1 if res_mom_educ_w2 == . 
+replace res_mom_educ_w2 = res_mom_educ_w1 if (res_mom_educ_w2 == . & no_mom_w2 !=. & res_mom_educ_w1 ! = 99)
 
 rename H2RM2 res_mom_born_US_w2
 rename H2RM3 res_mom_born_country_w2

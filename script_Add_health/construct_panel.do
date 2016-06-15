@@ -19,13 +19,13 @@ use constructed_variables, clear
 gen fam_income_impute_ind = 1 if family_income_1994 ==.
 replace fam_income_impute_ind = 0 if family_income_1994 !=.
 
-
-keep AID FAMID AH_PVT BIO_SEX BIO_SEX2 GSWGT1 GSWGT2 eat_breakfast_w1  num_eat_breakfast_w2 family_income_1994 fam_income_impute_ind race IMONTH  W1STATE W2STATE zConscientiousness_w1 *_w1 *_w2
+* BIO_SEX in wave 1 is wrong, so will be taken out
+keep AID FAMID AH_PVT BIO_SEX GSWGT1 GSWGT2 eat_breakfast_w1  num_eat_breakfast_w2 family_income_1994 fam_income_impute_ind race IMONTH  W1STATE W2STATE zConscientiousness_w1 *_w1 *_w2
 
 rename W1STATE STATE_w1
 rename W2STATE STATE_w2
 
-rename BIO_SEX BIO_SEX1
+
 
 gen parent_present_w1_no_reshape =  parent_present_when_eat_w1
 gen parent_present_w2_no_reshape = parent_present_when_eat_w2
@@ -34,9 +34,9 @@ gen parent_present_w2_no_reshape = parent_present_when_eat_w2
 * BIO_SEX race conscientiousness
 * sleep_time_w
 
-reshape long BIO_SEX age_mom_w age_dad_w  res_mom_educ_w res_dad_educ_w month_year_w ///
+reshape long age_mom_w age_dad_w  res_mom_educ_w res_dad_educ_w month_year_w ///
 smoke_frds_w drink_frds_w ///
-GSWGT BMI_w BMI_zscore_w overweight_w obese_w    ///
+GSWGT BMI_w BMI_zscore_w overweight_w obese_w  weight_image_w  ///
 religion_w allowance_w  vege_fruits_dum_w  cookies_dum_w ///
 general_health_w headache_w feeling_hot_w stomach_ache_w cold_sweats_w physical_weak_w sore_throat_w tired_w pain_urination_w sick_w wake_up_tired_w ///
 skin_problem_w dizziness_w chest_pain_w muscle_pain_w poor_appetite_w  trouble_sleep_w  trouble_relax_w moodiness_w freq_crying_w  fearful_w ///

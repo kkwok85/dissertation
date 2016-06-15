@@ -103,14 +103,30 @@ BMI_w BMI_zscore_w overweight_w obese_w {
 }
 
 
+*good!!
+
+xi: xtivreg2 regular_cigarette_w zConscientiousness_w1 $demographic_panel i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel ( res_mom_work_hours_v2_w  mwh_conscientious_w1   =   mom_mom3   mom_mom3_conscientious_w1 ) [pw=GSWGT] if wave == 1, r fe cluster(FAMID)
+xi: xtivreg2  regular_cigarette_w zNeuroticism_w1 $demographic_panel i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel ( res_mom_work_hours_v2_w  mwh_zNeuroticism_w1  =   mom_mom3   mom_mom3_zNeuroticism_w1 ) [pw=GSWGT] if wave == 1, r fe cluster(FAMID)
+
+tab mom_full_time_mom_report_v2_w, gen(mom_mom)
+
+gen mom_mom1_conscientious_w1 = mom_mom1*zConscientiousness_w1
+gen mom_mom2_conscientious_w1 = mom_mom2*zConscientiousness_w1
+gen mom_mom3_conscientious_w1 = mom_mom3*zConscientiousness_w1
+
+gen mom_mom3_zNeuroticism_w1 = mom_mom3*zNeuroticism_w1
 
 
+tab mom_full_time_child_report_v2_w, gen(mom_child)
 
-
+gen mom_child1_conscientious_w1 = mom_child1*zConscientiousness_w1
+gen mom_child2_conscientious_w1 = mom_child2*zConscientiousness_w1
+gen mom_child3_conscientious_w1 = mom_child3*zConscientiousness_w1
 
 gen mwh_conscientious_w1 = res_mom_work_hours_v2_w*zConscientiousness_w1
 gen IV_conscientious_w = youngest_sib_age_w*zConscientiousness_w1
 
+gen mwh_zNeuroticism_w1 = res_mom_work_hours_v2_w*zNeuroticism_w1
 
 *gen mwh_w1 = res_mom_work_hours_v2_w*zExtraversion_w1
 *gen IV2_w = youngest_sib_age_w*zExtraversion_w1

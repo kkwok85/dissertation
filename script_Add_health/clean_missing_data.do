@@ -38,7 +38,10 @@ use Add_Health_merged_w1_to_w4, clear
 
 
 replace BIO_SEX = . if (BIO_SEX == 6 | BIO_SEX==8)
+* BIO_SEX2 does not have to change
 
+* but BIO_SEX has 25 cases different from BIO_SEX2. read add healt section: http://www.cpc.unc.edu/projects/addhealth/faqs/aboutdata
+replace BIO_SEX = BIO_SEX2 if (BIO_SEX != BIO_SEX2 & BIO_SEX2 !=.)   // should be 25 changes only. web said 23, just ignore it)
 
 
 
@@ -53,6 +56,8 @@ replace H1DA11 = . if (H1DA11 >= 996 & H1DA11 <= 999)
 * race
 replace H1GI1M = . if (H1GI1M == 96)
 replace H1GI1Y = . if (H1GI1Y == 96)
+
+replace H1GI4 = . if (H1GI4 == 6 | H1GI4 == 8)
 
 replace H1GI6A = . if (H1GI6A == 6 | H1GI6A == 8 | H1GI6A == 9)
 replace H1GI6B = . if (H1GI6B == 6 | H1GI6B == 8 | H1GI6B == 9)
@@ -112,6 +117,8 @@ replace H1WP8 = . if (H1WP8 >= 96 & H1WP8 <= 98)
 
 
 * diet
+replace H1GH28 = . if (H1GH28 == 6 | H1GH28 == 8)
+
 replace H1GH33 = . if (H1GH33 == 6 | H1GH33 == 8)
 replace H1GH34 = . if (H1GH34 == 6 | H1GH34 == 8)
 replace H1GH36 = . if (H1GH36 == 6 | H1GH36 == 8)
@@ -313,6 +320,9 @@ replace H2WP8 = . if (H2WP8 >= 96 & H2WP8 <= 98)
 
 
 * BMI 
+
+replace H2GH30 = . if (H2GH30 == 6 | H2GH30 == 8)
+
 replace H2GH31 = . if (H2GH31 == 6 | H2GH31 == 8)
 
 replace H2GH42 = "" if (H2GH42 == "999996" | H2GH42 ==  "999998") 
@@ -407,6 +417,13 @@ replace H2GH1 = . if (H2GH1 == 6 | H2GH1 == 8)
 forvalues i = 8(1)27 {
 	replace H2GH`i' = . if (H2GH`i' == 6 | H2GH`i' == 8)
 }
+
+
+* BMI/height/weight
+replace H2WS16HF = . if (H2WS16HF == 96 | H2WS16HF == 98)
+
+replace H2WS16HI = . if (H2WS16HI == 96 | H2WS16HI == 98)
+replace H2WS16W = . if (H2WS16W == 996 | H2WS16W == 998)
 
 
 

@@ -13,8 +13,9 @@
 #install.packages("ggplot2")
 # install.packages("reshape")
 # install.packages("haven")
-# install.packages("readstata13")
-
+ install.packages("readstata13")
+install.packages("multcomp")
+ 
 library(readstata13)
 library(haven)
 
@@ -36,7 +37,7 @@ library(ggplot2)
 library(reshape)
 library(foreign)
 require(MASS)
-
+library(multcomp)
 
 rm(list = ls())
 
@@ -414,6 +415,10 @@ atusresp$teabsrsn[which(atusresp$telfs == 1)] <- 1
 atusresp$teabsrsn[which(atusresp$telfs >= 3)] <- 16
 
 
+
+
+
+
 atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" = "spouse.presence.hh",
                                          "tespempnot" = "spouse.employ.status", "tespuhrs" ="spouse.work.hours",
                                          "trdtocc1" = "occupations", "trchildnum" = "num.children",
@@ -423,7 +428,7 @@ atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" =
                                          "teabsrsn" = "reason.absent.last.week.atus",
                                          "tudis" = "disability", "tryhhchild" = "age.youngest.child", 
                                          "tubus" = "household.own.bus", "tubus1" = "unpaid.work.family.bus",
-                                         "trspftpt" = "full.part.time.spouse", "trhhchild" = "presence.child", "trohhchild" = "presence.own.child"))
+                                         "trspftpt" = "full.part.time.spouse", "trhhchild" = "presence.child", "trohhchild" = "presence.own.child", "trtcc" = "sec.child.care"))
 
 
 
@@ -431,7 +436,7 @@ atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" =
 atusresp.subset <- atusresp[c("tucaseid", "tulineno",  "work.hours", "spouse.presence.hh", "spouse.employ.status", "spouse.work.hours", 
                               "occupations", "num.children", "num.family.member", "employment.status", "hourly.status", "earnings.report.way", "class.worker","hourly.rate.if.report.other", 
                               "weekly.earnings", "weekly.earning.top.coded", "allocation.flag.week.earn", "reason.absent.last.week.atus", "disability", "age.youngest.child", 
-                              "hourly.rate.if.report.other", "full.part.time.spouse", "presence.child", "presence.own.child" , "household.own.bus", "unpaid.work.family.bus"  )]
+                              "hourly.rate.if.report.other", "full.part.time.spouse", "presence.child", "presence.own.child" , "household.own.bus", "unpaid.work.family.bus", "sec.child.care"  )]
 
 
 
@@ -499,12 +504,12 @@ atuscps$prptrea[atuscps$prptrea == -1 ] <- 45 #dont mess up with the order!!!!
 atuscps <- rename(atuscps, replace = c("gereg" = "region", "gestfips" = "fips", "hefaminc" = "edited.family.income", "hufaminc" = "family.income",
                                        "pemaritl" = "marital.status", "pehractt" = "work.hours.last.week", "penlfact" = "current.situation", "prabsrea" = "reason.not.work", 
                                        "peschenr" = "enrolled.school", "peschft" = "full.part.stud", "peschlvl" = "hs.college",
-                                       "peabsrsn" = "reason.absent.last.week", "prptrea" = "reason.pt.work" ))
+                                       "peabsrsn" = "reason.absent.last.week", "prptrea" = "reason.pt.work", "gtmetsta" = "metropolitan.status" ))
 
 
 
 atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.family.income", "family.income",  "marital.status", "work.hours.last.week", "current.situation", "reason.not.work", "reason.absent.last.week" ,
-                            "enrolled.school", "full.part.stud","hs.college", "reason.pt.work" )]
+                            "enrolled.school", "full.part.stud","hs.college", "reason.pt.work", "metropolitan.status" )]
 
 
 
