@@ -1,5 +1,6 @@
 combine.data.regress.graph  <- join(combine.data.regress.v2,atussum, by=c("tucaseid"), type = "left")
 
+#combine.data.regress.graph  <- join(combine.data,atussum, by=c("tucaseid"), type = "left")
 
 
 # check where did the time save from work from home

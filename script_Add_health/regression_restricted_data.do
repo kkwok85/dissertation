@@ -313,6 +313,93 @@ replace addnotes("Robust Standard errors in parentheses. Sampling weights are ap
 
 
 
+* test 
+
+
+
+gen FAMID_2 = FAMID*wave*wave
+
+
+duplicates report FAMID_2 
+
+
+foreach personality in zConscientiousness_w1 zNeuroticism_w1 { 
+
+eststo clear
+
+eststo A`personality': quietly reg BMI_zscore_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo B`personality': quietly areg BMI_zscore_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo B2`personality': quietly areg BMI_zscore_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo C`personality': quietly reg lose_weight_dum_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo D`personality': quietly areg lose_weight_dum_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo D2`personality': quietly areg lose_weight_dum_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo E`personality': quietly reg tried_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo F`personality': quietly areg tried_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo F2`personality': quietly areg tried_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo G`personality': quietly reg regular_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo H`personality': quietly areg regular_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo H2`personality': quietly areg regular_cigarette_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo I`personality': quietly reg how_many_days_smoke_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo J`personality': quietly areg how_many_days_smoke_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo J2`personality': quietly areg how_many_days_smoke_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo K`personality': quietly reg how_many_cigarettes_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo L`personality': quietly areg how_many_cigarettes_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo L2`personality': quietly areg how_many_cigarettes_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo M`personality': quietly reg total_smoke_a_month_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo N`personality': quietly areg total_smoke_a_month_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo N2`personality': quietly areg total_smoke_a_month_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo O`personality': quietly reg ever_drink_alcohol_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo P`personality': quietly areg ever_drink_alcohol_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo P2`personality': quietly areg ever_drink_alcohol_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo Q`personality': quietly reg drink_days_v2_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo R`personality': quietly areg drink_days_v2_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo R2`personality': quietly areg drink_days_v2_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo S`personality': quietly reg drink_amount_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo T`personality': quietly areg drink_amount_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo T2`personality': quietly areg drink_amount_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo U`personality': quietly reg total_drink_per_year_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo V`personality': quietly areg total_drink_per_year_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo V2`personality': quietly areg total_drink_per_year_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo W`personality': quietly reg ever_marijuana_30_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo X`personality': quietly areg ever_marijuana_30_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo X2`personality': quietly areg ever_marijuana_30_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+eststo Y`personality': quietly reg ever_all_but_m_drugs_w res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT], vce(cluster PSUSCID_w)
+eststo Z`personality': quietly areg ever_all_but_m_drugs_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID) vce(cluster PSUSCID_w)
+eststo Z2`personality': quietly areg ever_all_but_m_drugs_w  res_mom_work_hours_v2_w `personality' int_`personality' i.mwh_impute_indicator_w $demographic_panel $mom_occupation_panel $mom_edu_panel  $dad_educ_career_panel $family_income_panel $supervision_panel $time_panel [pw=GSWGT],  absorb(FAMID_2) vce(cluster PSUSCID_w)
+
+
+
+
+
+esttab B2`personality'  B`personality' D2`personality' D`personality' F2`personality' F`personality'  H2`personality' H`personality'  J2`personality' J`personality'  L2`personality' L`personality' N2`personality' N`personality' using `personality'_OLS_FE.tex, label title(OLS versus Sibling FE: Mom work hours X child's `personality') ///
+se star(* 0.1 ** 0.05 *** 0.01) keep(res_mom_work_hours_v2_w `personality' int_`personality') booktabs mtitles("BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" ) mgroups("BMI Z-score" "Lose weight" "Ever smoked" "Regular smoker" "Num. of smoke days" "Num. of cigarettes" "Total num. of cigarettes", pattern(1 0 1 0 1 0 1 0 1 0 1 0 1 0 ) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) replace
+
+esttab  P2`personality' P`personality'  R2`personality' R`personality'  T2`personality' T`personality'  V2`personality' V`personality'  X2`personality' X`personality'  Z2`personality' Z`personality' using `personality'_OLS_FE2.tex, label  title(OLS versus Sibling FE: Mom work hours X child's `personality') ///
+se star(* 0.1 ** 0.05 *** 0.01) keep(res_mom_work_hours_v2_w `personality' int_`personality') booktabs mtitles( "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" "BFE" "SFE" ) mgroups( "Ever drank alcohol" "Num. of drink days" "Num. of drink amount" "Total num. of drink" "Smoked marijuana" "Used other drugs" , pattern(1 0 1 0 1 0 1 0 1 0 1 0  ) prefix(\multicolumn{@span}{c}{) suffix(}) span erepeat(\cmidrule(lr){@span})) ///
+replace addnotes("Robust Standard errors in parentheses. Sampling weights are applied. The controls are listed in the summary statistics table and they are the same as the last column of the previous OLS tables. Missing values of the controls such as family income and mother working hours are imputed either using the mean value of the sample or filled with 0. Missing indicators are applied in the regression models.")
+
+
+
+
+
+} 
+
+
+
+
+
 
 
 

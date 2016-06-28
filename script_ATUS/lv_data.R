@@ -97,6 +97,11 @@ combine.data$legnhth <- as.numeric(combine.data$legnhth)
 
 
 
+combine.data$lradj <- as.numeric(combine.data$lradj)
+
+combine.data$lradj[which( combine.data$lradj == -2 | combine.data$lradj == -3 )] <- "NA"
+
+
 combine.data$health.status.dum <- "NA"
 combine.data$health.status.dum[which(combine.data$legnhth == 3 | combine.data$legnhth == 4 | combine.data$legnhth == 5 )] <- 0
 combine.data$health.status.dum[which(combine.data$legnhth == 1 | combine.data$legnhth == 2 )] <- 1
@@ -122,6 +127,9 @@ table(combine.data$lupaid.dum)
 
 combine.data$lupaid.dum <- as.numeric(combine.data$lupaid.dum)
 
+
+
+combine.data$lrlvhrs7[which(combine.data$lrlvhrs7 == -1 | combine.data$lrlvhrs7 == -2 | combine.data$lrlvhrs7 == -3 )] <- "NA"
 
 
 
@@ -616,5 +624,46 @@ combine.data.regress.test2  <- join(combine.data,atussum, by=c("tucaseid"), type
 
 summary(lm(paste0("combine.data$health.status.dum"," ~ factor(luadloc) + num.children + diary.day + edited.weekly.earnings + factor(edited.weekly.earnings.indicator)+ factor(weekly.earning.top.coded) "
                   ,demographic.var, employ.var , current.sit, family.bus, spouse.var), data = combine.data.regress.test2, weights = lufinlwgt ))
+
+
+a <- combine.data[which(combine.data$presence.own.child == 1),]
+
+a <- combine.data[which(combine.data$class.worker == 1 | combine.data$class.worker == 2 | combine.data$class.worker == 3 | combine.data$class.worker == 4 | combine.data$class.worker == 5 ),]
+
+a <- combine.data[which(a$diary.day != "Saturday"  & a$diary.day != "Sunday"  & a$holiday.indicator == "Not holiday"  ),]
+
+
+
+
+
+
+
+summary(lm(paste0("total.time.child"," ~ factor(luadloc)*edit.spouse.presence + work.hours + age  + diary.day  "
+                  ,demographic.var, current.sit, family.bus, spouse.var), data = a, weights = lufinlwgt ))
+
+
+summary(lm(paste0("total.time.child"," ~ factor(luadloc)*marital.status + work.hours + age  + diary.day  "
+                  ,demographic.var, current.sit, family.bus, spouse.var), data = a, weights = lufinlwgt ))
+
+
+summary(lm(paste0("work.hours"," ~ factor(luadloc)*marital.status + work.hours + age  + diary.day  "
+                  ,demographic.var, current.sit, family.bus, spouse.var), data = a, weights = lufinlwgt ))
+
+
+
+# no diff
+summary(lm(paste0("total.job.wfh.time"," ~ factor(luadloc)*presence.own.child+ work.hours + age  + diary.day  "
+                  ,demographic.var, current.sit, family.bus, spouse.var), data = combine.data, weights = lufinlwgt ))
+
+
+
+# who will use flexible locations?
+
+
+
+# can be reverse causality!!! more work.hours people then have flexible work hours
+
+summary(lm(paste0("luadloc"," ~ work.hours + occupations+ work.hours + age  + diary.day + num.family.member + factor(luunpd) "
+                  ,demographic.var, current.sit, family.bus, spouse.var), data = combine.data, weights = lufinlwgt ))
 
 
