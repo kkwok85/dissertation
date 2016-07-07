@@ -2,7 +2,6 @@
 
 
 
-impute.data.function <- function(impute.data.input ) {
 
 
 
@@ -14,9 +13,9 @@ impute.data.function <- function(impute.data.input ) {
 ################################## re-run the complete data set and otehr dataset
 
 
-rr  <- Match(Y=NULL, Tr=impute.data.input$treatment, X=impute.data.input$predicted.wage, M=10, ties=F, caliper=0.5);
+rr  <- Match(Y=NULL, Tr=combine.data.complete.regress.female.employ$treatment, X=combine.data.complete.regress.female.employ$predicted.wage, M=10, ties=F, caliper=0.5);
 
-#matched <- rbind(impute.data.input[rr$index.treated,], impute.data.input[rr$index.control,])
+#matched <- rbind(combine.data.complete.regress.female.employ[rr$index.treated,], combine.data.complete.regress.female.employ[rr$index.control,])
 
 
 # http://stackoverflow.com/questions/27695784/r-obtain-the-matched-data-set-from-matching-package-not-that-easy
@@ -24,8 +23,8 @@ rr  <- Match(Y=NULL, Tr=impute.data.input$treatment, X=impute.data.input$predict
 head(rr$index.treated)
 head(rr$index.control)
 #their predicted wage are similar
-impute.data.input[7,c("treatment", "predicted.wage")]
-impute.data.input[68512,c("treatment", "predicted.wage")]
+combine.data.complete.regress.female.employ[7,c("treatment", "predicted.wage")]
+combine.data.complete.regress.female.employ[68512,c("treatment", "predicted.wage")]
 
 
 dfTC = data.frame(idxTreated = rr$index.treated, idxControl = rr$index.control,
@@ -42,14 +41,14 @@ dfTCWide = reshape2::dcast(dfTC, idxTreated ~ numControl,
 # get the attributes for the treated
 
 for (i in 1:nrow(dfTCWide)) {
-  dfTCWide$idxTreated.school.years[i] <- impute.data.input[ dfTCWide[i,1], c("school.years")]
-  dfTCWide$idxTreated.experience.years[i] <- impute.data.input[ dfTCWide[i,1], c("experience.years")]
-  dfTCWide$idxTreated.age[i] <- impute.data.input[ dfTCWide[i,1], c("age")]
-  dfTCWide$idxTreated.marital.status.edit[i] <- impute.data.input[ dfTCWide[i,1], c("marital.status.edit")]
-  dfTCWide$idxTreated.fips[i] <- impute.data.input[ dfTCWide[i,1], c("fips")]
-  dfTCWide$idxTreated.edited.occupations[i] <- impute.data.input[ dfTCWide[i,1], c("edited.occupations")]
-  dfTCWide$idxTreated.num.children[i] <- impute.data.input[ dfTCWide[i,1], c("num.children")]
-  dfTCWide$idxTreated.num.family.member[i] <- impute.data.input[ dfTCWide[i,1], c("num.family.member")]
+  dfTCWide$idxTreated.school.years[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("school.years")]
+  dfTCWide$idxTreated.experience.years[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("experience.years")]
+  dfTCWide$idxTreated.age[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("age")]
+  dfTCWide$idxTreated.marital.status.edit[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("marital.status.edit")]
+  dfTCWide$idxTreated.fips[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("fips")]
+  dfTCWide$idxTreated.edited.occupations[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("edited.occupations")]
+  dfTCWide$idxTreated.num.children[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("num.children")]
+  dfTCWide$idxTreated.num.family.member[i] <- combine.data.complete.regress.female.employ[ dfTCWide[i,1], c("num.family.member")]
   
   
 }
@@ -180,14 +179,14 @@ for (j in 1:10)  {
     print(i)
     print(j)
    
-    dfTCWide[i,col[j]] <- impute.data.input[ dfTCWide[i,j+1], c("school.years")]
-    dfTCWide[i,col[j]+1] <- impute.data.input[ dfTCWide[i,j+1], c("experience.years")]
-    dfTCWide[i,col[j]+2] <- impute.data.input[ dfTCWide[i,j+1], c("age")]
-    dfTCWide[i,col[j]+3] <- impute.data.input[ dfTCWide[i,j+1], c("marital.status.edit")]
-    dfTCWide[i,col[j]+4] <- impute.data.input[ dfTCWide[i,j+1], c("fips")]
-    dfTCWide[i,col[j]+5] <- impute.data.input[ dfTCWide[i,j+1], c("edited.occupations")]
-    dfTCWide[i,col[j]+6] <- impute.data.input[ dfTCWide[i,j+1], c("num.children")]
-    dfTCWide[i,col[j]+7] <- impute.data.input[ dfTCWide[i,j+1], c("num.family.member")]
+    dfTCWide[i,col[j]] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("school.years")]
+    dfTCWide[i,col[j]+1] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("experience.years")]
+    dfTCWide[i,col[j]+2] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("age")]
+    dfTCWide[i,col[j]+3] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("marital.status.edit")]
+    dfTCWide[i,col[j]+4] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("fips")]
+    dfTCWide[i,col[j]+5] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("edited.occupations")]
+    dfTCWide[i,col[j]+6] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("num.children")]
+    dfTCWide[i,col[j]+7] <- combine.data.complete.regress.female.employ[ dfTCWide[i,j+1], c("num.family.member")]
     
   
   }
@@ -271,52 +270,55 @@ test2 <-  Match(Y=NULL, Tr=test$treatment, X=cbind(test$school.years ,test$exper
 
 
 
-index.control.impute.data.input <- test[test2$index.control, "Control"]
+index.control.combine.data.complete.regress.female.employ <- test[test2$index.control, "Control"]
 
 
-return(impute.data.input[index.control.impute.data.input , "weekly.earnings"])
+return(combine.data.complete.regress.female.employ[index.control.combine.data.complete.regress.female.employ , "weekly.earnings"])
 
 }
 
 
 
 
-#table(impute.data.input$class.worker)
-#table(impute.data.input$weekly.earnings[which(impute.data.input$class.worker == 6   )])
+#table(combine.data.complete.regress.female.employ$class.worker)
+#table(combine.data.complete.regress.female.employ$weekly.earnings[which(combine.data.complete.regress.female.employ$class.worker == 6   )])
 
-#impute.data.input[which(impute.data.input$class.worker == 6 | impute.data.input$class.worker == 7 ) ]
+#combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$class.worker == 6 | combine.data.complete.regress.female.employ$class.worker == 7 ) ]
 
 
-impute.data.input$edited.weekly.earnings <- NA
+combine.data.complete.regress.female.employ$edited.weekly.earnings <- NA
 
 for (i in 1:nrow(dfTCWide))  {
-  impute.data.input[dfTCWide$idxTreated[i] , "edited.weekly.earnings"] <- find.match.function(i)
+  combine.data.complete.regress.female.employ[dfTCWide$idxTreated[i] , "edited.weekly.earnings"] <- find.match.function(i)
   
 }
 
 
 
-#table(impute.data.input$weekly.earnings[which(impute.data.input$class.worker == 8  )])
+#table(combine.data.complete.regress.female.employ$weekly.earnings[which(combine.data.complete.regress.female.employ$class.worker == 8  )])
 
-impute.data.input$edited.weekly.earnings[which(impute.data.input$class.worker == 8  )] <- 0 
-
-
-
-#table(impute.data.input$employment.status[which(impute.data.input$employment.status>2)],impute.data.input$weekly.earnings[which(impute.data.input$employment.status>2)] )
-
-impute.data.input$edited.weekly.earnings[which(impute.data.input$employment.status>2)] <- 0 
+combine.data.complete.regress.female.employ$edited.weekly.earnings[which(combine.data.complete.regress.female.employ$class.worker == 8  )] <- 0 
 
 
 
-impute.data.input$edited.weekly.earnings[which(is.na(impute.data.input$weekly.earnings)==FALSE)] <-  impute.data.input$weekly.earnings[which(is.na(impute.data.input$weekly.earnings)==FALSE)]
+#table(combine.data.complete.regress.female.employ$employment.status[which(combine.data.complete.regress.female.employ$employment.status>2)],combine.data.complete.regress.female.employ$weekly.earnings[which(combine.data.complete.regress.female.employ$employment.status>2)] )
+
+combine.data.complete.regress.female.employ$edited.weekly.earnings[which(combine.data.complete.regress.female.employ$employment.status>2)] <- 0 
 
 
-impute.data.input$edited.weekly.earnings.indicator <- 0
-impute.data.input$edited.weekly.earnings.indicator[is.na(impute.data.input$weekly.earnings)==TRUE] <- 1 
+
+combine.data.complete.regress.female.employ$edited.weekly.earnings[which(is.na(combine.data.complete.regress.female.employ$weekly.earnings)==FALSE)] <-  combine.data.complete.regress.female.employ$weekly.earnings[which(is.na(combine.data.complete.regress.female.employ$weekly.earnings)==FALSE)]
+
+
+combine.data.complete.regress.female.employ$edited.weekly.earnings <-  combine.data.complete.regress.female.employ$edited.weekly.earnings/100
+
+
+combine.data.complete.regress.female.employ$edited.weekly.earnings.indicator <- 0
+combine.data.complete.regress.female.employ$edited.weekly.earnings.indicator[is.na(combine.data.complete.regress.female.employ$weekly.earnings)==TRUE] <- 1 
 #table(combine.data$edited.weekly.earnings.indicator)
 
 
 
-return(impute.data.input)
 
-}
+
+
