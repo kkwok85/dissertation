@@ -106,7 +106,7 @@ for (i in 1:length(yvariables.v3) ) {
   
   
   
-  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )  #wfh
   
   P_value.2 <- robust.result[[i]][2,4]
   
@@ -199,7 +199,7 @@ for (i in 1:length(yvariables.v3) ) {
   
   
   
-  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )  #wfh
   
   P_value.2 <- robust.result[[i]][2,4]
   
@@ -300,7 +300,7 @@ for (i in 1:length(yvariables.agg) ) {
   
   
   
-  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )  #wfh
   
   P_value.2 <- robust.result[[i]][2,4]
   
@@ -382,7 +382,7 @@ for (i in 1:length(yvariables.agg) ) {
   
   
   
-  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][4,2],digits=3), nsmall = 3),")" )  #wfh
+  empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )  #wfh
   
   P_value.2 <- robust.result[[i]][2,4]
   

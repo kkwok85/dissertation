@@ -74,10 +74,10 @@ robust.result <- list()
 for (i in 1:length(yvariables.v3) ) { 
   dep.var <- yvariables.v3[i]
   if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" ) {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp )
     
   } else {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp )
     
   }
 
@@ -170,10 +170,10 @@ robust.result <- list()
 for (i in 1:length(yvariables.v3) ) { 
   dep.var <- yvariables.v3[i]
   if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" ) {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$age.youngest.child < 13),] , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$age.youngest.child < 13),] , weights = tufnwgtp )
     
   } else {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp )
     
   }
   
@@ -282,7 +282,7 @@ robust.result <- list()
 for (i in 1:length(yvariables.agg) ) { 
   dep.var <- yvariables.agg[i]
   
-  full.model <- lm(paste0(yvariables.agg[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp )
+  full.model <- lm(paste0(yvariables.agg[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp )
   
   
   
@@ -367,7 +367,7 @@ robust.result <- list()
 for (i in 1:length(yvariables.agg) ) { 
   dep.var <- yvariables.agg[i]
   
-  full.model <- lm(paste0(yvariables.agg[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp )
+  full.model <- lm(paste0(yvariables.agg[i]," ~   total.job.time + edited.employ.status +total.job.wfh.time  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp )
   
   
   
