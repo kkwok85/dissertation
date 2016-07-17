@@ -1180,6 +1180,22 @@ combine.data$portion.sec.child.care.hh <- combine.data$sec.child.care.hh/(combin
 combine.data$portion.primary.child.care <- combine.data$total.time.child/(combine.data$sec.child.care.hh + combine.data$total.time.child)
 
 
+yvariables.v3 <-c( "physical.care.hh.children",
+                   "grocery.shopping", "food.drink.preparation", "purchasing.food",
+                   "play.with.hh.children",
+                   "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
+                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec", "portion.sec.child.care.hh",  "total.travel.work.time",  "total.grooming.time", "TV.movies"  )
+
+
+
+
+combine.data$other.time.use <- 1440 - combine.data$physical.care.hh.children - combine.data$grocery.shopping - combine.data$food.drink.preparation -
+                                      combine.data$purchasing.food - combine.data$play.with.hh.children - combine.data$reading.to.hh.children - 
+                                      combine.data$talk.listening.to.hh.children - combine.data$homework.hh.children - combine.data$supervision.hh.children -
+                                      combine.data$pick.drop.hh.child - combine.data$pick.drop.hh.child - 
+                                      combine.data$total.travel.work.time - combine.data$total.grooming.time - combine.data$TV.movies
+  
+  
 
 
 
@@ -1305,6 +1321,16 @@ table(duplicated(combine.data.regress.v2$tucaseid) )
 
 
 
+
+
+
+
+
+
+
+
+
+
 # combine.data.short.years <- combine.data[which(combine.data$interview.year == 2003 | combine.data$interview.year == 2004 | combine.data$interview.year == 2005),]
 
 
@@ -1336,8 +1362,7 @@ yvariables.v3 <-c( "physical.care.hh.children",
                    "grocery.shopping", "food.drink.preparation", "purchasing.food",
                    "play.with.hh.children",
                    "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec", "portion.sec.child.care.hh",  "total.travel.work.time",  "total.grooming.time", "TV.movies"  )
-
+                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec", "portion.sec.child.care.hh",  "total.travel.work.time",  "total.grooming.time", "TV.movies" , "other.time.use" )
 
 
 
