@@ -20,7 +20,7 @@ gen fam_income_impute_ind = 1 if family_income_1994 ==.
 replace fam_income_impute_ind = 0 if family_income_1994 !=.
 
 * BIO_SEX in wave 1 is wrong, so will be taken out
-keep AID FAMID AH_PVT BIO_SEX GSWGT1 GSWGT2 eat_breakfast_w1  num_eat_breakfast_w2 family_income_1994 fam_income_impute_ind race IMONTH  W1STATE W2STATE zConscientiousness_w1 *_w1 *_w2
+keep AID FAMID AH_PVT BIO_SEX GSWGT1 GSWGT2 eat_breakfast_w1  num_eat_breakfast_w2 family_income_1994 fam_income_impute_ind race IMONTH  W1STATE W2STATE zConscientiousness_w1 zConscientiousness_v2_w1 *_w1 *_w2
 
 rename W1STATE STATE_w1
 rename W2STATE STATE_w2

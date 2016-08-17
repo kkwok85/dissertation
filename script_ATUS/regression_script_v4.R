@@ -110,8 +110,8 @@ for (i in 1:length(yvariables.v3) ) {
   full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
   
   
-  me.wfh <- summary(glht(full.model.update, linfct = c(" 232.0996*total.job.time   + 232.0996*total.job.wfh.time = 0") ))
-  me.nwfh <- summary(glht(full.model.update, linfct = c("232.0996*total.job.time   =0") ))
+  me.wfh <- summary(glht(full.model.update, linfct = c("480*total.job.time   + 480*total.job.wfh.time = 0") ))
+  me.nwfh <- summary(glht(full.model.update, linfct = c("480*total.job.time   =0") ))
   
   
   P_value.5 <- me.wfh$test$pvalues
@@ -139,8 +139,9 @@ for (i in 1:length(yvariables.v3) ) {
 print(xtable(empty.frame, caption = "OLS Results of Working from Home and Marginal Effect of Maternal Employment"),  include.rownames = FALSE, include.colnames = TRUE  )
 
 
+empty.frame2$wfh <- empty.frame2$`Work from home`*480
 
-
+empty.frame2$wh <- empty.frame2$`Work hours`*480
 
 
 
@@ -162,10 +163,10 @@ mean.wfh.min.male <- weighted.mean(combine.data.complete.regress.male.employ$tot
 ################*****************************************####### male
 
 empty.frame <- data.frame(matrix(ncol = 5, nrow = length(yvariables.v3))) 
-empty.frame2 <- data.frame(matrix(ncol = 5, nrow = length(yvariables.v3))) 
+empty.frame3 <- data.frame(matrix(ncol = 5, nrow = length(yvariables.v3))) 
 colnames(empty.frame) <- c("Dependent Variables", "Work from home" , "Work hours","Work from home fathers", "Work at other locations fathers")
 
-colnames(empty.frame2) <- c("Dependent Variables", "Work from home" , "Work hours","Work from home mothers", "Work at other locations mothers")
+colnames(empty.frame3) <- c("Dependent Variables", "Work from home" , "Work hours","Work from home mothers", "Work at other locations mothers")
 
 
 
@@ -188,19 +189,19 @@ for (i in 1:length(yvariables.v3) ) {
   
   
   empty.frame[i,1] <- names.y[i]
-  empty.frame2[i,1] <- names.y[i]
+  empty.frame3[i,1] <- names.y[i]
   
   P_value.4 <- robust.result[[i]][3,4]
   
   
   
   empty.frame[i,2] <- paste0(format(round(robust.result[[i]][3,1],digits=3), nsmall = 3),star.function(P_value.4),"(",format(round(robust.result[[i]][3,2],digits=3), nsmall = 3),")" )  #wfh
-  empty.frame2[i,2] <- robust.result[[i]][3,1]  #wfh
+  empty.frame3[i,2] <- robust.result[[i]][3,1]  #wfh
   
   P_value.2 <- robust.result[[i]][2,4]
   
   empty.frame[i,3] <- paste0(format(round(robust.result[[i]][2,1],digits=3), nsmall = 3),star.function(P_value.2),"(",format(round(robust.result[[i]][2,2],digits=3), nsmall = 3),")" )  #work hours
-  empty.frame2[i,3] <- robust.result[[i]][2,1]  #work hours
+  empty.frame3[i,3] <- robust.result[[i]][2,1]  #work hours
   
 
   
@@ -213,18 +214,18 @@ for (i in 1:length(yvariables.v3) ) {
   full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
   
   
-  me.wfh <- summary(glht(full.model.update, linfct = c("413.7331*total.job.time  +  413.7331*total.job.wfh.time = 0") ))
-  me.nwfh <- summary(glht(full.model.update, linfct = c("413.7331*total.job.time   =0") ))
+  me.wfh <- summary(glht(full.model.update, linfct = c("480*total.job.time  +  480*total.job.wfh.time = 0") ))
+  me.nwfh <- summary(glht(full.model.update, linfct = c("480*total.job.time   =0") ))
   
   
   P_value.5 <- me.wfh$test$pvalues
   empty.frame[i,4] <- paste0(format(round(me.wfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.5), "(", format(round(me.wfh$test$sigma, digits=3), nsmall = 3), ")")  
-  empty.frame2[i,4] <- me.wfh$test$coefficients  
+  empty.frame3[i,4] <- me.wfh$test$coefficients  
   
   
   P_value.6 <- me.nwfh$test$pvalues
   empty.frame[i,5] <- paste0(format(round(me.nwfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.6), "(", format(round(me.nwfh$test$sigma, digits=3), nsmall = 3), ")")  
-  empty.frame2[i,5] <- me.nwfh$test$coefficients 
+  empty.frame3[i,5] <- me.nwfh$test$coefficients 
   
   
   
@@ -243,7 +244,9 @@ print(xtable(empty.frame, caption = "OLS Results of Working from Home and Margin
 
 
 
+empty.frame3$wfh <- empty.frame3$`Work from home`*480
 
+empty.frame3$wh <- empty.frame3$`Work hours`*480
 
 
 

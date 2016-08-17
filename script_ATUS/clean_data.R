@@ -1193,10 +1193,13 @@ combine.data$other.time.use <- 1440 - combine.data$physical.care.hh.children - c
                                       combine.data$purchasing.food - combine.data$play.with.hh.children - combine.data$reading.to.hh.children - 
                                       combine.data$talk.listening.to.hh.children - combine.data$homework.hh.children - combine.data$supervision.hh.children -
                                       combine.data$pick.drop.hh.child - combine.data$pick.drop.hh.child - 
-                                      combine.data$total.travel.work.time - combine.data$total.grooming.time - combine.data$TV.movies
+                                      combine.data$total.travel.work.time - combine.data$total.grooming.time 
   
   
 
+combine.data$total.job.time2  <- (combine.data$total.job.time)/480
+
+combine.data$total.job.wfh.time2 <-  (combine.data$total.job.wfh.time)/480
 
 
 

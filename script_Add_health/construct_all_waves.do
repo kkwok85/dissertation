@@ -43,6 +43,7 @@ gen H4PE28_reverse =  6 - H4PE28
 
 
 
+
 gen Extraversion_w4 = H4PE1 + H4PE9_reverse + H4PE17 + H4PE25_reverse     // beaware that the higher the number the lower the extravert
 gen Agreeableness_w4 = H4PE2 + H4PE10_reverse + H4PE18 + H4PE26_reverse  // beaware that the higher the number the lower the agreeable
 gen Conscientiousness_w4 = H4PE3 + H4PE11_reverse + H4PE19 + H4PE27_reverse // beaware that the higher the number the lower the conscientious
@@ -51,6 +52,30 @@ gen Openness_w4 = H4PE5 + H4PE13_reverse + H4PE21_reverse + H4PE29_reverse  // b
 
 
 
+gen H4PE1_reverse = 6 - H4PE1
+gen H4PE17_reverse = 6 - H4PE17
+gen H4PE2_reverse = 6 - H4PE2
+gen H4PE18_reverse = 6 - H4PE18
+gen H4PE3_reverse = 6 - H4PE3
+gen H4PE19_reverse = 6 - H4PE19
+gen H4PE4_reverse = 6 - H4PE4
+gen H4PE20_reverse = 6 - H4PE20
+gen H4PE5_reverse = 6 - H4PE5
+
+
+
+
+
+gen Extraversion_v2_w4 = H4PE1_reverse + H4PE9 + H4PE17_reverse + H4PE25    
+gen Agreeableness_v2_w4 = H4PE2_reverse + H4PE10 + H4PE18_reverse + H4PE26  
+gen Conscientiousness_v2_w4 = H4PE3_reverse + H4PE11 + H4PE19_reverse + H4PE27 
+gen Neuroticism_v2_w4 = H4PE4_reverse + H4PE12 + H4PE20_reverse + H4PE28
+gen Openness_v2_w4 = H4PE5_reverse + H4PE13 + H4PE21 + H4PE29
+
+
+foreach personality in Extraversion_v2_w4 Agreeableness_v2_w4 Conscientiousness_v2_w4 Neuroticism_v2_w4 Openness_v2_w4 {
+	egen z`personality' = std(`personality')
+}
 
 
 
@@ -59,6 +84,10 @@ gen Openness_w4 = H4PE5 + H4PE13_reverse + H4PE21_reverse + H4PE29_reverse  // b
 foreach personality in Extraversion_w4 Agreeableness_w4 Conscientiousness_w4 Neuroticism_w4 Openness_w4 {
 	egen z`personality' = std(`personality')
 }
+
+
+
+
 
 
 * Item Reversal of personality test
@@ -72,11 +101,28 @@ gen H1PF36_reverse =  6 - H1PF36
 
 
 
+
+
 gen Neuroticism_w1 = H1PF30_reverse + H1PF32_reverse + H1PF33_reverse + H1PF34_reverse + H1PF35_reverse + H1PF36_reverse // beware the higher the number the lower the neurotic
 gen Conscientiousness_w1 = H1PF18 + H1PF19 + H1PF20 + H1PF21 // beaware that the higher the number the lower the conscientious
 gen Extraversion_w1 = S62B + S62E + S62O // beaware that the higher the number the lower the extravert
 
 
+
+gen H1PF18_reverse = 6 - H1PF18
+gen H1PF19_reverse = 6 - H1PF19
+gen H1PF20_reverse = 6 - H1PF20
+gen H1PF21_reverse = 6 - H1PF21
+
+
+gen S62B_reverse = 6 - S62B
+gen S62E_reverse = 6 - S62E
+gen S62O_reverse = 6 - S62O
+
+
+gen Neuroticism_v2_w1 = H1PF30 + H1PF32 + H1PF33+ H1PF34 + H1PF35 + H1PF36 
+gen Conscientiousness_v2_w1 = H1PF18_reverse + H1PF19_reverse + H1PF20_reverse + H1PF21_reverse 
+gen Extraversion_v2_w1 = S62B_reverse + S62E_reverse + S62O_reverse
 
 
 
@@ -96,6 +142,11 @@ replace zConscientiousness_w1 = zConscientiousness_w1*(-1)
 replace zNeuroticism_w1 = zNeuroticism_w1*(-1)
 
 
+
+
+foreach personality in Neuroticism_v2_w1 Conscientiousness_v2_w1 Extraversion_v2_w1 {
+	egen z`personality' = std(`personality')
+}
 
 
 

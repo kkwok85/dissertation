@@ -429,4 +429,38 @@ replace H2WS16W = . if (H2WS16W == 996 | H2WS16W == 998)
 
 
 
+
+
+
+
+
+
+
+
+
+* wave 4
+foreach  variables in H4PE1 H4PE9 H4PE17 H4PE25 H4PE2 H4PE10 H4PE18 H4PE26 H4PE3 H4PE11 H4PE19 H4PE27 H4PE4 H4PE12 H4PE20 H4PE28 H4PE5 H4PE13 H4PE21 H4PE29 {
+	replace `variables' = . if (`variables' == 6 | `variables' == 8 )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 save temp_missing_data, replace
