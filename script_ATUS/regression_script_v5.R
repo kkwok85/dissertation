@@ -21,12 +21,12 @@ demographic.var <- c("+ age + race.edit + sex + marital.status.edit + school.lev
 employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week +factor(edited.employ.status)")
 family.bus <- c("+ factor(household.own.bus) + factor(unpaid.work.family.bus)")
 family.var <- c("+ num.children + num.family.member + age.youngest.child" )
-time.var <- c("+ interview.year  + diary.day" )
+time.var <- c("+ factor(interview.year ) + factor(diary.day)" )
 location.var <- c("+ region + fips")
 spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
 earnings.var <- c("+ edited.weekly.earnings + factor(edited.weekly.earnings.indicator) + factor(weekly.earning.top.coded)")
-family.inc.var <- c("+ edited.family.income3" )
-children.sick.var <- c("+ children.sick.indicator")
+family.inc.var <- c("+ factor(edited.family.income3)" )
+children.sick.var <- c("+ factor(children.sick.indicator)")
 
 
 
@@ -246,7 +246,7 @@ empty.frame3$percent <- (empty.frame3$`Work hours (units of 480 minutes)` - empt
 # check result the same as the table printed out
 
 #
-summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp ))
+summary(lm(paste0("total.time.child"," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp ))
 summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp ))
 
 
