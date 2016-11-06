@@ -15,7 +15,6 @@ yvariables.v3 <-c( "physical.care.hh.children",
 
 
 
-
 # regression
 # factor(edited.occupations.indicator) skilled cuz it is cut out  ,+ factor(reason.not.work)  + factor(reason.absent.last.week) + factor(reason.absent.last.week.atus)
 # factor(allocation.flag.week.earn)  cut 
@@ -34,6 +33,7 @@ children.sick.var <- c("+ factor(children.sick.indicator)")
 
 
 
+#DF$factor_var = droplevels(DF$factor_var)
 
 
 star.function <- function(p.value)  {
@@ -51,17 +51,17 @@ star.function <- function(p.value)  {
 
 
 
- 
-  
-  
-#combine.data.complete.regress.female.employ$wfh.v3 <- factor(combine.data.complete.regress.female.employ$wfh.v3, levels=c(0,1,2), labels = c("Work.at.office", "Work.from.home", "Unemployed/out.of.labor.force"))
+
+
+
+#combine.data.complete.regress.female.no.unemploy$wfh.v3 <- factor(combine.data.complete.regress.female.no.unemploy$wfh.v3, levels=c(0,1,2), labels = c("Work.at.office", "Work.from.home", "Unemployed/out.of.labor.force"))
 
 
 
 
-mean.work.hours.female <- weighted.mean(combine.data.complete.regress.female.employ$total.job.time2  , combine.data.complete.regress.female.employ$tufnwgtp, na.rm=TRUE)
+mean.work.hours.female <- weighted.mean(combine.data.complete.regress.female.no.unemploy$total.job.time2  , combine.data.complete.regress.female.no.unemploy$tufnwgtp, na.rm=TRUE)
 
-mean.wfh.min.female <- weighted.mean(combine.data.complete.regress.female.employ$total.job.wfh.time2 , combine.data.complete.regress.female.employ$tufnwgtp, na.rm=TRUE)
+mean.wfh.min.female <- weighted.mean(combine.data.complete.regress.female.no.unemploy$wfh.v3 , combine.data.complete.regress.female.no.unemploy$tufnwgtp, na.rm=TRUE)
 
 # empty.frame2 is for checking
 
@@ -82,10 +82,10 @@ robust.result <- list()
 for (i in 1:length(yvariables.v3) ) { 
   dep.var <- yvariables.v3[i]
   if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" | dep.var == "sec.child.care_total.job" | dep.var == "sec.child.care_social.act" | dep.var == "sec.child.care_house.act" | dep.var == "sec.child.care_eat.drink") {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.no.unemploy[which(combine.data.complete.regress.female.no.unemploy$age.youngest.child < 13),] , weights = tufnwgtp )
     
   } else {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2  +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.no.unemploy , weights = tufnwgtp )
     
   }
   
@@ -115,7 +115,7 @@ for (i in 1:length(yvariables.v3) ) {
   full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
   
   
-  me.wfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2    + 1*total.job.wfh.time2 = 0") ))
+  me.wfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2    + 1*wfh.v3 = 0") ))
   me.nwfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2    =0") ))
   
   
@@ -123,7 +123,7 @@ for (i in 1:length(yvariables.v3) ) {
   empty.frame[i,4] <- paste0(format(round(me.wfh$test$coefficients,digits=3), nsmall = 3), star.function(P_value.5), "(", format(round(me.wfh$test$sigma, digits=3), nsmall = 3), ")")  
   empty.frame2[i,4] <- me.wfh$test$coefficients 
   
-
+  
   
   
   
@@ -154,9 +154,9 @@ empty.frame2$percent <- (empty.frame2$`Work hours (units of 480 minutes)` - empt
 
 
 
-mean.work.hours.male <- weighted.mean(combine.data.complete.regress.male.employ$total.job.time2  , combine.data.complete.regress.male.employ$tufnwgtp, na.rm=TRUE)
+mean.work.hours.male <- weighted.mean(combine.data.complete.regress.male.no.unemploy$total.job.time2  , combine.data.complete.regress.male.no.unemploy$tufnwgtp, na.rm=TRUE)
 
-mean.wfh.min.male <- weighted.mean(combine.data.complete.regress.male.employ$total.job.wfh.time2 , combine.data.complete.regress.male.employ$tufnwgtp, na.rm=TRUE)
+mean.wfh.min.male <- weighted.mean(combine.data.complete.regress.male.no.unemploy$wfh.v3 , combine.data.complete.regress.male.no.unemploy$tufnwgtp, na.rm=TRUE)
 
 
 
@@ -178,10 +178,10 @@ robust.result <- list()
 for (i in 1:length(yvariables.v3) ) { 
   dep.var <- yvariables.v3[i]
   if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" | dep.var == "sec.child.care_total.job" | dep.var == "sec.child.care_social.act" | dep.var == "sec.child.care_house.act" | dep.var == "sec.child.care_eat.drink" ) {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$age.youngest.child < 13),] , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.no.unemploy[which(combine.data.complete.regress.male.no.unemploy$age.youngest.child < 13),] , weights = tufnwgtp )
     
   } else {
-    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp )
+    full.model <- lm(paste0(yvariables.v3[i]," ~   total.job.time2   +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.no.unemploy , weights = tufnwgtp )
     
   }
   
@@ -215,7 +215,7 @@ for (i in 1:length(yvariables.v3) ) {
   full.model.update$coefficients<- full.model$coefficients[!is.na(full.model$coefficients)]
   
   
-  me.wfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2   +  1*total.job.wfh.time2 = 0") ))
+  me.wfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2   +  1*wfh.v3 = 0") ))
   me.nwfh <- summary(glht(full.model.update, linfct = c("1*total.job.time2    =0") ))
   
   
@@ -224,7 +224,7 @@ for (i in 1:length(yvariables.v3) ) {
   empty.frame3[i,4] <- me.wfh$test$coefficients  
   
   
-
+  
   
   
   #empty.frame[i,5] <- 480*summary(full.model)$coefficients[2,1] + summary(full.model)$coefficients[3,1] + summary(full.model)$coefficients[4,1]  
@@ -250,12 +250,12 @@ empty.frame3$percent <- (empty.frame3$`Work hours (units of 480 minutes)` - empt
 # check result the same as the table printed out
 
 #
-summary(lm(paste0("total.time.child"," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp ))
-summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp ))
+summary(lm(paste0("total.time.child"," ~   total.job.time2  +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.no.unemploy , weights = tufnwgtp ))
+summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.no.unemploy[which(combine.data.complete.regress.female.no.unemploy$age.youngest.child < 13),] , weights = tufnwgtp ))
 
 
-summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ , weights = tufnwgtp ))
-summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13),] , weights = tufnwgtp ))
+summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.no.unemploy , weights = tufnwgtp ))
+summary(lm(paste0(yvariables.v3[1]," ~   total.job.time2  +wfh.v3  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.male.no.unemploy[which(combine.data.complete.regress.male.no.unemploy$age.youngest.child < 13),] , weights = tufnwgtp ))
 
 
 

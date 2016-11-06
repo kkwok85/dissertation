@@ -1,37 +1,4 @@
 
-names.y <- c("Physical care", 
-             "Grocery shopping", "Cooking", "Purchasing prepared food",
-             "Playing with children", 
-             "Reading to children", "Talking and listening to children", "Helping with homework", "Supervising children", "Picking or dropping off children", "Travel time for helping children",
-             "Total time for primary child care", "Total time for secondary child care*", "Total time for primary and secondary child care*" , "Proportion of secondary child care", "Second. child care - work", "Second. child care - social act.", "Second. child care - household act.", "Second. child care - eating and drinking","Travel time to and from work", "Total grooming time", "Total other time use" )
-
-yvariables.v3 <-c( "physical.care.hh.children",
-                   "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                   "play.with.hh.children",
-                   "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec",  "portion.sec.child.care.hh", "sec.child.care_total.job", "sec.child.care_social.act", "sec.child.care_house.act", "sec.child.care_eat.drink",  "total.travel.work.time",  "total.grooming.time", "other.time.use" )
-
-
-
-
-# SEPECIAL FOR SELF-EMPLOYEDD!!!
-
-# regression
-# factor(edited.occupations.indicator) skilled cuz it is cut out  ,+ factor(reason.not.work)  + factor(reason.absent.last.week) + factor(reason.absent.last.week.atus)
-# factor(allocation.flag.week.earn)  cut 
-# becareful of this one!!!! sex is taken away!!!
-demographic.no.sex.var <- c("+ age + race.edit  +  marital.status.edit + school.level.completed.edit") 
-demographic.var <- c("+ age + race.edit + sex + marital.status.edit + school.level.completed.edit ")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week +factor(edited.employ.status)")
-#current.sit <- c("+ factor(current.situation)   + factor(enrolled.school) ") 
-family.bus <- c("+ factor(household.own.bus) + factor(unpaid.work.family.bus)")
-family.var <- c("+ num.children + num.family.member + age.youngest.child" )
-time.var <- c("+ interview.year  + diary.day" )
-location.var <- c("+ region + fips")
-spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-earnings.var.self.employed <- c("+ edited.weekly.earnings ")
-family.inc.var <- c("+ edited.family.income3" )
-children.sick.var <- c("+ children.sick.indicator")
 
 
 
@@ -45,7 +12,7 @@ row <- seq(from = 1 , to = 500, by = 1)
 
 for (i in 1:length(yvariables.v3)) {    
   
-  if (yvariables.v3 == "sec.child.care.hh" | yvariables.v3 == "total.time.child.prim.sec" | yvariables.v3 == "portion.sec.child.care.hh" | yvariables.v3 == "sec.child.care_total.job" | yvariables.v3 == "sec.child.care_social.act" | yvariables.v3 == "sec.child.care_house.act" | yvariables.v3 == "sec.child.care_eat.drink") {
+  if (yvariables.v3[i] == "sec.child.care.hh" | yvariables.v3[i] == "total.time.child.prim.sec" | yvariables.v3[i] == "portion.sec.child.care.hh" | yvariables.v3[i] == "sec.child.care_total.job" | yvariables.v3[i] == "sec.child.care_social.act" | yvariables.v3[i] == "sec.child.care_house.act" | yvariables.v3[i] == "sec.child.care_eat.drink") {
     z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.complete.sum.stat[which(combine.data.complete.sum.stat$age.youngest.child < 13),] )
     
     
@@ -68,12 +35,12 @@ for (i in 1:length(yvariables.v3)) {
   
   empty.frame[row[i],2] <- names.y[i]
   empty.frame[row[i],3] <- paste0(signif(c, digits=3) ,"(",signif(d, digits = 3),")")
-
+  
   
   empty.frame[row[i],4] <- paste0(signif(a[2,2], digits = 3) ,"(",signif(sqrt(b[2,2]), digits = 3),")")
-
+  
   empty.frame[row[i],5] <- paste0( signif(a[1,2], digits = 3) ,"(",signif(sqrt(b[1,2]), digits = 3),")")
-
+  
   
   
 }   
@@ -172,14 +139,16 @@ combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,ch
 
 
 
+combine.data.complete.sum.stat.dum$nwfh_new <- 0
+combine.data.complete.sum.stat.dum$nwfh_new[which(combine.data.complete.sum.stat.dum$wfh.v3wfh == 0)] <- 1
 
 
 
 
-xvariables <- c("total.job.wfh.time", "age", "race.edit1", "race.edit2", "race.edit3", "race.edit4", "race.edit5" ,"sexMale", "sexFemale",
+xvariables <- c("wfh.v3wfh", "nwfh_new", "age", "race.edit1", "race.edit2", "race.edit3", "race.edit4", "race.edit5" ,"sexMale", "sexFemale",
                 "marital.status.editMarried", "marital.status.editDivorced, separated or widowed",   "marital.status.editNever married",
                 "school.level.completed.editLess than HS", "school.level.completed.editHS", "school.level.completed.editSome college/Associate Degree", "school.level.completed.editCollege or above",
-                "edited.employ.statusEmployed","edited.employ.statusNot employed", "treatment0", "treatment1", "work.hours", 
+               "treatment0", "treatment1", "work.hours", "edited.employ.statusNot employed" , "edited.employ.statusEmployed" ,
                 "occupationsBusiness and financial operations",                    
                 "occupationsComputer and mathematical science",                    
                 "occupationsArchitecture and engineering",                         
@@ -218,7 +187,7 @@ xvariables <- c("total.job.wfh.time", "age", "race.edit1", "race.edit2", "race.e
                 "num.children",
                 "num.family.member",
                 "age.youngest.child",
-
+                
                 
                 "diary.dayMonday",
                 "diary.dayTuesday",
@@ -268,10 +237,10 @@ xvariables <- c("total.job.wfh.time", "age", "race.edit1", "race.edit2", "race.e
                 
 )
 
-names <- c("Work from home minutes", "Age", "1 if non-Hispanic White", "1 if non-Hispanic black", "1 if Hispanic","1 if non-Hispanic Asian","1 if others", "1 if male", "1 if female",
+names <- c("1 if work from home", "1 if work at office or other locations", "Age", "1 if non-Hispanic White", "1 if non-Hispanic black", "1 if Hispanic","1 if non-Hispanic Asian","1 if others", "1 if male", "1 if female",
            "1 if married", "1 if divorced, separated or widowed", "1 if never married",
            "1 if Less than HS", "1 if HS", "1 if some college/Associate Degree", "1 if college or above",
-           "1 if Employed", "1 if not employed", "1 if self-employed", "1 if self-employed" ,  "Weekly work hours*", 
+           "1 if not self-employed", "1 if self-employed" ,  "Weekly work hours*", "1 if not employed",  "1 if employed",
            "1 if business and financial operations",                    
            "1 if computer and mathematical science",                    
            "1 if architecture and engineering" ,                        
@@ -308,7 +277,7 @@ names <- c("Work from home minutes", "Age", "1 if non-Hispanic White", "1 if non
            "Number of children",
            "Number of family members",
            "Age of youngest child",           
-
+           
            
            "1 if Monday",
            "1 if Tuesday",
@@ -347,7 +316,7 @@ names <- c("Work from home minutes", "Age", "1 if non-Hispanic White", "1 if non
            "1 if $100,000 to $149,999",
            "1 if $150,000 and over",
            
-           "Week earnings*",
+           "Weekly earnings",
            "1 if sick",
            "1 if not sick"
            

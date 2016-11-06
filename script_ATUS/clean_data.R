@@ -1,18 +1,17 @@
-#install.packages("stargazer")
-#install.packages("plyr")
-#install.packages("lmtest")
-#install.packages("sandwich")
-#install.packages("pastecs")
-#install.packages("xtable")
-#install.packages("survey")
-#install.packages("dummies")
-
-#install.packages("dplyr")
-#install.pacakges("srvyr")
-#install.packages("dummies")
-#install.packages("ggplot2")
-# install.packages("reshape")
-# install.packages("haven")
+install.packages("stargazer")
+install.packages("plyr")
+install.packages("lmtest")
+install.packages("sandwich")
+install.packages("pastecs")
+install.packages("xtable")
+install.packages("survey")
+install.packages("dummies")
+install.packages("dplyr")
+install.packges("srvyr")
+install.packages("dummies")
+install.packages("ggplot2")
+install.packages("reshape")
+install.packages("haven")
 install.packages("readstata13")
 install.packages("multcomp")
 install.packages("Matching") 
@@ -47,16 +46,16 @@ rm(list = ls())
 
 
 
-load('D:/ATUS/0314/atusact.rda')
-load('D:/ATUS/0314/atuscps.rda')
-load('D:/ATUS/0314/atusresp.rda')
-load('D:/ATUS/0314/atusrost.rda')
-load('D:/ATUS/0314/atusrost.rda')
-load('D:/ATUS/0314/atussum.rda')
-load('D:/ATUS/0314/atuswgts.rda')
-load('D:/ATUS/0314/atuswho.rda')
-lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
-lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
+load('E:/ATUS/0314/atusact.rda')
+load('E:/ATUS/0314/atuscps.rda')
+load('E:/ATUS/0314/atusresp.rda')
+load('E:/ATUS/0314/atusrost.rda')
+load('E:/ATUS/0314/atusrost.rda')
+load('E:/ATUS/0314/atussum.rda')
+load('E:/ATUS/0314/atuswgts.rda')
+load('E:/ATUS/0314/atuswho.rda')
+#lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
+#lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
 
 
 
@@ -240,6 +239,129 @@ total.other.job <- total.other.job[c("tucaseid", "total.other.job.time", "total.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+###### construct data for secondary #####
+
+atusact$sec.child.care_main.job <- 0
+atusact$sec.child.care_sec.job <- 0
+atusact$sec.child.care_house.act <- 0
+atusact$sec.child.care_cosumer.pur <- 0
+
+atusact$sec.child.care_prof.personal.care <- 0
+atusact$sec.child.care_house.ser <- 0
+atusact$sec.child.care_govt.ser <- 0
+atusact$sec.child.care_eat.drink <- 0
+atusact$sec.child.care_social.act <- 0
+atusact$sec.child.care_sport.act <- 0
+atusact$sec.child.care_religion.act <- 0
+atusact$sec.child.care_volunt.act <- 0
+atusact$sec.child.care_phone.call <- 0
+atusact$sec.child.care_traveling <- 0
+
+
+
+atusact$sec.child.care_main.job[which(atusact$trcodep ==50101 & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(atusact$trcodep ==50101 & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_sec.job[which(atusact$trcodep ==50102 & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(atusact$trcodep ==50102 & atusact$trtcc_ln > 0 )]
+
+
+atusact$sec.child.care_house.act[which(  (atusact$trcodep >= 20101 & atusact$trcodep <= 29999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 20101 & atusact$trcodep <= 29999) & atusact$trtcc_ln > 0 )]
+
+atusact$sec.child.care_cosumer.pur[which(  (atusact$trcodep >= 70101 & atusact$trcodep <= 79999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 70101 & atusact$trcodep <= 79999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_prof.personal.care[which(  (atusact$trcodep >= 80101 & atusact$trcodep <= 89999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 80101 & atusact$trcodep <= 89999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_house.ser[which(  (atusact$trcodep >= 90101 & atusact$trcodep <= 99999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 90101 & atusact$trcodep <= 99999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_govt.ser[which(  (atusact$trcodep >= 100101 & atusact$trcodep <= 109999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 100101 & atusact$trcodep <= 109999) & atusact$trtcc_ln > 0 )]
+
+atusact$sec.child.care_eat.drink[which(  (atusact$trcodep >= 110101 & atusact$trcodep <= 119999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 110101 & atusact$trcodep <= 119999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_social.act[which(  (atusact$trcodep >= 120101 & atusact$trcodep <= 129999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 120101 & atusact$trcodep <= 129999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_sport.act[which(  (atusact$trcodep >= 130101 & atusact$trcodep <= 139999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 130101 & atusact$trcodep <= 139999) & atusact$trtcc_ln > 0 )]
+
+atusact$sec.child.care_religion.act[which(  (atusact$trcodep >= 140101 & atusact$trcodep <= 149999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 140101 & atusact$trcodep <= 149999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_volunt.act[which(  (atusact$trcodep >= 150101 & atusact$trcodep <= 159999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 150101 & atusact$trcodep <= 159999) & atusact$trtcc_ln > 0 )]
+
+atusact$sec.child.care_phone.call[which(  (atusact$trcodep >= 160101 & atusact$trcodep <= 169999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 160101 & atusact$trcodep <= 169999) & atusact$trtcc_ln > 0 )]
+atusact$sec.child.care_traveling[which(  (atusact$trcodep >= 180101 & atusact$trcodep <= 189999)  & atusact$trtcc_ln > 0 )] <- atusact$trtcc_ln[which(   (atusact$trcodep >= 180101 & atusact$trcodep <= 189999) & atusact$trtcc_ln > 0 )]
+
+
+atusact$sec.child.care_total.job <- atusact$sec.child.care_main.job + atusact$sec.child.care_sec.job
+
+# atusact$sec.child.care_traveling[ which( atusact$trtcc_ln > 0  & atusact$tucaseid == 20030101031654)]
+
+
+
+
+
+
+
+
+
+# use these to check: 20030101031654 20030101031749 20030101032030  20030101032943
+
+# check aggregate
+# atusact$sec.child.care_main.job[which(atusact$tucaseid == 20030101031654)]
+# head(total.sec.child.care_main.job.data[which(total.sec.child.care_main.job.data$ID == 20030101031654),])   # seond line and this line should be equal
+
+
+
+
+
+get.ID.data <- aggregate(atusact$sec.child.care_main.job , by=list( ID = atusact$tucaseid  ), FUN=sum)
+
+
+
+#names(total.sec.child.care_main.job.data)[names(total.sec.child.care_main.job.data)=="x"] <- "sec.child.care_main.job"
+
+
+
+# sec.child.care_house.act , sec.child.care_eat.drink, sec.child.care_social.act
+
+
+temp.name <- c("sec.child.care_main.job", "sec.child.care_sec.job" ,"sec.child.care_house.act", "sec.child.care_cosumer.pur" , "sec.child.care_prof.personal.care" , "sec.child.care_house.ser" , "sec.child.care_govt.ser",  
+               "sec.child.care_eat.drink", "sec.child.care_social.act" , "sec.child.care_sport.act", "sec.child.care_religion.act", "sec.child.care_volunt.act", "sec.child.care_phone.call", "sec.child.care_traveling" , "sec.child.care_total.job")
+
+
+
+combine.sec.child.care <- as.data.frame(get.ID.data$ID)
+names(combine.sec.child.care  )[names(combine.sec.child.care  )=="get.ID.data$ID"] <- "ID"
+
+
+
+for (i in 1:length(temp.name)) {
+  
+
+  
+  temp.data.sec <- eval((parse(text=    paste0("aggregate(atusact$", temp.name[i], " , by=list( ID = atusact$tucaseid  ), FUN=sum)")    )))
+  
+  names(temp.data.sec )[names(temp.data.sec )=="x"] <- temp.name[i]
+  
+  combine.sec.child.care <- join(temp.data.sec , combine.sec.child.care , by="ID", type = "full")
+
+
+}
+
+
+# check aggregate
+# atusact$sec.child.care_main.job[which(atusact$tucaseid == 20030101031654)]
+# head(total.sec.child.care_main.job.data[which(total.sec.child.care_main.job.data$ID == 20030101031654),])   # seond line and this line should be equal
+
+
+
+names(combine.sec.child.care)[names(combine.sec.child.care)=="ID"] <- "tucaseid"
+
+
+
+
+# 110101 ,2
 
 
 # generate y variables
@@ -559,6 +681,10 @@ atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.fa
 
 combine.data <- join(total.main.job,atussum.subset,  by="tucaseid", type = "full")
 combine.data <- join(combine.data, total.other.job,  by="tucaseid", type = "full")
+combine.data <- join(combine.data, combine.sec.child.care,  by="tucaseid", type = "full")
+
+
+
 
 combine.data <- join(combine.data,atuscps.subset,  by="tucaseid", type = "full")
 combine.data <- join(combine.data,atusresp.subset, by=c("tucaseid","tulineno"), type = "full")
@@ -646,7 +772,8 @@ combine.data$wfh.v3[which(combine.data$employment.status ==  3 | combine.data$em
 combine.data$wfh.v3[which(combine.data$wfh == "")] <- NA
 table(combine.data$wfh.v3)
 
-
+combine.data$wfh.v3 <- factor(combine.data$wfh.v3, levels=c(0,1,2), 
+                                           labels = c("nwfh", "wfh", "Unemployed"))
 
 
 # definition of wfh_mom
@@ -1284,7 +1411,6 @@ combine.data.complete.regress.male.employ <- combine.data.complete[which(combine
 
 
 
-
 combine.data.regress.v2 <- combine.data[which(combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
                                                 combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
 
@@ -1361,14 +1487,6 @@ yvariables.v2 <-c( "total.time.child", "physical.care.hh.children",
 
 
 
-yvariables.v3 <-c( "physical.care.hh.children",
-                   "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                   "play.with.hh.children",
-                   "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec", "portion.sec.child.care.hh",  "total.travel.work.time",  "total.grooming.time", "TV.movies" , "other.time.use" )
-
-
-
 
 yvariables.agg <-c("total01", "total02", "total.time.adults", "total04", "total05", "total06", "total07" , "total08", "total09" , "total10", "total11",
                    "total12", "total13", "total14", "total15", "total16", "total18")
@@ -1390,8 +1508,8 @@ yvariables.agg <-c("total01", "total02", "total.time.adults", "total04", "total0
 
 
 
-source("D:/github/dissertation/script_ATUS/impute_wage_women.R") 
-source("D:/github/dissertation/script_ATUS/impute_wage_men.R") 
+source("E:/github/dissertation/script_ATUS/impute_wage_women.R") 
+source("E:/github/dissertation/script_ATUS/impute_wage_men.R") 
 
 
 
@@ -1406,6 +1524,23 @@ combine.data.complete.self.employed.regress.male.employ <- combine.data.complete
 
 combine.data.complete.sum.stat <- rbind(combine.data.complete.regress.female.employ, combine.data.complete.regress.male.employ)
 combine.data.complete.sum.stat <- combine.data.complete.sum.stat[order(combine.data.complete.sum.stat$tucaseid),]
+
+
+
+
+# drop unemployed
+
+combine.data.complete.regress.female.no.unemploy <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$wfh.v3 != 2) ,] 
+
+
+combine.data.complete.regress.male.no.unemploy <- combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$wfh.v3 != 2) ,] 
+
+
+combine.data.complete.sum.stat.no.employ <- rbind(combine.data.complete.regress.female.no.unemploy , combine.data.complete.regress.male.no.unemploy)
+combine.data.complete.sum.stat.no.employ <- combine.data.complete.sum.stat[order(combine.data.complete.sum.stat$tucaseid),]
+
+
+
 
 
 #combine.data.complete.sum.stat <- combine.data.complete[which(combine.data.complete$presence.own.child == 1 &

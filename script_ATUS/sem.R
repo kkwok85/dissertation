@@ -75,8 +75,8 @@
 
 
                 
-r
-
+install.packages("lavaan")
+library("lavaan")
 
 
 
@@ -311,13 +311,13 @@ spouse.employ.status.dum <- use edited.spouse.work.hours
 spouse.employ.statusNot.Employed
 
 
+race.edit1 taken away
+
+controls <- paste0(" total.job.time2 +  work.hours.last.week + edited.work.hours + treatment + age  + num.children + num.family.member +age.youngest.child + interview.year.dum  + edited.spouse.work.hours + edited.weekly.earnings + children.sick.indicator +  white.collar  + school.level.completed.editCollege.or.above + diary.dayFriday ")
+final.model <- paste0("\ntotal.job.wfh.time2 ~  ", controls ," \ntotal.time.child ~ total.job.wfh.time2 +", controls ," \ntotal.job.wfh.time2 ~~ 0.3*total.time.child\n")
 
 
-controls <- paste0(" total.job.time2 +  work.hours.last.week + edited.work.hours + treatment + age  + num.children + num.family.member +age.youngest.child + interview.year.dum  + edited.spouse.work.hours + edited.weekly.earnings + children.sick.indicator +  white.collar  + school.level.completed.editCollege.or.above + diary.dayFriday + race.edit1")
-final.model <- paste0("\ntotal.job.wfh.time2 ~  ", controls ," \ntotal.time.child ~ total.job.wfh.time2 +", controls ," \ntotal.job.wfh.time2 ~~ 0.5*total.time.child\n")
-
-
-fit1 <- sem(final.model, data=combine.data.complete.regress.female.employ.dum)
+fit1 <- sem(final.model, data=combine.data.complete.regress.female.employ.dum[])
 
 
 
