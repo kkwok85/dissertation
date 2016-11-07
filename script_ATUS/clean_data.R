@@ -1,3 +1,13 @@
+############################################################################################################################################################################################
+############################################################################################################################################################################################
+# This clean_data.R script is responsible for cleaning the data so that regression and summary statistics
+# can be performed. Here I assume you have the data already. Please change your data.location 
+# and script.location drive before you run the whole script.
+############################################################################################################################################################################################
+############################################################################################################################################################################################
+
+
+
 install.packages("stargazer")
 install.packages("plyr")
 install.packages("lmtest")
@@ -12,19 +22,14 @@ install.packages("dummies")
 install.packages("ggplot2")
 install.packages("reshape")
 install.packages("haven")
-install.packages("readstata13")
 install.packages("multcomp")
 install.packages("Matching") 
 
 
-library(readstata13)
 library(haven)
-
 library(dummies)
-
 library(dplyr)
 library(srvyr)
-
 library(xtable)
 library(pastecs)
 library(stargazer)
@@ -46,19 +51,25 @@ rm(list = ls())
 
 
 
-load('E:/ATUS/0314/atusact.rda')
-load('E:/ATUS/0314/atuscps.rda')
-load('E:/ATUS/0314/atusresp.rda')
-load('E:/ATUS/0314/atusrost.rda')
-load('E:/ATUS/0314/atusrost.rda')
-load('E:/ATUS/0314/atussum.rda')
-load('E:/ATUS/0314/atuswgts.rda')
-load('E:/ATUS/0314/atuswho.rda')
-#lv.data <-  read.dta13("D:/lvresp_2011/lvresp_2011.dta", convert.factors = T, generate.factors=T)
-#lvwgts.data <-  read.dta13("D:/lvwgts_2011/lvwgts_2011.dta", convert.factors = T, generate.factors=T)
+
+
+# input data location here. please be aware that you should use "/" instead of "\"
+data.location <- "E:/ATUS/0314"
+script.location <- "E:/github/dissertation/script_ATUS"
+
+
+# load data into R environment
+eval(parse(text = paste0(" load('", data.location  , "/atusact.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atuscps.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atusresp.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atusrost.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atussum.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atuswgts.rda')")) )
+eval(parse(text = paste0(" load('", data.location  , "/atuswho.rda')")) )
 
 
 
+# set decimal place 
 options("scipen" = 10)
 
 
@@ -66,30 +77,19 @@ options("scipen" = 10)
 memory.limit(size = 50000)
 
 
+##############################################################################################
+##############################################################################################
+############ Part A:this part is to generate the minutes working from home (WFH)  ############ 
+##############################################################################################
+##############################################################################################
 
-# merge.atusact.atussum <- join(atusact, atussum, by="tucaseid")
-
-#https://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.html
-#http://stackoverflow.com/questions/1660124/how-to-sum-a-variable-by-group
-# http://www.bls.gov/tus/lexiconnoex0314.pdf
-# for aggregate: http://davetang.org/muse/2013/05/22/using-aggregate-and-apply-in-r/
-
-# 050101 is main job
-# tewhere = 1 is home = 2 is workplace
-
-# check dplyr, data.table and sqldf and time the merge time
-
-
-
-
-
+# prepare ID list for later use
 ID.list <- as.data.frame(atussum$tucaseid)
 colnames(ID.list) <- "ID"
 
 
 
-
-# generate main job total time
+############ generate main job (secondary job is not included here) total time ###################
 
 total.main.job <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50101  ), FUN=sum)
 
@@ -112,8 +112,7 @@ merge.total.main.job.true.only.IDlist[is.na(merge.total.main.job.true.only.IDlis
 total.main.job <- merge.total.main.job.true.only.IDlist
 
 # for checking only
-#table(total.main.job.false.only$main.job.total.time-atussum$t050101)
-table(total.main.job$x-atussum$t050101)
+#table(total.main.job$x-atussum$t050101)
 
 
 
@@ -124,18 +123,11 @@ table(total.main.job$x-atussum$t050101)
 
 
 
-# generate work from home time
-
-#atusact$work.hr.indicator <- c(0)
-#for (i in 1:nrow(atusact)) {
-
-#  if (atusact$tucumdur24[i] > 240 & atusact$tucumdur24[i] <960) {
-#    atusact$work.hr.indicator[i] <- 1
-#  }
-
-#}
 
 
+############ generate wfh variables for main job (secondary job is below): wfh minutes and percentage of wfh minutes over total work minutes  ###################
+
+# generate wfh minutes (secondary job)
 
 total.main.job.wfh <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50101, location = atusact$tewhere == 1  ), FUN=sum)
 
@@ -152,6 +144,7 @@ colnames(total.main.job)[which(names(total.main.job) == "x")] <- "total.main.job
 total.main.job <- join(total.main.job, total.main.job.wfh.true.only, by="ID")
 
 
+# generate percentage of wfh minutes over total work minutes (secondary job)
 total.main.job[is.na(total.main.job )] <- 0
 total.main.job$total.percent.main.job.wfh <- total.main.job$total.main.job.wfh.time/total.main.job$total.main.job.time
 
@@ -164,7 +157,7 @@ total.main.job[is.na(total.main.job )] <- 0
 colnames(total.main.job)[which(names(total.main.job) == "ID")] <- "tucaseid" 
 
 
-# final product
+# final product of working from home variables (main job)
 total.main.job <- total.main.job[c("tucaseid", "total.main.job.time", "total.main.job.wfh.time", "total.percent.main.job.wfh")]
 
 
@@ -173,7 +166,7 @@ total.main.job <- total.main.job[c("tucaseid", "total.main.job.time", "total.mai
 
 
 
-# for creating secondary job wfh
+############ generate secondary job total time ###################
 
 
 total.other.job <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50102  ), FUN=sum)
@@ -197,11 +190,13 @@ merge.total.other.job.true.only.IDlist[is.na(merge.total.other.job.true.only.IDl
 total.other.job <- merge.total.other.job.true.only.IDlist
 
 # for checking only
-#table(total.other.job.false.only$other.job.total.time-atussum$t050101)
-table(total.other.job$x-atussum$t050102)
+# table(total.other.job$x-atussum$t050102)
 
 
 
+############ generate wfh variables for main job (secondary job is below): wfh minutes and percentage of wfh minutes over total work minutes  ###################
+
+# generate wfh minutes (secondary job)
 
 
 total.other.job.wfh <- aggregate(atusact$tuactdur24, by=list( ID = atusact$tucaseid , code = atusact$trcodep ==50102, location = atusact$tewhere == 1  ), FUN=sum)
@@ -215,6 +210,7 @@ colnames(total.other.job)[which(names(total.other.job) == "x")] <- "total.other.
 
 
 
+# generate percentage of wfh minutes over total work minutes (secondary job)
 
 total.other.job <- join(total.other.job, total.other.job.wfh.true.only, by="ID")
 
@@ -231,10 +227,23 @@ total.other.job[is.na(total.other.job )] <- 0
 colnames(total.other.job)[which(names(total.other.job) == "ID")] <- "tucaseid" 
 
 
-# final product
+# final product of working from home variables (secondary job)
 total.other.job <- total.other.job[c("tucaseid", "total.other.job.time", "total.other.job.wfh.time", "total.percent.other.job.wfh")]
 
 
+# check the accuracy of working from home definition using the following steps:
+# 1) find any respondent working from home minutes from the created dataset (total.main.job): 
+#    e.g one example of respondent ID: 20030100014165   His wfh minutes is 65 minutes
+# 2) use the following command to check that respondent (change the respondent ID by yourself)
+#   atusact[which(atusact$tucaseid == 20030100014165 & atusact$trcodep == 50101 & atusact$tewhere == 1 ),] 
+# the total of the column of tuactdur24 should match the wfh minutes (total.main.job.wfh.time) in the created data (total.main.job)
+
+
+##############################################################################################
+##############################################################################################
+############ Part A: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
 
@@ -246,12 +255,14 @@ total.other.job <- total.other.job[c("tucaseid", "total.other.job.time", "total.
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part B: construct data for secondary activities ################################# 
+##############################################################################################
+##############################################################################################
 
 
-
-
-
-###### construct data for secondary #####
+############ generate secondary activities item (at a higher level of the primary time use activites) ###################
 
 atusact$sec.child.care_main.job <- 0
 atusact$sec.child.care_sec.job <- 0
@@ -303,15 +314,7 @@ atusact$sec.child.care_total.job <- atusact$sec.child.care_main.job + atusact$se
 
 
 
-
-
-# use these to check: 20030101031654 20030101031749 20030101032030  20030101032943
-
-# check aggregate
-# atusact$sec.child.care_main.job[which(atusact$tucaseid == 20030101031654)]
-# head(total.sec.child.care_main.job.data[which(total.sec.child.care_main.job.data$ID == 20030101031654),])   # seond line and this line should be equal
-
-
+############ aggregate secondary activities item (at a higher level of the primary time use activites) ###################
 
 
 
@@ -350,9 +353,6 @@ for (i in 1:length(temp.name)) {
 }
 
 
-# check aggregate
-# atusact$sec.child.care_main.job[which(atusact$tucaseid == 20030101031654)]
-# head(total.sec.child.care_main.job.data[which(total.sec.child.care_main.job.data$ID == 20030101031654),])   # seond line and this line should be equal
 
 
 
@@ -360,49 +360,24 @@ names(combine.sec.child.care)[names(combine.sec.child.care)=="ID"] <- "tucaseid"
 
 
 
-
-# 110101 ,2
-
-
-# generate y variables
-# this is just to test this function
-#atussum$total.time.child <- as.data.frame(rowSums(subset(atussum, select=grep("^t0301|^t0302|t0303", names(atussum), value = TRUE))))
-
-#temp.data <- ""
-#for ( i in 1:3){ 
-#  if (i <10) {
-#    num <-paste0("0",i)
-#  }
-#  else {
-#    num <-i 
-#  } 
-  
-#  search.head <- paste0("^t",num)
-  
-#  temp.data <- subset(atussum, select=c(grep(search.head, names(atussum), value = TRUE) )) 
-#  temp.data <-cbind(atussum$tucaseid, temp.data)
-
-#  result[[i]] <- as.data.frame(rowSums(temp.data[,-1] ,na.rm=TRUE)) 
-
-#} 
- 
-
-
-# for test 
-#test.care <- as.data.frame(rowSums(subset(atussum, select=grep("^t03", names(atussum), value = TRUE))))
-
-#table(result[[3]]- test.care)
+##############################################################################################
+##############################################################################################
+############ Part B: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
 
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part c: construct aggregate data ################################################ 
+##############################################################################################
+##############################################################################################
 
-
-
-
-########### create total01 to total18
+############ create an aggregate level of activities. They are at a 2nd-tier category ###################
 temp.data2 <- ""
 temp.data <- ""
 for ( i in c(1:16, 18)){ 
@@ -427,11 +402,17 @@ for ( i in c(1:16, 18)){
 } 
 
 
-# for testing. Table should have everything zero
-test.care <- as.data.frame(rowSums(subset(atussum, select=grep("^t03", names(atussum), value = TRUE))))
-table(atussum$total03 - test.care)
 
 
+# check the above coding using the following steps:
+# 1) test.care <- as.data.frame(rowSums(subset(atussum, select=grep("^t03", names(atussum), value = TRUE))))
+# 2) table(atussum$total03 - test.care)
+# Table should have everything zero
+
+
+
+
+############ create other aggregate activites: total child care time, total adult care time, total traveling time and total grooming time ###################
 
 
 atussum$total.time.child = atussum$t030101+ atussum$t030102+ atussum$t030103+ atussum$t030104+ atussum$t030105+ 
@@ -452,6 +433,34 @@ atussum$total.grooming.time <- atussum$t010201 + atussum$t010299
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part C: End  #################################################################### 
+##############################################################################################
+##############################################################################################
+
+
+
+
+
+
+
+
+
+###############################################################################################################################################
+###############################################################################################################################################
+############ Part D: fill in the missing values, rename variables and subset variables ######################################################## 
+###############################################################################################################################################
+###############################################################################################################################################
+
+
+##############################################
+############ DAta: atussum ###################
+##############################################
+
+
+############ fill in missing values ###################
+
 atussum$teschenr[atussum$teschenr == -1 ] <- NA
 atussum$teschenr[atussum$teschenr == -3 ] <- NA
 
@@ -466,7 +475,9 @@ table(atussum$edited.teschenr.indicator)
 
 
 
-#combine.data$total.travel.work.time <- combine.data$travel.work + combine.data$travel.work.related + combine.data$travel.work.other
+
+############ rename variables ###################
+
 
 atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201" = "food.drink.preparation", "t070103" = "purchasing.food",
                                        "t030101" = "physical.care.hh.children" , "t030102" = "reading.to.hh.children" , 
@@ -488,6 +499,7 @@ atussum <- rename(atussum, replace = c("t070101" = "grocery.shopping", "t020201"
 
 
 
+############ subset variables ###################
 
 
 atussum.subset <- atussum[c("tucaseid","total.travel.work.time", "total.grooming.time", "total.time.child", "total.time.adults", "grocery.shopping", "food.drink.preparation", "purchasing.food",
@@ -511,8 +523,15 @@ atussum.subset <- atussum[c("tucaseid","total.travel.work.time", "total.grooming
 
 
 
+##############################################
+############ DAta: atusresp ##################
+##############################################
 
-# this question is assked only if there is a partner and the partner is employed full time. no problem to edit this way
+
+############ fill in missing values ###################
+
+
+# this question is asked only if there is a partner and the partner is employed full time. no problem to edit this way
 atusresp$trspftpt[atusresp$trspftpt == -1 ] <- 4
 
 
@@ -569,6 +588,10 @@ atusresp$teio1cow[which(atusresp$teio1cow == -1)] <- 9
 atusresp$trthh[which(atusresp$trthh == -1)] <- NA
 
 
+
+############ rename variables ###################
+
+
 atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" = "spouse.presence.hh",
                                          "tespempnot" = "spouse.employ.status", "tespuhrs" ="spouse.work.hours",
                                          "trdtocc1" = "occupations", "trchildnum" = "num.children",
@@ -582,6 +605,7 @@ atusresp <- rename(atusresp, replace = c("tehruslt" = "work.hours", "trsppres" =
 
 
 
+############ subset variables ###################
 
 atusresp.subset <- atusresp[c("tucaseid", "tulineno",  "work.hours", "spouse.presence.hh", "spouse.employ.status", "spouse.work.hours", 
                               "occupations", "num.children", "num.family.member", "employment.status", "hourly.status", "earnings.report.way", "class.worker","hourly.rate.if.report.other", 
@@ -592,8 +616,11 @@ atusresp.subset <- atusresp[c("tucaseid", "tulineno",  "work.hours", "spouse.pre
 
 
 
+##############################################
+############ DAta: atuscps ###################
+##############################################
 
-
+############ fill in missing values ###################
 
 
 atuscps$hefaminc[atuscps$hefaminc == -1 ] <- NA
@@ -650,6 +677,7 @@ atuscps$prptrea[atuscps$prptrea == -1 ] <- 45 #dont mess up with the order!!!!
 
 
 
+############ rename variables ###################
 
 
 atuscps <- rename(atuscps, replace = c("gereg" = "region", "gestfips" = "fips", "hefaminc" = "edited.family.income", "hufaminc" = "family.income",
@@ -658,6 +686,7 @@ atuscps <- rename(atuscps, replace = c("gereg" = "region", "gestfips" = "fips", 
                                        "peabsrsn" = "reason.absent.last.week", "prptrea" = "reason.pt.work", "gtmetsta" = "metropolitan.status" , "tratusr" = "respond.atus" ))
 
 
+############ subset variables ###################
 
 atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.family.income", "family.income",  "marital.status", "work.hours.last.week", "current.situation", "reason.not.work", "reason.absent.last.week" ,
                             "enrolled.school", "full.part.stud","hs.college", "reason.pt.work", "metropolitan.status" , "respond.atus")]
@@ -669,6 +698,11 @@ atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.fa
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part D: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
 
@@ -676,6 +710,11 @@ atuscps.subset <- atuscps[c("tucaseid", "tulineno", "region", "fips", "edited.fa
 
 
 
+###############################################################################################################################################
+###############################################################################################################################################
+############ Part E: combine data of all subset of atus data and working from home data ####################################################### 
+###############################################################################################################################################
+###############################################################################################################################################
 
 
 
@@ -702,14 +741,26 @@ combine.data <- join(combine.data,lvwgts.data , by=c("tucaseid"), type = "full")
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part E: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
 
 
 
 
-#######################################################################
-# creation of variables
+###############################################################################################################################################
+###############################################################################################################################################
+############ Part F: create and lable new variables for regressions ###########################################################################
+###############################################################################################################################################
+###############################################################################################################################################
+
+
+############ create school level variables ###################
+
 combine.data$school.level.completed.edit <- c("")
 combine.data$school.level.completed.edit[which(combine.data$school.level.completed <= 38 )] <- 1   # less than HS
 combine.data$school.level.completed.edit[which(combine.data$school.level.completed == 39 )] <- 2   # HS
@@ -727,8 +778,8 @@ combine.data$school.level.completed.edit <- factor(combine.data$school.level.com
 
 
 
+############ create employment variables ###################
 
-# definition of employment
 combine.data$edited.employ.status <- c("")
 combine.data$edited.employ.status[which(combine.data$employment.status ==  1 | combine.data$employment.status ==  2 ) ] <- 1
 combine.data$edited.employ.status[which(combine.data$employment.status ==  3 | combine.data$employment.status ==  4 | combine.data$employment.status ==  5) ] <- 0
@@ -739,7 +790,7 @@ table(combine.data$edited.employ.status)
 
 
 
-# definition of wfh
+############ create wfh dummy ###################
 combine.data$wfh <- c("")
 combine.data$wfh[which(combine.data$total.percent.main.job.wfh > 0.85 & (combine.data$employment.status ==  1 | combine.data$employment.status ==  2 ) )] <- 1
 combine.data$wfh[which(combine.data$total.percent.main.job.wfh <= 0.85 & (combine.data$employment.status ==  1 | combine.data$employment.status ==  2 ) )] <- 0
@@ -748,6 +799,7 @@ combine.data$wfh[which(combine.data$wfh == "")] <- NA
 table(combine.data$wfh)
 
 
+############ create wfh dummy version 2 ###################
 
 combine.data$wfh.v2 <- c(0)
 combine.data$wfh.v2[which(combine.data$total.percent.main.job.wfh > 0.50 & (combine.data$employment.status ==  1 | combine.data$employment.status ==  2 )
@@ -760,7 +812,9 @@ table(combine.data$wfh.v2)
 
 
 
-# wfh.v3 combine first job and second job
+############ create wfh dummy version 3 ###################
+############ version 3 include primary and secondary job ###################
+
 combine.data$total.job.time <- combine.data$total.main.job.time + combine.data$total.other.job.time
 combine.data$total.job.wfh.time <- combine.data$total.main.job.wfh.time + combine.data$total.other.job.wfh.time
 combine.data$total.percent.total.job.wfh <-  combine.data$total.job.wfh.time/combine.data$total.job.time
@@ -776,7 +830,7 @@ combine.data$wfh.v3 <- factor(combine.data$wfh.v3, levels=c(0,1,2),
                                            labels = c("nwfh", "wfh", "Unemployed"))
 
 
-# definition of wfh_mom
+############ create wfh dummy for mother ###################
 combine.data$wfh_mom <- c("")
 combine.data$wfh_mom[which(combine.data$presence.own.child == 1 & combine.data$sex == 2 & combine.data$wfh == 1  )] <- 1
 combine.data$wfh_mom[which(combine.data$presence.own.child == 1 & combine.data$sex == 2 & combine.data$wfh == 0 )] <- 0
@@ -787,6 +841,7 @@ table(combine.data$wfh_mom)
 
 
 
+############ create wfh dummy for mother (version 2) ###################
 
 combine.data$wfh_mom.v2 <- c("")
 combine.data$wfh_mom.v2[which(combine.data$presence.own.child == 1 & combine.data$sex == 2 & combine.data$wfh.v2 == 1  )] <- 1
@@ -799,7 +854,7 @@ table(combine.data$wfh_mom.v2)
 
 
 
-
+############ create spouse presence variable ###################
 
 # edit definition of spouse presence ( not fill in NA)
 combine.data$edit.spouse.presence <- ""
@@ -809,6 +864,9 @@ combine.data$edit.spouse.presence[which(combine.data$edit.spouse.presence == "")
 table(combine.data$edit.spouse.presence)
 
 
+
+############ create whether children is sick variable ###################
+
 combine.data$children.sick.indicator <- as.numeric(c(""))
 combine.data$children.sick.indicator[which(combine.data$provide.medical.care.hh.children > 0 | combine.data$obtain.medical.care.hh.children > 0 |
                                           combine.data$wait.child.health > 0 | combine.data$child.health.other > 0)] <- 1
@@ -817,93 +875,10 @@ combine.data$children.sick.indicator[which(combine.data$provide.medical.care.hh.
                                           combine.data$wait.child.health == 0 & combine.data$child.health.other == 0)] <- 0
 
 
-## fill in NA for family.income
 
-# for finding the mode of family.income
-
-# another way to see weighted mode:
-#sum((combine.data.regress.v2$family.income[which(combine.data.regress.v2$family.income==14)])*(combine.data.regress.v2$tufnwgtp[which(combine.data.regress.v2$family.income==14)]))
-
-
-
-
-
-
-
-
-
-############old impute start here############
-
-#atuscps.income.mode <- atuscps.subset[which(atuscps.subset$tulineno==1),]
-#sort(table(atuscps.income.mode$family.income )) 
-#mode <- names(which(table(atuscps.income.mode$family.income ) == max(table(atuscps.income.mode$family.income ))))
-
-#mode <- as.integer(mode)
-
-# mode is 14!!
-
-
-
-
-#combine.data$edited.family.income2 <- c("")
-#combine.data$edited.family.income2 <- combine.data$family.income
-#combine.data$edited.family.income2[is.na(combine.data$family.income)] <- mode
-
-#combine.data$edited.family.income2.indicator <- 0
-#combine.data$edited.family.income2.indicator[is.na(combine.data$family.income)] <- 1 
-#table(combine.data$edited.family.income2.indicator)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# check mean and match it with ATUS example. The first answer is 24.62, the second one is 114
-#weighted.mean(combine.data.complete$total.time.child[which(combine.data.complete$interview.year==2006)], combine.data.complete$tufnwgtp[which(combine.data.complete$interview.year==2006)], na.rm=TRUE)
-
-
-#b <- combine.data.complete[which(combine.data.complete$total.time.child > 0), ]
-#weighted.mean(b$total.time.child[which(b$interview.year==2006)], b$tufnwgtp[which(b$interview.year==2006)], na.rm=TRUE)
-
-# num.children is taken simply to drop those NA. It is ok to use num.children
-data.for.earnings <- combine.data[which(is.na(combine.data$num.children)==FALSE), ]
-
-
-# at this moment use weighted mean
-
-mean.weekly.earnings <- weighted.mean(data.for.earnings$weekly.earnings, data.for.earnings$tufnwgtp, na.rm=TRUE)
-
-
-
-
-
-
-#combine.data$edited.weekly.earnings <- c("")
-#combine.data$edited.weekly.earnings <- combine.data$weekly.earnings
-#combine.data$edited.weekly.earnings[is.na(combine.data$weekly.earnings)] <- mean.weekly.earnings
-#combine.data$edited.weekly.earnings <- combine.data$edited.weekly.earnings/100
-
-
-
-#combine.data$edited.weekly.earnings.indicator <- 0
-#combine.data$edited.weekly.earnings.indicator[is.na(combine.data$weekly.earnings)] <- 1 
-#table(combine.data$edited.weekly.earnings.indicator)
-
-
-
-
-
+############ create occupation variables ###################
 
 ## fill in NA for occupations
-
 combine.data$edited.occupations <- c("")
 combine.data$edited.occupations <- combine.data$occupations
 combine.data$edited.occupations[is.na(combine.data$occupations)] <- 23
@@ -913,6 +888,16 @@ combine.data$edited.occupations.indicator[is.na(combine.data$occupations)] <- 1
 table(combine.data$edited.occupations.indicator)
 
 
+############ create work hours variables ###################
+# check mean and match it with ATUS example. The first answer is 24.62, the second one is 114
+#weighted.mean(combine.data.complete$total.time.child[which(combine.data.complete$interview.year==2006)], combine.data.complete$tufnwgtp[which(combine.data.complete$interview.year==2006)], na.rm=TRUE)
+
+# num.children is taken simply to drop those NA. It is ok to use num.children
+data.for.earnings <- combine.data[which(is.na(combine.data$num.children)==FALSE), ]
+
+# at this moment use weighted mean
+
+mean.weekly.earnings <- weighted.mean(data.for.earnings$weekly.earnings, data.for.earnings$tufnwgtp, na.rm=TRUE)
 
 mean.work.hours <- weighted.mean(data.for.earnings$work.hours, data.for.earnings$tufnwgtp, na.rm=TRUE)
 ## fill in NA work.hours
@@ -929,8 +914,9 @@ table(combine.data$edited.work.hours.indicator)
 
 
 
+############ create spouse work hours variables ###################
 
-## fill in NA for spouse.work.hours (be careful or this!!!)
+## fill in NA for spouse.work.hours (be careful of this!!!)
 ## if no spouse, or spouse not employed, then they are 0 work hours
 combine.data$edited.spouse.work.hours <- c("")
 
@@ -944,7 +930,80 @@ table(is.na(combine.data$spouse.work.hours))
 table(combine.data$edited.spouse.work.hours.indicator)
 
 
+############ create race variables ###################
 
+
+
+# checked, totall correct
+# http://kfoster.ccny.cuny.edu/classes/spring2011/eco290/ATUS_overview.html tells how to classify
+combine.data$race.edit <- c("")
+combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 1)] <- 1   #white
+combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 2)] <- 2   #black
+combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 4)] <- 4  # Asian
+combine.data$race.edit[which(combine.data$hispanic == 2 & 
+                               (combine.data$race != 1 & combine.data$race != 2 & combine.data$race != 4  ))] <- 5  # other
+
+
+combine.data$race.edit[which(combine.data$hispanic == 1 )] <- 3  # Hispanic
+
+combine.data$race.edit[which(combine.data$race.edit == "" )] <- NA
+combine.data$race.edit <- factor(combine.data$race.edit, levels=c(1,2,3, 4, 5), 
+                                           labels = c("Non-hispanic White", "Non-hispanic Black", "Hispanic", "Non-hispanic Asian", "Others"))
+
+
+
+
+
+
+
+############ create marital status variables ###################
+
+
+
+combine.data$marital.status <- factor(combine.data$marital.status, levels=c(1,2,3,4,5,6), 
+                                      labels = c("Married-spouse present", "Married-spouse absent", "Widowed", "Divorced", "Separated", "Never married"))
+
+
+combine.data$marital.status.edit <- c("")
+combine.data$marital.status.edit[which(combine.data$marital.status == "Married-spouse present" | combine.data$marital.status == "Married-spouse absent")] <- 1
+combine.data$marital.status.edit[which(combine.data$marital.status == "Widowed" | combine.data$marital.status == "Divorced" | combine.data$marital.status == "Separated" )] <- 2
+combine.data$marital.status.edit[which(combine.data$marital.status == "Never married")] <- 3
+
+
+combine.data$marital.status.edit <- factor(combine.data$marital.status.edit, levels=c(1,2,3), 
+                                           labels = c("Married", "Divorced, separated or widowed", "Never married"))
+
+
+
+
+############ create other dependent variables ###################
+
+combine.data$total.time.child.prim.sec <- combine.data$sec.child.care.hh + combine.data$total.time.child
+
+
+combine.data$portion.sec.child.care.hh <- combine.data$sec.child.care.hh/(combine.data$sec.child.care.hh + combine.data$total.time.child)
+
+combine.data$portion.primary.child.care <- combine.data$total.time.child/(combine.data$sec.child.care.hh + combine.data$total.time.child)
+
+
+
+
+combine.data$other.time.use <- 1440 - combine.data$physical.care.hh.children - combine.data$grocery.shopping - combine.data$food.drink.preparation -
+  combine.data$purchasing.food - combine.data$play.with.hh.children - combine.data$reading.to.hh.children - 
+  combine.data$talk.listening.to.hh.children - combine.data$homework.hh.children - combine.data$supervision.hh.children -
+  combine.data$pick.drop.hh.child - combine.data$pick.drop.hh.child - 
+  combine.data$total.travel.work.time - combine.data$total.grooming.time 
+
+
+
+combine.data$total.job.time2  <- (combine.data$total.job.time)/480
+
+combine.data$total.job.wfh.time2 <-  (combine.data$total.job.wfh.time)/480
+
+
+
+
+############ label value for variables ###################
 
 
 combine.data$hourly.status <- factor(combine.data$hourly.status, levels = c(1,2,-1), labels = c("hourly", "not hourly", "invalid"))
@@ -962,24 +1021,6 @@ combine.data$edit.spouse.presence <- factor(combine.data$edit.spouse.presence, l
 
 
 
-#combine.data$edited.family.income2 <- ordered(combine.data$edited.family.income2 , levels=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), 
- #                                             labels = c("Less than $5,000", 
-  #                                                       "$5,000 to $7,499",
-   #                                                      "$7,500 to $9,999",
-    #                                                     "$10,000 to $12,499",
-     #                                                    "$12,500 to $14,999",
-      #                                                   "$15,000 to $19,999",
-       #                                                  "$20,000 to $24,999",
-        #                                                 "$25,000 to $29,999",
-         #                                                "$30,000 to $34,999",
-          #                                               "$35,000 to $39,999",
-           #                                              "$40,000 to $49,999",
-            #                                             "$50,000 to $59,999",
-             #                                            "$60,000 to $74,999",
-              #                                           "$75,000 to $99,999",
-               #                                          "$100,000 to $149,999",
-                #                                         "$150,000 and over"
-                 #                             ))
 
 
 
@@ -1013,59 +1054,7 @@ combine.data$edited.occupations <- factor(combine.data$edited.occupations,
 
 
 
-
-
-
-
 combine.data$sex <- factor(combine.data$sex, levels=c(1,2), labels = c("Male", "Female"))
-
-#combine.data$race <- factor(combine.data$race)
-
-
-# checked, totall correct
-#http://kfoster.ccny.cuny.edu/classes/spring2011/eco290/ATUS_overview.html tells how to classify
-combine.data$race.edit <- c("")
-combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 1)] <- 1   #white
-combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 2)] <- 2   #black
-combine.data$race.edit[which(combine.data$hispanic == 2 & combine.data$race == 4)] <- 4  # Asian
-combine.data$race.edit[which(combine.data$hispanic == 2 & 
-                              (combine.data$race != 1 & combine.data$race != 2 & combine.data$race != 4  ))] <- 5  # other
-
-
-combine.data$race.edit[which(combine.data$hispanic == 1 )] <- 3  # Hispanic
-
-combine.data$race.edit[which(combine.data$race.edit == "" )] <- NA
-combine.data$marital.status.edit <- factor(combine.data$marital.status.edit, levels=c(1,2,3, 4, 5), 
-                                           labels = c("Non-hispanic White", "Non-hispanic Black", "Hispanic", "Non-hispanic Asian", "Others"))
-head(combine.data[,c("hispanic","race", "race.edit")])
-
-
-
-
-
-
-
-
-
-
-
-combine.data$marital.status <- factor(combine.data$marital.status, levels=c(1,2,3,4,5,6), 
-                                      labels = c("Married-spouse present", "Married-spouse absent", "Widowed", "Divorced", "Separated", "Never married"))
-
-
-combine.data$marital.status.edit <- c("")
-combine.data$marital.status.edit[which(combine.data$marital.status == "Married-spouse present" | combine.data$marital.status == "Married-spouse absent")] <- 1
-combine.data$marital.status.edit[which(combine.data$marital.status == "Widowed" | combine.data$marital.status == "Divorced" | combine.data$marital.status == "Separated" )] <- 2
-combine.data$marital.status.edit[which(combine.data$marital.status == "Never married")] <- 3
-
-
-combine.data$marital.status.edit <- factor(combine.data$marital.status.edit, levels=c(1,2,3), 
-                                      labels = c("Married", "Divorced, separated or widowed", "Never married"))
-
-
-
-
-
 
 
 
@@ -1125,7 +1114,6 @@ combine.data$diary.day <- factor(combine.data$diary.day, levels=c(1,2,3,4,5,6,7)
 
 
 
-
 combine.data$region <- factor(combine.data$region)
 combine.data$fips <- factor(combine.data$fips)
 
@@ -1135,29 +1123,8 @@ combine.data$spouse.presence.hh <- factor(combine.data$spouse.presence.hh, level
 
 
 
-
 combine.data$spouse.employ.status <- factor(combine.data$spouse.employ.status, levels=c(1,2,3), labels = c("Employed", "Not Employed", "No spouse/partner present"))
 combine.data$full.part.time.spouse <- factor(combine.data$full.part.time.spouse, levels=c(1,2,3,4), labels = c("Full time", "Part time", "Hours vary", "No partner/not employed"))
-
-
-#combine.data$family.income <- ordered(combine.data$family.income, levels=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16), 
-#                                      labels = c("Less than $5,000", 
-#                                                 "$5,000 to $7,499",
-#                                                 "$7,500 to $9,999",
-#                                                 "$10,000 to $12,499",
-#                                                 "$12,500 to $14,999",
-#                                                 "$15,000 to $19,999",
-#                                                 "$20,000 to $24,999",
-#                                                 "$25,000 to $29,999",
-#                                                 "$30,000 to $34,999",
-#                                                 "$35,000 to $39,999",
-#                                                 "$40,000 to $49,999",
-#                                                 "$50,000 to $59,999",
-#                                                 "$60,000 to $74,999",
-#                                                 "$75,000 to $99,999",
-#                                                "$100,000 to $149,999",
-#                                                 "$150,000 and over"
-#                                      ))
 
 
 
@@ -1173,14 +1140,27 @@ combine.data$wfh_mom.v2 <- factor(combine.data$wfh_mom.v2, levels=c(0,1,2), labe
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part E: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
-###################################################  create new variable for imputation #########################
 
 
 
-# estimate miner equation and impute for self-employed
+
+###############################################################################################################################################
+###############################################################################################################################################
+############ Part F: create and label new variables for imputation of self-employed wages #####################################################
+###############################################################################################################################################
+###############################################################################################################################################
 
 
+# estimate mincer equation and impute for self-employed
+
+
+############ create school level variable ###################
 
 combine.data$school.years <- as.numeric(c(""))
 
@@ -1203,22 +1183,24 @@ combine.data$school.years[which(combine.data$school.level.completed == 46)] <- 2
 
 combine.data$school.years[which(combine.data$school.level.completed == "")] <- NA
 
-head(combine.data[,c("school.years","school.level.completed")], n = 10)
 
 
+############ create experience year variable ###################
 
 
 combine.data$experience.years <- as.numeric(c(""))
 combine.data$experience.years <- combine.data$age - combine.data$school.years - 6
 combine.data$experience.years[which(combine.data$experience.years < 0)] <- 0
 
-
-
-head(combine.data[,c("school.years","age", "experience.years")], n = 10)
-
+############ create experience square year variable ###################
 
 combine.data$experience.years_sq <- combine.data$experience.years*combine.data$experience.years
+
+############ create age square year variable ###################
+
 combine.data$age_sq <- combine.data$age*combine.data$age
+
+############ create log wage variable ###################
 
 combine.data$ln_wage <- log(combine.data$weekly.earnings/100)
 combine.data$ln_wage[which(combine.data$ln_wage== "-Inf")] <- 0
@@ -1227,28 +1209,9 @@ combine.data$ln_wage[which(combine.data$edited.occupations== "Not employed")] <-
 
 
 
-# check the data
-
-table(combine.data$school.years)
-
-table(combine.data$age)
-table(combine.data$experience.years)  # make sure it has no zero
 
 
-
-
-
-# all unemployed are NA
-#head( combine.data.complete$weekly.earnings[which(combine.data.complete$employment.status==5)], n = 10)
-
-#head(combine.data.complete$weekly.earnings[which(combine.data.complete$edited.occupations== "Not employed")])
-
-#head(combine.data.complete$ln_wage[which(combine.data.complete$edited.occupations== "Not employed")])
-
-
-
-
-
+############ create treatment (self-employed status) variable ###################
 
 
 combine.data$treatment <- as.numeric(c(""))
@@ -1259,31 +1222,14 @@ combine.data$treatment[which(combine.data$class.worker == 1 | combine.data$class
                                combine.data$employment.status == 3 | combine.data$employment.status == 4 |
                                combine.data$employment.status == 5)] <- 0
 
-# checking: these 2 numbers are the same
-#table(combine.data$employment.status)
-#table( combine.data$treatment)
 
 
 
-
-
-
-
-
-# http://www.nber.org/papers/w4259.pdf
-
-# https://tel.archives-ouvertes.fr/tel-00780563v1/document
-
-#full.model <- lm( ln_wage ~ school.years + experience.years + experience.years_sq +   age + age_sq + marital.status.edit + 
-#                   + region + fips + edited.occupations + num.children + num.family.member + interview.year , data = combine.data.complete , weights = tufnwgtp )
-
-full.model <- lm( ln_wage ~ school.years + experience.years + experience.years_sq +   age + age_sq + marital.status.edit + 
-                    + fips + edited.occupations + num.children + num.family.member + interview.year , data = combine.data , weights = tufnwgtp )
+############ mincer equation and generate predicted wages ###################
 
 
 full.model <- lm( ln_wage ~ school.years + experience.years + experience.years_sq +   age + age_sq + marital.status.edit + 
                     + fips + edited.occupations + num.children + num.family.member + interview.year , data = combine.data , weights = tufnwgtp )
-
 
 
 
@@ -1293,59 +1239,33 @@ combine.data$predicted.wage <- predict(full.model, combine.data, weights = tufnw
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part F: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
 
 
 
 
-combine.data$total.time.child.prim.sec <- combine.data$sec.child.care.hh + combine.data$total.time.child
-
-
-combine.data$portion.sec.child.care.hh <- combine.data$sec.child.care.hh/(combine.data$sec.child.care.hh + combine.data$total.time.child)
-
-combine.data$portion.primary.child.care <- combine.data$total.time.child/(combine.data$sec.child.care.hh + combine.data$total.time.child)
-
-
-yvariables.v3 <-c( "physical.care.hh.children",
-                   "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                   "play.with.hh.children",
-                   "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                   "total.time.child", "sec.child.care.hh", "total.time.child.prim.sec", "portion.sec.child.care.hh",  "total.travel.work.time",  "total.grooming.time", "TV.movies"  )
 
 
 
-
-combine.data$other.time.use <- 1440 - combine.data$physical.care.hh.children - combine.data$grocery.shopping - combine.data$food.drink.preparation -
-                                      combine.data$purchasing.food - combine.data$play.with.hh.children - combine.data$reading.to.hh.children - 
-                                      combine.data$talk.listening.to.hh.children - combine.data$homework.hh.children - combine.data$supervision.hh.children -
-                                      combine.data$pick.drop.hh.child - combine.data$pick.drop.hh.child - 
-                                      combine.data$total.travel.work.time - combine.data$total.grooming.time 
-  
-  
-
-combine.data$total.job.time2  <- (combine.data$total.job.time)/480
-
-combine.data$total.job.wfh.time2 <-  (combine.data$total.job.wfh.time)/480
+###############################################################################################################################################
+###############################################################################################################################################
+############ Part G: create the dataset for regression and sum stat by subset combine.data ####################################################
+###############################################################################################################################################
+###############################################################################################################################################
 
 
-
-
-# subset data for regression + sum statistics, remember to combine with atussum!!!!
 
 combine.data.complete <-combine.data[which(combine.data$respond.atus==1), ]
 
 
-#combine.data.complete2 <-combine.data[which(is.na(combine.data$num.children)==FALSE), ] # should have 159937 obs
 
-# just to check this is correct
-#table(combine.data.complete$work.hours - combine.data.complete2$work.hours)
-
-
-
-###################### family income imputation #########
-#head(combine.data.complete[,c("edited.family.income", "family.income")], n = 10) 
-
+############ edit family income variable ###################
 
 combine.data.complete$edited.family.income3 <- combine.data.complete$family.income 
 
@@ -1353,46 +1273,18 @@ combine.data.complete$edited.family.income3 <- combine.data.complete$family.inco
 combine.data.complete$edited.family.income3[which(is.na(combine.data.complete$edited.family.income3 ) == TRUE)] <- combine.data.complete$edited.family.income[which(is.na(combine.data.complete$edited.family.income3 ) == TRUE)]
 
 # check
-tail(combine.data.complete[,c("edited.family.income", "family.income", "edited.family.income3")], n = 10)   
+#tail(combine.data.complete[,c("edited.family.income", "family.income", "edited.family.income3")], n = 10)   
 
 
 
-length(which(is.na(combine.data.complete$edited.family.income3 )==TRUE ))
+#length(which(is.na(combine.data.complete$edited.family.income3 )==TRUE ))
 # 13698: it is fine
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-combine.data.regress.female.employ <- combine.data[which(combine.data$sex == "Female"& combine.data$presence.own.child == 1 &
-                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
-
-
-
-combine.data.regress.male.employ <- combine.data[which(combine.data$sex == "Male"& combine.data$presence.own.child == 1 &
-                                                           combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
-
-
-
-
-
-
+############ key data for regressions ###################
 
 
 combine.data.complete.regress.female.employ <- combine.data.complete[which(combine.data.complete$sex == "Female"& combine.data.complete$presence.own.child == 1 &
@@ -1405,149 +1297,40 @@ combine.data.complete.regress.male.employ <- combine.data.complete[which(combine
 
 
 
-
-
-
-
-
-
-combine.data.regress.v2 <- combine.data[which(combine.data$presence.own.child == 1 & combine.data$wfh != "Unemployed/Not in labor force" &
-                                                combine.data$diary.day != "Saturday"  & combine.data$diary.day != "Sunday"  & combine.data$holiday.indicator == "Not holiday" ),] 
-
-
-
-
-
-
-
-combine.data.regress.v2.male <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Male"),] 
-combine.data.regress.v2.female <- combine.data.regress.v2[which(combine.data.regress.v2$sex == "Female"),] 
-
-
-
-
-
-table(combine.data.regress.v2$holiday.indicator)
-table(combine.data.regress.v2$diary.day)
-table(combine.data.regress.v2$wfh)
-table(combine.data.regress.v2$wfh.v2)
-
-table(combine.data.regress.v2$presence.own.child)
-
-
-combine.data.regress.v2$holiday.indicator <- factor(combine.data.regress.v2$holiday.indicator)
-combine.data.regress.v2$diary.day <- factor(combine.data.regress.v2$diary.day)
-combine.data.regress.v2$wfh <- factor(combine.data.regress.v2$wfh)
-combine.data.regress.v2$wfh.v2 <- factor(combine.data.regress.v2$wfh.v2)
-combine.data.regress.v2$wfh.v3 <- factor(combine.data.regress.v2$wfh.v3)
-
-combine.data.regress.v2$edited.occupations <- factor(combine.data.regress.v2$edited.occupations)
-
-
-table(duplicated(combine.data.regress.v2$tucaseid) )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# combine.data.short.years <- combine.data[which(combine.data$interview.year == 2003 | combine.data$interview.year == 2004 | combine.data$interview.year == 2005),]
-
-
-#combine.data.short.years.woman <-combine.data.short.years[which(combine.data.short.years$sex == 2 & combine.data.short.years$presence.own.child == 1),]
-
-
-
-
-
-yvariables <-c( "total.time.child", 
-                "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                "play.with.hh.children", "play.sports.with.hh.children",
-                "provide.medical.care.hh.children", "obtain.medical.care.hh.children",
-                "reading.to.hh.children","talk.listening.to.hh.children", "organization.plan.for.hh.children","homework.hh.children", "home.school.hh.children", "supervision.hh.children")
-
-
-
-
-yvariables.v2 <-c( "total.time.child", "physical.care.hh.children",
-                "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                "play.with.hh.children",
-                "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                "total.travel.work.time",  "total.grooming.time" )
-
-
-
-
-
-yvariables.agg <-c("total01", "total02", "total.time.adults", "total04", "total05", "total06", "total07" , "total08", "total09" , "total10", "total11",
-                   "total12", "total13", "total14", "total15", "total16", "total18")
-
-
-
-
-## control
-#original
-#demographic.var <- c("+ age + sex+ factor(race) + marital.status")
-#employ.var <- c("+ work.hours + factor(occupations)")
-#family.var <- c("+ num.children + num.family.member ")
-#time.var <- c("+ factor(interview.year) + factor(holiday.indicator) + factor(diary.day) ")
-#location.var <- c("+ factor(region) + factor(fips) ")
-#spouse.var <- c("+ factor(spouse.presence.hh) + factor(spouse.employ.status) +  spouse.work.hours + factor(full.part.time.spouse) ")
-#family.inc.var <- c("+ factor(family.income)")
-#childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare ")
-
-
-
-
-source("E:/github/dissertation/script_ATUS/impute_wage_women.R") 
-source("E:/github/dissertation/script_ATUS/impute_wage_men.R") 
-
-
-
-combine.data.complete.self.employed.regress.female.employ <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$class.worker == 6 | combine.data.complete.regress.female.employ$class.worker == 7),] 
-
-
-
-combine.data.complete.self.employed.regress.male.employ <- combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$class.worker == 6 | combine.data.complete.regress.male.employ$class.worker == 7 ),] 
-
-
-
+############ key data for summary stat ###################
 
 combine.data.complete.sum.stat <- rbind(combine.data.complete.regress.female.employ, combine.data.complete.regress.male.employ)
 combine.data.complete.sum.stat <- combine.data.complete.sum.stat[order(combine.data.complete.sum.stat$tucaseid),]
 
 
 
-
-# drop unemployed
-
-combine.data.complete.regress.female.no.unemploy <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$wfh.v3 != 2) ,] 
+############ impute wages ###################
 
 
-combine.data.complete.regress.male.no.unemploy <- combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$wfh.v3 != 2) ,] 
-
-
-combine.data.complete.sum.stat.no.employ <- rbind(combine.data.complete.regress.female.no.unemploy , combine.data.complete.regress.male.no.unemploy)
-combine.data.complete.sum.stat.no.employ <- combine.data.complete.sum.stat[order(combine.data.complete.sum.stat$tucaseid),]
+eval(parse(text = paste0(" source('", script.location  , "/impute_wage_women.R')")) )
+eval(parse(text = paste0(" source('", script.location  , "/impute_wage_men.R')")) )
 
 
 
+##############################################################################################
+##############################################################################################
+############ Part G: End  #################################################################### 
+##############################################################################################
+##############################################################################################
 
 
-#combine.data.complete.sum.stat <- combine.data.complete[which(combine.data.complete$presence.own.child == 1 &
-      #                                                          combine.data.complete$diary.day != "Saturday"  & combine.data.complete$diary.day != "Sunday"  & combine.data.complete$holiday.indicator == "Not holiday" ),] 
 
 
-#for testing
-#table(combine.data.complete.sum.stat$total.time.child-combine.data.complete.sum.stat1$total.time.child)
+
+
+ 
+
+
+
+
+
+
+
+
 
 

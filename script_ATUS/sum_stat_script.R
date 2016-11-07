@@ -1,122 +1,41 @@
-# old sum stat for dep variables
 
-
-#########################################################################
-
-
-empty.frame <- data.frame(matrix(ncol = 5, nrow = 2)) 
-
-z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.regress.v2)
-
-
-for (i in 1: length(yvariables.v2)) {    
-  
-
-
-a <- svyby( ~get(yvariables.v2[i]),~sex, z, svymean)
-b <- svyby( ~get(yvariables.v2[i]),~sex, z, svyvar)
+############################################################################################################################################################################################
+############################################################################################################################################################################################
+# This sum_stat_script.R script is responsible for running regressions
+# I assume you have the data and have already run clean_data.R to clean the data
+############################################################################################################################################################################################
+############################################################################################################################################################################################
 
 
 
 
-colnames(empty.frame) <-c("Variables" ,"Mean", "SD", "Mean", "SD") 
-
-
-
-
-empty.frame[i,1] <- yvariables.v2[i]
-empty.frame[i,2] <- signif(a[2,2], digits = 3)
-empty.frame[i,3] <- signif(sqrt(b[2,2]), digits = 3)
-empty.frame[i,4] <- signif(a[1,2], digits = 3) 
-empty.frame[i,5] <- signif(sqrt(b[1,2]), digits = 3)
-
-
-}   
-
-addtorow <- list()
-addtorow$pos <- list(0, 0)
-addtorow$command <- c(" & Women & & Men &  \\\\\n",
-                      "Variables & Mean & SD & Mean & SD \\\\\n")
-print(xtable(empty.frame, caption = "Summary Statistics for the dependent variables")
-            , add.to.row = addtorow, include.rownames = FALSE, include.colnames = FALSE )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# new sum stat for dep variables
-
-
-#########################################################################
-
-
-
-# regression
-# factor(edited.occupations.indicator) skilled cuz it is cut out  ,+ factor(reason.not.work)  + factor(reason.absent.last.week) + factor(reason.absent.last.week.atus) +edited.work.hours + factor(edited.work.hours.indicator)
-# factor(allocation.flag.week.earn)  cut 
-
-demographic.var <- c("+ age + race + sex + marital.status ")
-employ.var <- c("+ edited.work.hours + factor(edited.work.hours.indicator) + edited.occupations  + total.other.job.time +  total.main.job.time + work.hours.last.week +factor(employment.status)")
-current.sit <- c("+ factor(current.situation)   + factor(enrolled.school) ") 
-family.bus <- c("+ factor(household.own.bus) + factor(unpaid.work.family.bus)")
-family.var <- c("+ num.children + num.family.member + age.youngest.child" )
-time.var <- c("+ interview.year  + diary.day" )
-location.var <- c("+ region + fips")
-spouse.var <- c("+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse ")
-family.inc.var <- c("+ edited.family.income2 + factor(edited.family.income2.indicator) + edited.weekly.earnings + factor(edited.weekly.earnings.indicator) + factor(weekly.earning.top.coded) " )
-childcare.service.var <- c("+ use.paid.childcare + wait.to.meet.childcare + childcare.other + travel.use.childcare + phone.call.care.provider")
-children.sick.var <- c("+ provide.medical.care.hh.children + obtain.medical.care.hh.children + wait.child.health + child.health.other")
-
-
-
-
-
-yvariables.v2 <-c( "total.time.child", "physical.care.hh.children",
-                   "grocery.shopping", "food.drink.preparation", "purchasing.food",
-                   "play.with.hh.children",
-                   "reading.to.hh.children","talk.listening.to.hh.children","homework.hh.children", "supervision.hh.children", "pick.drop.hh.child", "travel.caring.help.hh.child",
-                   "total.travel.work.time",  "total.grooming.time" )
-
-
-
-names.y <- c("Total time for childcare", "Physical care", 
-             "Grocery shopping", "Cooking", "Purchasing prepared food",
-             "Playing with children", 
-             "Reading to children", "Talking and listening to children", "Helping homework", "Supervising children", "Picking or droping off children", "Travel time for helping children",
-              "Travel time for work", "Total grooming time" )
+############ a function for generating summary statistics for dependent variables   ###################
 
 
 empty.frame <- data.frame(matrix(ncol = 5, nrow = 2)) 
 
-z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.regress.v2)
 colnames(empty.frame) <-c("Variables group" ,"Variables","Mean(SD)", "Mean(SD) (Women)", "Mean(SD) (Men)") 
 
-row <- seq(from = 1 , to = 500, by = 2)
+row <- seq(from = 1 , to = 500, by = 1)
 
-for (i in 1:length(yvariables.v2)) {    
+for (i in 1:length(yvariables.v3)) {    
+  
+  if (yvariables.v3[i] == "sec.child.care.hh" | yvariables.v3[i] == "total.time.child.prim.sec" | yvariables.v3[i] == "portion.sec.child.care.hh" | yvariables.v3[i] == "sec.child.care_total.job" | yvariables.v3[i] == "sec.child.care_social.act" | yvariables.v3[i] == "sec.child.care_house.act" | yvariables.v3[i] == "sec.child.care_eat.drink") {
+    # weighted average 
+    z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.complete.sum.stat[which(combine.data.complete.sum.stat$age.youngest.child < 13),] )
+    
+    
+  } else {
+    z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.complete.sum.stat)
+    
+  }
   
   
+  a <- svyby( ~get(yvariables.v3[i]),~sex, z, svymean, na.rm = TRUE)
+  b <- svyby( ~get(yvariables.v3[i]),~sex, z, svyvar, na.rm = TRUE)
   
-  a <- svyby( ~get(yvariables.v2[i]),~sex, z, svymean, na.rm = TRUE)
-  b <- svyby( ~get(yvariables.v2[i]),~sex, z, svyvar, na.rm = TRUE)
-  
-  c <- svymean( ~get(yvariables.v2[i]) , z , na.rm = TRUE)
-  d <- sqrt(svyvar( ~get(yvariables.v2[i]) , z , na.rm = TRUE))
+  c <- svymean( ~get(yvariables.v3[i]) , z , na.rm = TRUE)
+  d <- sqrt(svyvar( ~get(yvariables.v3[i]) , z , na.rm = TRUE))
   
   
   
@@ -124,13 +43,12 @@ for (i in 1:length(yvariables.v2)) {
   
   
   empty.frame[row[i],2] <- names.y[i]
-  empty.frame[row[i],3] <- signif(c, digits=3)
-  empty.frame[row[i]+1,3] <- paste0( "(",signif(d, digits = 3),")")
+  empty.frame[row[i],3] <- paste0(signif(c, digits=3) ,"(",signif(d, digits = 3),")")
   
-  empty.frame[row[i],4] <- signif(a[2,2], digits = 3)
-  empty.frame[row[i]+1,4] <- paste0( "(",signif(sqrt(b[2,2]), digits = 3),")")
-  empty.frame[row[i],5] <- signif(a[1,2], digits = 3) 
-  empty.frame[row[i]+1,5] <- paste0( "(",signif(sqrt(b[1,2]), digits = 3),")")
+  
+  empty.frame[row[i],4] <- paste0(signif(a[2,2], digits = 3) ,"(",signif(sqrt(b[2,2]), digits = 3),")")
+  
+  empty.frame[row[i],5] <- paste0( signif(a[1,2], digits = 3) ,"(",signif(sqrt(b[1,2]), digits = 3),")")
   
   
   
@@ -142,7 +60,9 @@ addtorow <- list()
 addtorow$pos <- list(0, 0)
 addtorow$command <- c("  & & Mean(SD) & Mean(SD) (Women) & Mean(SD) (Men) \\\\\n",
                       " Variables group & Variables   &  Full & Women & Men \\\\\n")
-print(xtable(empty.frame, caption = "Summary Statistics for the independent variables")
+
+# Table 1 results in the paper
+print(xtable(empty.frame, caption = "Summary Statistics for the dependent variables")
       , add.to.row = addtorow, include.rownames = FALSE, include.colnames = FALSE )
 
 
@@ -159,101 +79,91 @@ print(xtable(empty.frame, caption = "Summary Statistics for the independent vari
 
 
 
+############ generate summary statistics for independent variables   ###################
+
+# It is comprised of 2 parts. The first part transform all data into dummy. The second part do the summary statistics for the dummy
+# The reasons to do that is because it is very hard to do summary statistics over factor variables. 
 
 
+############ expand variables into dummy   ###################
 
-# another option
-#interview.year.dum  <- combine.data.regress.v2[c("tucaseid", "interview.year")]
-#interview.year.dum$interview.year  <- unclass(interview.year.dum$interview.year)
-#interview.year.dum$interview.year  <- factor(interview.year.dum$interview.year)
-#interview.year.dum <- dummy.data.frame(interview.year.dum)
 
 # this is to expand factor variables (for the ordered variables)
-combine.data.regress.v2.dum <- combine.data.regress.v2 
-combine.data.regress.v2.dum$interview.year  <- unclass(combine.data.regress.v2.dum$interview.year)
-combine.data.regress.v2.dum$interview.year  <- factor(combine.data.regress.v2.dum$interview.year)
+combine.data.complete.sum.stat.dum <- combine.data.complete.sum.stat 
+combine.data.complete.sum.stat.dum$interview.year  <- unclass(combine.data.complete.sum.stat.dum$interview.year)
+combine.data.complete.sum.stat.dum$interview.year  <- factor(combine.data.complete.sum.stat.dum$interview.year)
 
 
 
-combine.data.regress.v2.dum$family.income  <- unclass(combine.data.regress.v2.dum$family.income)
-combine.data.regress.v2.dum$family.income  <- factor(combine.data.regress.v2.dum$family.income)
+combine.data.complete.sum.stat.dum$edited.family.income3 <- unclass(combine.data.complete.sum.stat.dum$edited.family.income3)
+combine.data.complete.sum.stat.dum$edited.family.income3  <- factor(combine.data.complete.sum.stat.dum$edited.family.income3)
 
 
 
-combine.data.regress.v2.dum <- dummy.data.frame(combine.data.regress.v2.dum) 
+combine.data.complete.sum.stat.dum <- dummy.data.frame(combine.data.complete.sum.stat.dum) 
 
 
 
-gender <- combine.data.regress.v2[c("tucaseid", "sex")]
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum, gender , by="tucaseid")
+gender <- combine.data.complete.sum.stat[c("tucaseid", "sex")]
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum, gender , by="tucaseid")
 
 
 # this is to expand factor variables (for the non factor variables)
-employment.status.dum  <- combine.data.regress.v2[c("tucaseid", "employment.status")]
+
+treatment.dum  <- combine.data.complete.sum.stat[c("tucaseid", "treatment")]
+treatment.dum$treatment <- factor(treatment.dum$treatment)
+treatment.dum <- dummy.data.frame(treatment.dum) 
+
+
+
+
+employment.status.dum  <- combine.data.complete.sum.stat[c("tucaseid", "employment.status")]
 employment.status.dum$employment.status <- factor(employment.status.dum$employment.status)
 employment.status.dum <- dummy.data.frame(employment.status.dum) 
 
 
 
-current.situation.dum  <- combine.data.regress.v2[c("tucaseid", "current.situation")]
-current.situation.dum$current.situation  <- factor(current.situation.dum$current.situation)
-current.situation.dum <- dummy.data.frame(current.situation.dum) 
 
-
-reason.not.work.dum  <- combine.data.regress.v2[c("tucaseid", "reason.not.work")]
-reason.not.work.dum$reason.not.work <- factor(reason.not.work.dum$reason.not.work)
-reason.not.work.dum <- dummy.data.frame(reason.not.work.dum) 
-
-
-reason.absent.last.week.dum  <- combine.data.regress.v2[c("tucaseid", "reason.absent.last.week")]
-reason.absent.last.week.dum$reason.absent.last.week  <- factor(reason.absent.last.week.dum$reason.absent.last.week)
-reason.absent.last.week.dum <- dummy.data.frame(reason.absent.last.week.dum)
-
-enrolled.school.dum  <- combine.data.regress.v2[c("tucaseid", "enrolled.school")]
-enrolled.school.dum$enrolled.school  <- factor(enrolled.school.dum$enrolled.school)
-enrolled.school.dum <- dummy.data.frame(enrolled.school.dum)
-
-
-household.own.bus.dum  <- combine.data.regress.v2[c("tucaseid", "household.own.bus")]
+household.own.bus.dum  <- combine.data.complete.sum.stat[c("tucaseid", "household.own.bus")]
 household.own.bus.dum$household.own.bus  <- factor(household.own.bus.dum$household.own.bus)
 household.own.bus.dum <- dummy.data.frame(household.own.bus.dum)
 
 
 
-unpaid.work.family.bus.dum  <- combine.data.regress.v2[c("tucaseid", "unpaid.work.family.bus")]
+unpaid.work.family.bus.dum  <- combine.data.complete.sum.stat[c("tucaseid", "unpaid.work.family.bus")]
 unpaid.work.family.bus.dum$unpaid.work.family.bus  <- factor(unpaid.work.family.bus.dum$unpaid.work.family.bus)
 unpaid.work.family.bus.dum <- dummy.data.frame(unpaid.work.family.bus.dum)
 
 
-reason.absent.last.week.atus.dum  <- combine.data.regress.v2[c("tucaseid", "reason.absent.last.week.atus")]
-reason.absent.last.week.atus.dum$reason.absent.last.week.atus  <- factor(reason.absent.last.week.atus.dum$reason.absent.last.week.atus)
-reason.absent.last.week.atus.dum <- dummy.data.frame(reason.absent.last.week.atus.dum)
+
+children.sick.indicator.dum  <- combine.data.complete.sum.stat[c("tucaseid", "children.sick.indicator")]
+children.sick.indicator.dum$children.sick.indicator  <- factor(children.sick.indicator.dum$children.sick.indicator)
+children.sick.indicator.dum <- dummy.data.frame(children.sick.indicator.dum)
 
 
 
 
-
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,employment.status.dum  , by="tucaseid")
-
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,current.situation.dum  , by="tucaseid")
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,reason.not.work.dum ,by="tucaseid")
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,reason.absent.last.week.dum,by="tucaseid")
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,enrolled.school.dum ,by="tucaseid")
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,household.own.bus.dum ,by="tucaseid")
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,unpaid.work.family.bus.dum ,by="tucaseid") 
-combine.data.regress.v2.dum <- join(combine.data.regress.v2.dum,reason.absent.last.week.atus.dum ,by="tucaseid") 
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,treatment.dum  , by="tucaseid")
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,employment.status.dum  , by="tucaseid")
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,household.own.bus.dum ,by="tucaseid")
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,unpaid.work.family.bus.dum ,by="tucaseid") 
+combine.data.complete.sum.stat.dum <- join(combine.data.complete.sum.stat.dum,children.sick.indicator.dum ,by="tucaseid") 
 
 
+
+combine.data.complete.sum.stat.dum$nwfh_new <- 0
+combine.data.complete.sum.stat.dum$nwfh_new[which(combine.data.complete.sum.stat.dum$wfh.v3wfh == 0)] <- 1
 
 
 
 
+############ do summary statistics for all independent variables   ###################
 
-xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale", "sexFemale",
-                "marital.statusMarried-spouse present", "marital.statusMarried-spouse absent",
-                "marital.statusWidowed","marital.statusDivorced" , "marital.statusSeparated", 
-                "marital.statusNever married", 
-                "employment.status1","employment.status2", "work.hours", 
+
+xvariables <- c("wfh.v3wfh", "nwfh_new", "age", "race.editNon-hispanic White", "race.editNon-hispanic Black", "race.editHispanic", "race.editNon-hispanic Asian", "race.editOthers" ,"sexMale", "sexFemale",
+                "marital.status.editMarried", "marital.status.editDivorced, separated or widowed",   "marital.status.editNever married",
+                "school.level.completed.editLess than HS", "school.level.completed.editHS", "school.level.completed.editSome college/Associate Degree", "school.level.completed.editCollege or above",
+               "treatment0", "treatment1", "work.hours", "edited.employ.statusNot employed" , "edited.employ.statusEmployed" ,
                 "occupationsBusiness and financial operations",                    
                 "occupationsComputer and mathematical science",                    
                 "occupationsArchitecture and engineering",                         
@@ -276,17 +186,13 @@ xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale"
                 "occupationsProduction",                                           
                 "occupationsTransportation and material moving", 
                 "total.main.job.time","total.other.job.time", "work.hours.last.week",
-                "current.situation1", "current.situation2", "current.situation3", "current.situation4", "current.situation5",
-                "current.situation6", "current.situation7", 
-
                 
                 
                 
-       
                 
-                "enrolled.school1",
-                "enrolled.school2",
-                "enrolled.school3", 
+                
+                
+                
                 
                 "household.own.bus1",
                 "household.own.bus2",
@@ -296,18 +202,7 @@ xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale"
                 "num.children",
                 "num.family.member",
                 "age.youngest.child",
-                "interview.year1",
-                "interview.year2",
-                "interview.year3",
-                "interview.year4",
-                "interview.year5",
-                "interview.year6",
-                "interview.year7",
-                "interview.year8",
-                "interview.year9",
-                "interview.year10",
-                "interview.year11",
-                "interview.year12", 
+                
                 
                 "diary.dayMonday",
                 "diary.dayTuesday",
@@ -330,44 +225,37 @@ xvariables <- c("wfh.v30","wfh.v31", "age", "race1", "race2", "race4", "sexMale"
                 "full.part.time.spouseHours vary",
                 "full.part.time.spouseNo partner/not employed",
                 
-                "family.income1",
-                "family.income2",
-                "family.income3",
-                "family.income4",
-                "family.income5",
-                "family.income6",
-                "family.income7",
-                "family.income8",
-                "family.income9",
-                "family.income10",
-                "family.income11",
-                "family.income12",
-                "family.income13",
-                "family.income14",
-                "family.income15",
-                "family.income16",
+                "edited.family.income31",
+                "edited.family.income32",
+                "edited.family.income33",
+                "edited.family.income34",
+                "edited.family.income35",
+                "edited.family.income36",
+                "edited.family.income37",
+                "edited.family.income38",
+                "edited.family.income39",
+                "edited.family.income310",
+                "edited.family.income311",
+                "edited.family.income312",
+                "edited.family.income313",
+                "edited.family.income314",
+                "edited.family.income315",
+                "edited.family.income316",
+                
+                "edited.weekly.earnings",
+                "children.sick.indicator0",
+                "children.sick.indicator1"
+                
+                
+                
+                
+                
+)
 
-                "weekly.earnings",
-                
-                "use.paid.childcare",
-                "wait.to.meet.childcare",
-                "childcare.other", 
-                "travel.use.childcare", 
-                "phone.call.care.provider",
-                
-                "provide.medical.care.hh.children", 
-                "obtain.medical.care.hh.children", 
-                "wait.child.health", 
-                "child.health.other"
-                
-                
-
-                
-                )
-
-names <- c("1 if work at office of other locations", "1 if work from home", "Age", "1 if white", "1 if black", "1 if asian", "1 if male", "1 if female",
-           "1 if married-spouse present", "1 if married-spouse absent", "1 if widowed", "1 if divorced","1 if separated", "1 if never married",
-           "1 employed-at work", "1 employed-absent", "Weekly work hours*", 
+names <- c("1 if work from home", "1 if work at office or other locations", "Age", "1 if non-Hispanic White", "1 if non-Hispanic black", "1 if Hispanic","1 if non-Hispanic Asian","1 if others", "1 if male", "1 if female",
+           "1 if married", "1 if divorced, separated or widowed", "1 if never married",
+           "1 if Less than HS", "1 if HS", "1 if some college/Associate Degree", "1 if college or above",
+           "1 if not self-employed", "1 if self-employed" ,  "Weekly work hours*", "1 if not employed",  "1 if employed",
            "1 if business and financial operations",                    
            "1 if computer and mathematical science",                    
            "1 if architecture and engineering" ,                        
@@ -390,18 +278,10 @@ names <- c("1 if work at office of other locations", "1 if work from home", "Age
            "1 if production"     ,                                      
            "1 if transportation and material moving", 
            "Daily work hours-main job","Daily work hours-other jobs", "Work hours last week", 
-           "1 if disabled",
-           "1 if ill", 
-           "1 if in school", 
-           "1 if taking care of house or family", 
-           "1 if in retirement",
-           "1 if other", 
-           "1 if either over 49 years old or retired", 
-  
            
-           "1 if hs, college or university",
-           "1 if not enrolled",
-           "1 if either a child, in armed forces or over 54 years old",
+           
+           
+           
            
            "1 if someone in household own business/farm: yes",
            "1 if someone in household own business/farm: no",
@@ -412,18 +292,7 @@ names <- c("1 if work at office of other locations", "1 if work from home", "Age
            "Number of children",
            "Number of family members",
            "Age of youngest child",           
-           "1 if year = 2003",
-           "1 if year = 2004",
-           "1 if year = 2005",
-           "1 if year = 2006",
-           "1 if year = 2007",
-           "1 if year = 2008",
-           "1 if year = 2009",
-           "1 if year = 2010",
-           "1 if year = 2011",
-           "1 if year = 2012",
-           "1 if year = 2013",
-           "1 if year = 2014",
+           
            
            "1 if Monday",
            "1 if Tuesday",
@@ -462,18 +331,9 @@ names <- c("1 if work at office of other locations", "1 if work from home", "Age
            "1 if $100,000 to $149,999",
            "1 if $150,000 and over",
            
-           "Week earnings if reported*",
-           
-           "Minutes used in paid childcare services",
-           "Minutes used in waiting associated with childcare services",
-           "Minutes used in childcare - other", 
-           "Minutes used in childcare related travel", 
-           "Minutes used in childcare related phone call",
-           
-           "Minutes used in provide medical care to child", 
-           "Minutes used in obtain medical care child", 
-           "Minutes used in waiting for child health related act.", 
-           "Minutes used in child health - other"
+           "Weekly earnings",
+           "1 if sick",
+           "1 if not sick"
            
            
            
@@ -483,10 +343,10 @@ names <- c("1 if work at office of other locations", "1 if work from home", "Age
 
 empty.frame <- data.frame(matrix(ncol = 5, nrow = 2)) 
 
-z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.regress.v2.dum)
+z <- svydesign(id=~1, weights=~tufnwgtp, data=combine.data.complete.sum.stat.dum)
 colnames(empty.frame) <-c("Variables group" ,"Variables","Mean(SD)", "Mean(SD) (Women)", "Mean(SD) (Men)") 
 
-row <- seq(from = 1 , to = 500, by = 2)
+row <- seq(from = 1 , to = 500, by = 1)
 
 for (i in 1:length(xvariables)) {    
   
@@ -503,14 +363,15 @@ for (i in 1:length(xvariables)) {
   
   
   
-  empty.frame[row[i],2] <- names[i]
-  empty.frame[row[i],3] <- signif(c, digits=3)
-  empty.frame[row[i]+1,3] <- paste0( "(",signif(d, digits = 3),")")
   
-  empty.frame[row[i],4] <- signif(a[2,2], digits = 3)
-  empty.frame[row[i]+1,4] <- paste0( "(",signif(sqrt(b[2,2]), digits = 3),")")
-  empty.frame[row[i],5] <- signif(a[1,2], digits = 3) 
-  empty.frame[row[i]+1,5] <- paste0( "(",signif(sqrt(b[1,2]), digits = 3),")")
+  empty.frame[row[i],2] <- names[i]
+  empty.frame[row[i],3] <- paste0(signif(c, digits=3) ,"(",signif(d, digits = 3),")")
+  
+  
+  empty.frame[row[i],4] <- paste0(signif(a[2,2], digits = 3) ,"(",signif(sqrt(b[2,2]), digits = 3),")")
+  
+  empty.frame[row[i],5] <- paste0( signif(a[1,2], digits = 3) ,"(",signif(sqrt(b[1,2]), digits = 3),")")
+  
   
   
   
@@ -522,15 +383,16 @@ addtorow <- list()
 addtorow$pos <- list(0, 0)
 addtorow$command <- c("  & & Mean(SD) & Mean(SD) (Women) & Mean(SD) (Men) \\\\\n",
                       " Variables group & Variables   &  Full & Women & Men \\\\\n")
+
+
+# Table 2 results in the paper
+
 print(xtable(empty.frame, caption = "Summary Statistics for the independent variables")
       , add.to.row = addtorow, include.rownames = FALSE, include.colnames = FALSE )
 
 
 
 
-# clean the table by yourself by dividing the table up. 
-# Change the note. 
-# add title
 
 
 

@@ -1,3 +1,13 @@
+############################################################################################################################################################################################
+############################################################################################################################################################################################
+# This impute_wage_men.R script is responsible for imputing weekly wage variables for men
+# I assume you have the data and have already run clean_data.R to clean the data
+# Note: treatment observation = respondents who are self-employed, control observation = respondents who are employed by firms)
+# The whole idea is to first find 10 controls that have the closest predicted earnings to the predicted earning of each treatment observations. 
+# Then find the control observation that matches (in terms of attributes) the treatment observation the best. Then use the true value(not the predicted value) of the best match control 
+# to impute the treatment observations
+############################################################################################################################################################################################
+############################################################################################################################################################################################
 
 
 
@@ -10,22 +20,16 @@
 
 
 
-################################## re-run the complete data set and otehr dataset
 
+############ match treatement observations with controls. "Match" function will calcuate everything for you  ############
 
 rr  <- Match(Y=NULL, Tr=combine.data.complete.regress.male.employ$treatment, X=combine.data.complete.regress.male.employ$predicted.wage, M=10, ties=F, caliper=0.5);
 
-#matched <- rbind(combine.data.complete.regress.male.employ[rr$index.treated,], combine.data.complete.regress.male.employ[rr$index.control,])
 
 
-# http://stackoverflow.com/questions/27695784/r-obtain-the-matched-data-set-from-matching-package-not-that-easy
 
-head(rr$index.treated)
-head(rr$index.control)
-#their predicted wage are similar
-combine.data.complete.regress.male.employ[7,c("treatment", "predicted.wage")]
-combine.data.complete.regress.male.employ[68512,c("treatment", "predicted.wage")]
 
+############ find 10 controls for each treatment observations ############
 
 dfTC = data.frame(idxTreated = rr$index.treated, idxControl = rr$index.control,
                   numControl = factor(rep(1:10), labels = paste0("Control", 1:10)))
@@ -38,7 +42,7 @@ dfTCWide = reshape2::dcast(dfTC, idxTreated ~ numControl,
 
 
 
-# get the attributes for the treated
+############ get the attributes for each treatment observations ############
 
 for (i in 1:nrow(dfTCWide)) {
   dfTCWide$idxTreated.school.years[i] <- combine.data.complete.regress.male.employ[ dfTCWide[i,1], c("school.years")]
@@ -54,6 +58,7 @@ for (i in 1:nrow(dfTCWide)) {
 }
 
 
+############ create empty variables so as to put in the attributes for the controls ############
 
 dfTCWide$Control1.school.years <- NA
 dfTCWide$Control1.experience.years<- NA
@@ -167,6 +172,7 @@ dfTCWide$Control10.num.family.member <- NA
 
 
 
+############  put in the attributes for the controls ############
 
 
 
@@ -201,7 +207,6 @@ for (j in 1:10)  {
 
 
 
-head(dfTCWide)
 
 
 
@@ -209,7 +214,7 @@ head(dfTCWide)
 
 
 
-
+############  create a function that can find the best match to the treatment observations among the 10 controls, then use the true value of the control observations (not the predicted value) ############
 
 
 find.match.function <- function(num.row ){
@@ -280,14 +285,13 @@ find.match.function <- function(num.row ){
 
 
 
-#table(combine.data.complete.regress.male.employ$class.worker)
-#table(combine.data.complete.regress.male.employ$weekly.earnings[which(combine.data.complete.regress.male.employ$class.worker == 6   )])
 
-#combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$class.worker == 6 | combine.data.complete.regress.male.employ$class.worker == 7 ) ]
+############  impute weekly earnings ############
 
-
+# create a empty variable
 combine.data.complete.regress.male.employ$edited.weekly.earnings <- NA
 
+# impute the treatment observations
 for (i in 1:nrow(dfTCWide))  {
   combine.data.complete.regress.male.employ[dfTCWide$idxTreated[i] , "edited.weekly.earnings"] <- find.match.function(i)
   
@@ -295,27 +299,26 @@ for (i in 1:nrow(dfTCWide))  {
 
 
 
-#table(combine.data.complete.regress.male.employ$weekly.earnings[which(combine.data.complete.regress.male.employ$class.worker == 8  )])
-
+# put weekly earning = 0 if the worker is self-employed without pay
 combine.data.complete.regress.male.employ$edited.weekly.earnings[which(combine.data.complete.regress.male.employ$class.worker == 8  )] <- 0 
 
 
 
-#table(combine.data.complete.regress.male.employ$employment.status[which(combine.data.complete.regress.male.employ$employment.status>2)],combine.data.complete.regress.male.employ$weekly.earnings[which(combine.data.complete.regress.male.employ$employment.status>2)] )
-
+# put weekly earning = 0 if the worker is unemployed
 combine.data.complete.regress.male.employ$edited.weekly.earnings[which(combine.data.complete.regress.male.employ$employment.status>2)] <- 0 
 
 
-
+# put the original weekly earning data into the new weekly earning variable
 combine.data.complete.regress.male.employ$edited.weekly.earnings[which(is.na(combine.data.complete.regress.male.employ$weekly.earnings)==FALSE)] <-  combine.data.complete.regress.male.employ$weekly.earnings[which(is.na(combine.data.complete.regress.male.employ$weekly.earnings)==FALSE)]
 
+# divide the weekly earning by 100 so that the unit makes more sense
 
 combine.data.complete.regress.male.employ$edited.weekly.earnings <- combine.data.complete.regress.male.employ$edited.weekly.earnings/100
 
 
+# generate impute indicator variable
 combine.data.complete.regress.male.employ$edited.weekly.earnings.indicator <- 0
 combine.data.complete.regress.male.employ$edited.weekly.earnings.indicator[is.na(combine.data.complete.regress.male.employ$weekly.earnings)==TRUE] <- 1 
-#table(combine.data$edited.weekly.earnings.indicator)
 
 
 

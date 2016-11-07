@@ -1,107 +1,34 @@
+############################################################################################################################################################################################
+############################################################################################################################################################################################
+# This obs_unobs.R script is responsible for generating results for the identification in the paper
+# I assume you have the data and have already run clean_data.R to clean the data
+############################################################################################################################################################################################
+############################################################################################################################################################################################
 
 
+############ generate temporary variables for later use   ###################
 
 
-install.packages("lrmest")
-library(lrmest)
-
-+ edit.spouse.presence + spouse.employ.status +  edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)   + full.part.time.spouse 
-
-# dim(model.matrix(test))
-# 139 coefficients
-test <-lm(total.time.child ~  full.part.time.spouse , data = combine.data.complete.regress.female.employ , weights = tufnwgtp) 
-dim(model.matrix(test))
-
-r <- c(0)
-R <- rep(0, 139)
-R[3] <- 1
-d <- c(0)
-
-summary(lm(paste0("total.time.child" ," ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = combine.data.complete.regress.female.employ , weights = tufnwgtp) )
-
-
-
-rls(paste0("total.time.child ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), r, R, d, data = combine.data.complete.regress.female.employ  )
-
-
-earnings.var, family.inc.var,  children.sick.var
-
-
-#fips, spouse.employ.status, + full.part.time.spouse    has problem
-
-62
-
-
-r <- c(0)
-R <- rep(0, 84)
-R[3] <- 1
-d <- c(0)
-
-rls(paste0("total.time.child  ~   total.job.time2  +total.job.wfh.time2  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + interview.year  + factor(diary.day) +region + edit.spouse.presence + edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)  ", demographic.no.sex.var, family.bus, family.var, earnings.var, family.inc.var,  children.sick.var) , r, R, d, data = combine.data.complete.regress.female.employ)     
-
-
-
-
-first part:
-  
-  
-combine.data.complete.regress.female.employ$wfh.v4 <- 0
-
-combine.data.complete.regress.female.employ$wfh.v4[which(combine.data.complete.regress.female.employ$total.job.wfh.time2 > 0 )] <- 1 
-
-combine.data.complete.regress.female.employ$wfh.v5 <- combine.data.complete.regress.female.employ$wfh.v3
-
-combine.data.complete.regress.female.employ$wfh.v5[which(combine.data.complete.regress.female.employ$wfh.v3 == 2 )] <- 0 
-
-
-
-
-combine.data.complete.regress.male.employ$wfh.v4 <- 0
-
-combine.data.complete.regress.male.employ$wfh.v4[which(combine.data.complete.regress.male.employ$total.job.wfh.time2 > 0 )] <- 1 
-
-combine.data.complete.regress.male.employ$wfh.v5 <- combine.data.complete.regress.female.employ$wfh.v3
-
-combine.data.complete.regress.male.employ$wfh.v5[which(combine.data.complete.regress.female.employ$wfh.v3 == 2)] <- 1 
+combine.data.complete.regress.female.employ$wfh.dum <- 0
+combine.data.complete.regress.female.employ$wfh.dum[combine.data.complete.regress.female.employ$wfh.v3 == "wfh"] <- 1
 
 
 
 
 
 
+combine.data.complete.regress.male.employ$wfh.dum <- 0
+combine.data.complete.regress.male.employ$wfh.dum[combine.data.complete.regress.male.employ$wfh.v3 == "wfh"] <- 1
 
 
 
-
-#r <- c(0)
-#R <- rep(0, 84)
-#R[3] <- 1
-#d <- c(0)
-
-#t <- rls(paste0("total.time.child  ~   total.job.time2  + wfh.v4  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + interview.year  + factor(diary.day) +region + edit.spouse.presence + edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)  ", demographic.no.sex.var, family.bus, family.var, earnings.var, family.inc.var,  children.sick.var) , r, R, d, data = combine.data.complete.regress.female.employ)     
-#t <- rls(paste0("total.time.child  ~   total.job.time2  + wfh.v4  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + interview.year  + factor(diary.day) +region + edit.spouse.presence + edited.spouse.work.hours + factor(edited.spouse.work.hours.indicator)  ", demographic.no.sex.var, family.bus, family.var, earnings.var, family.inc.var,  children.sick.var) , r, R, d, data = combine.data.complete.regress.female.employ)     
-#t1 <- as.data.frame(t)
-#t2 <- as.matrix(t1[,1])
+############ a function to print the stars that can indicate significant levels  ###################
 
 
-
-
-
-
-# total primary
-
-
-# add quotation if u input dep.var name 
-
-# add quotation if u input dep.var name 
 table.obs.unobs <- function(data.input, dep.var) {
   
   
-  
-  # result<- lm(paste0(dep.var," ~   total.job.time2   + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
-  
-  # result <- lm(paste0(dep.var," ~   total.job.time2   + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
-  
+
   result <- lm(paste0(dep.var," ~   total.job.time2  + edited.occupationsManagement + edited.occupationsBusiness + edited.occupationsComputer + edited.occupationsArchitecture + edited.occupationsLife + edited.occupationsCommunity + edited.occupationsLegal + edited.occupationsEducation +  edited.occupationsArts + edited.occupationsHealthcare + edited.occupationsHealthcaresupport + edited.occupationsProtective + edited.occupationsFood + edited.occupationsBuilding + edited.occupationsPersonal + edited.occupationsSales + edited.occupationsOffice + edited.occupationsFarming + edited.occupationsConstruction + edited.occupationsInstallation + edited.occupationsProduction + edited.occupationsTransportation  + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + total.other.job.time", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
   
   
@@ -123,17 +50,11 @@ table.obs.unobs <- function(data.input, dep.var) {
   
   
   col2 <- var(resid(result), na.rm=TRUE)
-  #col2 <- var(data.input$predicted.yhat, na.rm = TRUE)
+  #col2 <- var(data.input$predicted.yhat, na.rm = TRUE) # another possible option. But the difference is very small
+  
   col3 <- (a - b)
   
   
-  
-  #result2 <- lm(paste0("wfh.dum"," ~   total.job.time2   + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
-  
-  
-  
-  
-  #result2 <- lm(paste0("wfh.dum"," ~   total.job.time2   + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
   
   result2 <- lm(paste0("wfh.dum"," ~   total.job.time2  + edited.occupationsManagement + edited.occupationsBusiness + edited.occupationsComputer + edited.occupationsArchitecture + edited.occupationsLife + edited.occupationsCommunity + edited.occupationsLegal + edited.occupationsEducation +  edited.occupationsArts + edited.occupationsHealthcare + edited.occupationsHealthcaresupport + edited.occupationsProtective + edited.occupationsFood + edited.occupationsBuilding + edited.occupationsPersonal + edited.occupationsSales + edited.occupationsOffice + edited.occupationsFarming + edited.occupationsConstruction + edited.occupationsInstallation + edited.occupationsProduction + edited.occupationsTransportation + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + total.other.job.time", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
   
@@ -145,10 +66,7 @@ table.obs.unobs <- function(data.input, dep.var) {
   col4 <- (a - b)*variance.ratio
   
   
-  #full.reg <- lm(paste0(dep.var," ~   total.job.time2 + wfh.dum  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
-  
-  #full.reg <- lm(paste0(dep.var," ~   total.job.time2   + wfh.dum  + edited.occupations + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment)", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input, weights = tufnwgtp )
-  
+
   full.reg <- lm(paste0(dep.var," ~   total.job.time2  + wfh.dum  + edited.occupationsManagement + edited.occupationsBusiness + edited.occupationsComputer + edited.occupationsArchitecture + edited.occupationsLife + edited.occupationsCommunity + edited.occupationsLegal + edited.occupationsEducation +  edited.occupationsArts + edited.occupationsHealthcare + edited.occupationsHealthcaresupport + edited.occupationsProtective + edited.occupationsFood + edited.occupationsBuilding + edited.occupationsPersonal + edited.occupationsSales + edited.occupationsOffice + edited.occupationsFarming + edited.occupationsConstruction + edited.occupationsInstallation + edited.occupationsProduction + edited.occupationsTransportation  + work.hours.last.week+ edited.work.hours + factor(edited.work.hours.indicator) + factor(treatment) + total.other.job.time", demographic.no.sex.var , family.bus, family.var, time.var, location.var, spouse.var, earnings.var, family.inc.var,  children.sick.var), data = data.input , weights = tufnwgtp )
   
   
@@ -175,33 +93,13 @@ table.obs.unobs <- function(data.input, dep.var) {
 
 
 
+############ generate results talbes for mothers   ###################
 
 
-
-
-
-
-
-
-# total primary + secondary
-
-#combine.data.complete.regress.female.employ.temp <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$wfh.v3 <=1 ),]
-
-#combine.data.complete.regress.female.employ.temp <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$edited.employ.status == "Employed" ),]
-
-#combine.data.complete.regress.female.employ.temp <- combine.data.complete.regress.female.employ
-
-#combine.data.complete.regress.female.employ.temp.under13 <- combine.data.complete.regress.female.employ.temp[which(combine.data.complete.regress.female.employ.temp$age.youngest.child < 13 & combine.data.complete.regress.female.employ.temp$interview.year != "2003"),]
-
-#combine.data.complete.regress.female.employ.under13.v2 <- combine.data.complete.regress.female.employ[which(combine.data.complete.regress.female.employ$age.youngest.child < 13 & combine.data.complete.regress.female.employ$interview.year != "2003"),]
-
-
-
-
-# all other variables
+# empty frame
 empty.frame.total <- data.frame(matrix(ncol = 8, nrow = length(yvariables.v3))) 
 
-
+# use the above functions to generate results
 for (i in 1:length(yvariables.v3)) {
 dep.var <-  yvariables.v3[i]
 if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" | dep.var == "sec.child.care_total.job" | dep.var == "sec.child.care_social.act" | dep.var == "sec.child.care_house.act" | dep.var == "sec.child.care_eat.drink") {
@@ -222,62 +120,20 @@ empty.frame.total$diff <- empty.frame.total$X6 - empty.frame.total$X5
 
 empty.frame.total <- empty.frame.total[,c(1,2, 3, 4,5,6,7,9,8)]
 
+# Table 5 results in the paper
 print(xtable(empty.frame.total, caption = "The Amount of Selection on Unobservables Relative to Selection on Observables
 Required to Attribute the Entire Working from Home Effect to Selection Bias - Mothers",   digits=3) ,include.rownames = FALSE, include.colnames = TRUE  )
 
 
 
 
-# for presentation 
-wfh.bias.table <- data.frame(cbind( empty.frame.total$X5, empty.frame.total$X6, empty.frame.total$X8), stringsAsFactors = FALSE)
-wfh.bias.table$true.value.wfh <- wfh.bias.table$X2  - wfh.bias.table$X1
-
-wfh.bias.table <- data.frame(cbind( empty.frame.total$X1, wfh.bias.table))
-
-wfh.bias.table <- wfh.bias.table[,c(1,2, 3, 5,4)]
+############ generate results talbes for fathers   ###################
 
 
-
-print(xtable(wfh.bias.table, caption = "The Amount of Selection on Unobservables Relative to Selection on Observables
-Required to Attribute the Entire Working from Home Effect to Selection Bias - Mothers",   digits=3) ,include.rownames = FALSE, include.colnames = TRUE  )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# total primary + secondary
-
-#combine.data.complete.regress.male.employ.temp <- combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$wfh.v3 <=1 ),]
-
-
-#combine.data.complete.regress.male.employ.temp <- combine.data.complete.regress.male.employ
-
-
-#combine.data.complete.regress.male.employ.temp.under13 <- combine.data.complete.regress.male.employ.temp[which(combine.data.complete.regress.male.employ.temp$age.youngest.child < 13 & combine.data.complete.regress.male.employ.temp$interview.year != "2003"),]
-
-#combine.data.complete.regress.male.employ.under13.v2 <- combine.data.complete.regress.male.employ[which(combine.data.complete.regress.male.employ$age.youngest.child < 13 & combine.data.complete.regress.male.employ$interview.year != "2003"),]
-
-
-
-
-
-# all other variables
+# empty frame
 empty.frame.total <- data.frame(matrix(ncol = 8, nrow = length(yvariables.v3))) 
 
-
+# use the above functions to generate results
 for (i in 1:length(yvariables.v3)) {
   dep.var <-  yvariables.v3[i]
   if (dep.var == "sec.child.care.hh" | dep.var == "total.time.child.prim.sec" | dep.var == "portion.sec.child.care.hh" | dep.var == "sec.child.care_total.job" | dep.var == "sec.child.care_social.act" | dep.var == "sec.child.care_house.act" | dep.var == "sec.child.care_eat.drink") {
@@ -299,22 +155,7 @@ empty.frame.total$diff <- empty.frame.total$X6 - empty.frame.total$X5
 
 empty.frame.total <- empty.frame.total[,c(1,2, 3, 4,5,6,7,9,8)]
 
+# Table 6 results in the paper
 print(xtable(empty.frame.total, caption = "The Amount of Selection on Unobservables Relative to Selection on Observables
 Required to Attribute the Entire Working from Home Effect to Selection Bias - Fathers",   digits=3) ,include.rownames = FALSE, include.colnames = TRUE  )
-
-
-
-# for presentation 
-wfh.bias.table.fathers <- data.frame(cbind( empty.frame.total$X5, empty.frame.total$X6, empty.frame.total$X8), stringsAsFactors = FALSE)
-wfh.bias.table.fathers$true.value.wfh <- wfh.bias.table.fathers$X2  - wfh.bias.table.fathers$X1
-
-wfh.bias.table.fathers <- data.frame(cbind( empty.frame.total$X1, wfh.bias.table.fathers))
-
-wfh.bias.table.fathers <- wfh.bias.table.fathers[,c(1,2, 3, 5,4)]
-
-
-
-print(xtable(wfh.bias.table.fathers, caption = "The Amount of Selection on Unobservables Relative to Selection on Observables
-             Required to Attribute the Entire Working from Home Effect to Selection Bias - Mothers",   digits=3) ,include.rownames = FALSE, include.colnames = TRUE  )
-
 
